@@ -1,5 +1,3 @@
-// import React from "react";
-
 const LoginPage = () => {
   return (
     <div className="w-full h-screen flex items-start">
