@@ -1,15 +1,25 @@
+import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+
 const LoginPage = () => {
+  const navigate = useNavigate()
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+  
   return (
-    <div className="w-full h-screen flex items-start">
-      <div className="relative w-2/5 h-full flex flex-col bg-green-900">
+    <div className="w-full h-screen flex items-center justify-center md:justify-between">
+      <div className="md:block hidden relative w-full md:w-2/5 h-full flex-col bg-green-900">
         <div className="absolute top-[40%] left-[5%] flex flex-col">
           <h1 className="text-4xl text-white font-bold my-4 tracking-tight md:tracking-super-wide">S!MATREN</h1>
           <p className="text-xl text-white font-normal">Pondok Pesantren Husnul Khotimah</p>
         </div>
       </div>
 
-      <div className="w-3/5 h-full flex flex-col p-20 justify-between">
-        <div className="relative box-border h-full w-full p-10 border border-green-900 rounded-md shadow-lg shadow-gray-500">
+      <div className="min-h-screen md:h-full md:p-10 w-3/5 flex items-center justify-between">
+        <div className="relative box-border h-full w-full p-6 md:p-10 border border-green-900 rounded-md shadow-lg shadow-gray-500">
           <div className="w-full flex flex-col items-center justify-center">
             <h3 className="text-2xl font-bold mb-4 text-green-900">Login</h3>
           </div>
@@ -30,8 +40,45 @@ const LoginPage = () => {
             />
           </div>
 
-          <div className="w-full flex flex-col py-16">
-            <button className="text-white bg-green-900 rounded-md p-2 text-center flex items-center justify-center">
+          <hr className="border-t border-green-700 my-4 mt-8" />
+
+          <div>
+            <p className="text-xs font-sans mb-4 text-green-900">Masuk Sebagai :</p>
+
+            <form className="flex flex-row gap-4">
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="admin"
+                  name="options"
+                  value="admin"
+                  checked={selectedOption === 'admin'}
+                  onChange={handleOptionChange}
+                  className="form-radio text-green-900"
+                />
+                <label htmlFor="admin" className="ml-2 text-xs">
+                  Admin
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="user"
+                  name="options"
+                  value="user"
+                  checked={selectedOption === 'user'}
+                  onChange={handleOptionChange}
+                  className="form-radio bg-green-900"
+                />
+                <label htmlFor="user" className="ml-2 text-xs">
+                  User
+                </label>
+              </div>
+            </form>
+          </div>
+
+          <div className="w-full flex flex-col py-5">
+            <button onClick={() => navigate('/AdminPage')} className="text-white bg-green-900 rounded-md p-2 text-center flex items-center justify-center">
               Log in
             </button>
 

@@ -1,9 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { HiChevronDown, HiChevronRight } from "react-icons/hi";
-import { VscTools } from "react-icons/vsc";
-import { RiHistoryFill, RiCalendarScheduleLine } from "react-icons/ri";
 import { DASHBOARD_SIDEBAR_BOTTOM_LINKS, DASHBOARD_SIDEBAR_LINKS } from "./content/Navigation";
 import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames";
@@ -12,12 +8,6 @@ const linkClasses = "flex items-center gap-3 font-semibold px-4 py-3 hover:scale
 
 // eslint-disable-next-line react/prop-types
 export default function Sidebar({ isOpen }) {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
   return (
     <div className={`transition-width duration-300 ease-in-out sticky top-0 h-screen w-64 bg-green-900 flex flex-col text-white ${isOpen ? "block" : "hidden"} md:block`}>
       <div className="flex items-center py-3 px-5">
@@ -44,23 +34,6 @@ export default function Sidebar({ isOpen }) {
         {DASHBOARD_SIDEBAR_LINKS.map((item) => (
           <SidebarLink key={item.key} item={item} />
         ))}
-        <div>
-          <div id="dropdownButton" onClick={toggleDropdown} className={classNames(linkClasses)}>
-            <span className="text-xl">
-              <VscTools />
-            </span>
-            Manajemen Pelatihan
-            <span className="text-xl">
-              {isDropdownOpen ? <HiChevronDown /> : <HiChevronRight />}
-            </span>
-          </div>
-          {isDropdownOpen && (
-            <div className="pl-7">
-              <DropdownLink to="/AdminPage/histori_pelatihan" label="Histori Pelatihan" icon={<RiHistoryFill />} />
-              <DropdownLink to="/AdminPage/jadwal_pelatihan" label="Jadwal Pelatihan" icon={<RiCalendarScheduleLine />} />
-            </div>
-          )}
-        </div>
       </div>
 
       <hr className="p-1 border-t border-green-700 mx-5"/>
@@ -83,18 +56,6 @@ function SidebarLink({ item }) {
       linkClasses)}>
       <span className="text-xl">{item.icon}</span>
       {item.label}
-    </Link>
-  );
-}
-
-function DropdownLink({ to, label, icon }) {
-  const { pathname } = useLocation();
-  return (
-    <Link to={to} className={classNames(
-      pathname === to ? "bg-[#98FB98] text-green-900" : "bg-green-900 text-white",
-      linkClasses)}>
-      <span className="text-xl">{icon}</span>
-      {label}
     </Link>
   );
 }
