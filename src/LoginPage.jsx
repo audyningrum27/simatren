@@ -1,14 +1,42 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
+import { useAuth } from './AuthContext';
 
 const LoginPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { login } = useAuth();
   const [selectedOption, setSelectedOption] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
-  
+
+  const handleLogin = () => {
+    // Dummy user data for demonstration
+    const adminCredentials = { email: "admin@admin.com", password: "admin123" };
+    const userCredentials = { email: "user@user.com", password: "user123" };
+
+    if (selectedOption === 'admin') {
+      if (email === adminCredentials.email && password === adminCredentials.password) {
+        login('admin');
+        navigate('/AdminPage');
+      } else {
+        alert('Invalid admin credentials');
+      }
+    } else if (selectedOption === 'user') {
+      if (email === userCredentials.email && password === userCredentials.password) {
+        login('user');
+        navigate('/UserPage');
+      } else {
+        alert('Invalid user credentials');
+      }
+    } else {
+      alert('Please select a role');
+    }
+  };
+
   return (
     <div className="w-full h-screen flex items-center justify-center md:justify-between">
       <div className="md:block hidden relative w-full md:w-2/5 h-full flex-col bg-green-900">
@@ -29,14 +57,18 @@ const LoginPage = () => {
             <input 
               type="email"
               placeholder="name@company.com"
-              className="w-full text-sm text-black bg-gray-100 border border-gray-300 rounded-md p-2" 
+              className="w-full text-sm text-black bg-gray-100 border border-gray-300 rounded-md p-2"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             <p className="text-sm font-sans py-4">Password</p>
             <input 
               type="password"
               placeholder="******"
-              className="w-full text-sm text-black bg-gray-100 border border-gray-300 rounded-md p-2" 
+              className="w-full text-sm text-black bg-gray-100 border border-gray-300 rounded-md p-2"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
@@ -78,7 +110,7 @@ const LoginPage = () => {
           </div>
 
           <div className="w-full flex flex-col py-5">
-            <button onClick={() => navigate('/AdminPage')} className="text-white bg-green-900 rounded-md p-2 text-center flex items-center justify-center">
+            <button onClick={handleLogin} className="text-white bg-green-900 rounded-md p-2 text-center flex items-center justify-center">
               Log in
             </button>
 
@@ -89,7 +121,7 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default LoginPage;

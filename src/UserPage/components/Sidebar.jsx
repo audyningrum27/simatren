@@ -20,7 +20,7 @@ export default function Sidebar({ isOpen }) {
         </div>
         <div className="px-5">
           <p className="text-sm font-bold">S!MATREN</p>
-          <p className="text-[10px] font-thin">Admin</p>
+          <p className="text-[10px] font-thin">NIP. 1737268</p>
         </div>
       </div>
  
@@ -30,7 +30,7 @@ export default function Sidebar({ isOpen }) {
         <h1 className="flex py-2 px-6 text-xs font-thin">MENU</h1>
       </div>
 
-      <div className="flex-initial w-64 px-2">
+      <div className="flex-initial w-64 px-5">
         {DASHBOARD_SIDEBAR_LINKS.map((item) => (
           <SidebarLink key={item.key} item={item} />
         ))}

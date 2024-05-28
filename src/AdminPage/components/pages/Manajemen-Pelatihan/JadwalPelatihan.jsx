@@ -104,7 +104,7 @@ function JadwalPelatihan() {
       </div>
 
       <div className="px-4 text-sm rounded-sm border-[1.5px] border-gray-200 items-center overflow-x-auto">
-        <div className="h-96 md:w-full w-[33rem] overflow-auto">
+        <div className="h-96 md:w-full w-[34rem] max-[500px]:w-[24rem] overflow-auto">
           <table className='text-gray-700 min-w-[900px]'>
             <thead className="sticky top-0 bg-white"> 
               <tr className="border-b-[1.5px]">

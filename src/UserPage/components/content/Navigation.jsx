@@ -27,13 +27,13 @@ export const DASHBOARD_SIDEBAR_LINKS = [
   {
     key: "cuti",
     label: "Cuti",
-    path: "/UserPage/cuti",
+    path: "/UserPage/pengajuan_cuti",
     icon: <MdOutlineCalendarMonth />
   },
   {
     key: "pelatihan",
     label: "Pelatihan",
-    path: "/UserPage/pelatihan",
+    path: "/UserPage/pelaporan_pelatihan",
     icon: <VscTools />
   },
   {

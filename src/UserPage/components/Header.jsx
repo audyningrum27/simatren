@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
 import { MdNotifications } from "react-icons/md";
 import { FaBars } from "react-icons/fa";
 
+// eslint-disable-next-line no-unused-vars
 const Header = ({ isOpen, setIsOpen }) => {
   return (
     <div className="w-full">
@@ -8,8 +10,10 @@ const Header = ({ isOpen, setIsOpen }) => {
         <button onClick={() => setIsOpen(prev => !prev)} className="text-gray-400 md:hidden">
           <FaBars className="w-6 h-6" />
         </button>
-        <div className="ml-auto flex items-center justify-center box-border h-6 w-8 border-2 border-green-900 rounded-md shadow-md shadow-gray-400 cursor-pointer">
-          <MdNotifications className="icon-gray-200" />
+        <div className="md:w-full w-[34rem] max-[500px]:w-[22rem]"> 
+          <div className="ml-auto flex items-center justify-center box-border h-6 w-8 border-2 border-green-900 rounded-md shadow-md shadow-gray-400 cursor-pointer">
+            <MdNotifications className="icon-gray-200" />
+          </div>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import Sidebar from "../Sidebar";
 import Header from "../Header";
 import { useState } from "react";
 
-export default function Layout() {
+export default function LayoutUser() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
