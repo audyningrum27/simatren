@@ -27,6 +27,7 @@ import HistoriPelatihan from "./UserPage/components/pages/Pelatihan/HistoriPelat
 
 import { AuthProvider } from './AuthContext';
 import PrivateRoute from './PrivateRoute';
+import JadwalPelatihanUser from './UserPage/components/pages/Pelatihan/JadwalPelatihan';
 
 function App() {
   return (
@@ -61,6 +62,8 @@ function App() {
             <Route path="/UserPage/histori_cuti" element={<HistoriCuti />} />
             <Route path="/UserPage/pelaporan_pelatihan" element={<PelaporanPelatihan />} />
             <Route path="/UserPage/histori_pelatihan" element={<HistoriPelatihan />} />
+            <Route path="/UserPage/jadwal_pelatihan" element={<JadwalPelatihanUser />} />
+
           </Route>
 
           <Route path="logout" element={<LoginPage />} />
