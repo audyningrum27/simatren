@@ -94,7 +94,7 @@ const dataPresensi = [
   },
 ]
 
-function Presensi() {
+function HistoriPresensi() {
   return (
     <div>
       <p className="text-xl font-bold px-5">Data Presensi</p>
@@ -164,4 +164,4 @@ function Presensi() {
 //     )
 // }
 
-export default Presensi;
+export default HistoriPresensi;

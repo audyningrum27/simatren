@@ -18,7 +18,6 @@ import DetailHistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelat
 
 import LayoutUser from "./UserPage/components/content/LayoutUser";
 import ProfilEdit from "./UserPage/components/pages/ProfilEdit";
-import Presensi from "./UserPage/components/pages/Presensi";
 import Penggajian from './UserPage/components/pages/Penggajian';
 import PengajuanCuti from "./UserPage/components/pages/Cuti/PengajuanCuti";
 import HistoriCuti from "./UserPage/components/pages/Cuti/HistoriCuti";
@@ -28,6 +27,7 @@ import HistoriPelatihan from "./UserPage/components/pages/Pelatihan/HistoriPelat
 import { AuthProvider } from './AuthContext';
 import PrivateRoute from './PrivateRoute';
 import JadwalPelatihanUser from './UserPage/components/pages/Pelatihan/JadwalPelatihan';
+import HistoriPresensi from './UserPage/components/pages/Presensi/HistoriPresensi';
 
 function App() {
   return (
@@ -56,7 +56,7 @@ function App() {
           {/* User Page */}
           <Route path="/UserPage" element={<PrivateRoute allowedRoles={['user']}><LayoutUser /></PrivateRoute>}>
             <Route index element={<ProfilEdit />} />
-            <Route path="/UserPage/presensi" element={<Presensi />} />
+            <Route path="/UserPage/historipresensi" element={<HistoriPresensi />} />
             <Route path="/UserPage/penggajian" element={<Penggajian />} />
             <Route path="/UserPage/pengajuan_cuti" element={<PengajuanCuti />} />
             <Route path="/UserPage/histori_cuti" element={<HistoriCuti />} />
