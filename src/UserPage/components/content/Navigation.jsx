@@ -1,23 +1,19 @@
 import { FaUser } from "react-icons/fa";
-import { HiOutlineUserGroup } from "react-icons/hi2";
 import { TbWallet, TbLogout } from "react-icons/tb";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { VscTools } from "react-icons/vsc";
 import { AiOutlineLineChart } from "react-icons/ai";
 
-export const DASHBOARD_SIDEBAR_LINKS = [
+export const DASHBOARD_SIDEBAR_TOP_LINKS = [
   {
     key: "profil",
     label: "Profil",
     path: "/UserPage",
     icon: <FaUser />
-  },
-  {
-    key: "presensi",
-    label: "Presensi",
-    path: "/UserPage/presensi",
-    icon: <HiOutlineUserGroup />
-  },
+  }
+]
+
+export const DASHBOARD_SIDEBAR_LINKS = [
   {
     key: "penggajian",
     label: "Penggajian",
