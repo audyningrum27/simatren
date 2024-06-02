@@ -1,31 +1,31 @@
-// import React, { useEffect, useRef } from 'react'
-import { HiOutlineSearch } from 'react-icons/hi'
+import { HiOutlineSearch } from 'react-icons/hi';
 import { IoDownloadOutline } from "react-icons/io5";
 import { getStatus } from "../utils/status";
-// import { useNavigate } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const dataGaji = [
-    {
-        id: '1',
-        nomor: '1',
-        bulan: 'Agustus',
-        gaji: 'Rp 5.000.000',
-        tunjangan: 'Rp 5.000.000',
-        potongan: 'Rp 5.000.000',
-        total: 'Rp 5.000.000',
-        status_gaji: 'Lunas',
-        action: 'Download Slip'
-    },
-    {
-      id: '2',
-      nomor: '2',
-      bulan: 'September',
-      gaji: 'Rp 5.000.000',
-      tunjangan: 'Rp 5.000.000',
-      potongan: 'Rp 5.000.000',
-      total: 'Rp 5.000.000',
-      status_gaji: 'Lunas',
-      action: 'Download Slip'
+  {
+    id: '1',
+    nomor: '1',
+    bulan: 'Agustus',
+    gaji: 'Rp 5.000.000',
+    tunjangan: 'Rp 5.000.000',
+    potongan: 'Rp 5.000.000',
+    total: 'Rp 5.000.000',
+    status_gaji: 'Lunas',
+    action: 'Download Slip'
+  },
+  {
+    id: '2',
+    nomor: '2',
+    bulan: 'September',
+    gaji: 'Rp 5.000.000',
+    tunjangan: 'Rp 5.000.000',
+    potongan: 'Rp 5.000.000',
+    total: 'Rp 5.000.000',
+    status_gaji: 'Lunas',
+    action: 'Download Slip'
   },
   {
     id: '3',
@@ -114,38 +114,37 @@ const dataGaji = [
     total: 'Rp 5.000.000',
     status_gaji: 'Lunas',
     action: 'Download Slip'
-  },
-]
+  }
+];
 
 function Penggajian() {
-  // const navigate = useNavigate();
-
-  const downloadCSV = (id) => {
+  const downloadPDF = (id) => {
     const rowData = dataGaji.find(row => row.id === id);
     if (!rowData) return;
 
-    const csvData = {
-      'No.': rowData.nomor,
-      'Bulan': rowData.bulan,
-      'Gaji': rowData.gaji,
-      'Tunjangan': rowData.tunjangan,
-      'Potongan': rowData.potongan,
-      'Total': rowData.total,
-      'Status': rowData.status_gaji,
-    };
+    const doc = new jsPDF();
+    doc.text(`Slip Gaji - ${rowData.bulan}`, 14, 16);
 
-    const csvRows = [
-      Object.keys(csvData).join(','), // header row
-      Object.values(csvData).join(',') // data row
-    ].join('\n');
+    const tableColumn = ["No.", "Bulan", "Gaji", "Tunjangan", "Potongan", "Total", "Status"];
+    const tableRows = [
+      [
+        rowData.nomor,
+        rowData.bulan,
+        rowData.gaji,
+        rowData.tunjangan,
+        rowData.potongan,
+        rowData.total,
+        rowData.status_gaji
+      ]
+    ];
 
-    const blob = new Blob([csvRows], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Data Gaji_${id}.csv`;
-    a.click();
-    URL.revokeObjectURL(url);
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save(`Data Gaji_${rowData.id}.pdf`);
   };
 
   return (
@@ -154,70 +153,54 @@ function Penggajian() {
 
       <div>
         <div className="relative py-4 w-full justify-between flex flex-row">
-            <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />              
-            <input
-              type="text"
-              placeholder="Search..."
-              className="text-sm focus:outline-none active:outline-none bg-gray-200 border border-gray-200 w-full h-10 pl-11 pr-4 rounded-sm"
-            />
-          </div>
-
-            <div className="px-4 text-sm rounded-sm border-[1.5px] border-gray-200 items-center overflow-x-auto">
-                <div className="h-96 md:w-full w-[34rem] max-[500px]:w-[24rem] overflow-auto">
-                    <table className='text-gray-700 min-w-[900px]'>
-                        <thead className="sticky top-0 bg-white"> 
-                            <tr className="border-b-[1.5px]">
-                                <td className='font-bold py-4'>No.</td>
-                                <td className='font-bold py-4'>Bulan</td>
-                                <td className='font-bold py-4'>Gaji</td>
-                                <td className='font-bold py-4'>Tunjangan</td>
-                                <td className='font-bold py-4'>Potongan</td>
-                                <td className='font-bold py-4'>Total</td>
-                                <td className='font-bold py-4'>Status</td>
-                                <td className='font-bold py-4'>Action</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {dataGaji.map((data) => (
-                                <tr key={data.nomor}>
-                                    <td className="p-1 pt-2">{data.nomor}</td>
-                                    <td>{data.bulan}</td>
-                                    <td>{data.gaji}</td>
-                                    <td>{data.tunjangan}</td>
-                                    <td>{data.potongan}</td>
-                                    <td>{data.total}</td>
-                                    <td>{getStatus(data.status_gaji)}</td>
-                                    <td className='font-semibold'>
-                                      <button onClick={() => downloadCSV(data.id)} className='flex justify-start items-center'>
-                                        {data.action}
-                                        <IoDownloadOutline fontSize={18} />
-                                      </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            {/* <div className='py-2 justify-end flex flex-row items-center'>
-                <button><HiChevronLeft fontSize={18} className='mr-2' /></button>
-                <div className='flex gap-4'>
-                    <BoxWrapper>1</BoxWrapper>
-                    <BoxWrapper>2</BoxWrapper>
-                    <BoxWrapper>..</BoxWrapper>
-                    <BoxWrapper>8</BoxWrapper>
-                </div>
-                <button><HiChevronRight fontSize={18} className='ml-2' /></button>
-
-            </div> */}
+          <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="text-sm focus:outline-none active:outline-none bg-gray-200 border border-gray-200 w-full h-10 pl-11 pr-4 rounded-sm"
+          />
         </div>
-    </div>
-  )
-}
 
-// function BoxWrapper({ children }) {
-//   return <button className="bg-neutral-100 rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold hover:bg-green-900 active:bg-green-900 focus:outline-none focus:bg focus:bg-green-900">{children}</button>
-// }
+        <div className="px-4 text-sm rounded-sm border-[1.5px] border-gray-200 items-center overflow-x-auto">
+          <div className="h-96 md:w-full w-[34rem] max-[500px]:w-[24rem] overflow-auto">
+            <table className='text-gray-700 min-w-[900px]'>
+              <thead className="sticky top-0 bg-white">
+                <tr className="border-b-[1.5px]">
+                  <td className='font-bold py-4'>No.</td>
+                  <td className='font-bold py-4'>Bulan</td>
+                  <td className='font-bold py-4'>Gaji</td>
+                  <td className='font-bold py-4'>Tunjangan</td>
+                  <td className='font-bold py-4'>Potongan</td>
+                  <td className='font-bold py-4'>Total</td>
+                  <td className='font-bold py-4'>Status</td>
+                  <td className='font-bold py-4'>Action</td>
+                </tr>
+              </thead>
+              <tbody>
+                {dataGaji.map((data) => (
+                  <tr key={data.nomor}>
+                    <td className="p-1 pt-2">{data.nomor}</td>
+                    <td>{data.bulan}</td>
+                    <td>{data.gaji}</td>
+                    <td>{data.tunjangan}</td>
+                    <td>{data.potongan}</td>
+                    <td>{data.total}</td>
+                    <td>{getStatus(data.status_gaji)}</td>
+                    <td className='font-semibold'>
+                      <button onClick={() => downloadPDF(data.id)} className='flex justify-start items-center'>
+                        {data.action}
+                        <IoDownloadOutline fontSize={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default Penggajian;
