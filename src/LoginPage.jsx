@@ -23,17 +23,17 @@ const LoginPage = () => {
         login('admin');
         navigate('/AdminPage');
       } else {
-        alert('Invalid admin credentials');
+        alert('Email atau Password Admin Salah');
       }
     } else if (selectedOption === 'user') {
       if (email === userCredentials.email && password === userCredentials.password) {
         login('user');
         navigate('/UserPage');
       } else {
-        alert('Invalid user credentials');
+        alert('Email atau Password Admin Salah');
       }
     } else {
-      alert('Please select a role');
+      alert('Lengkapi Data Terlebih Dahulu');
     }
   };
 
