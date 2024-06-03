@@ -43,7 +43,7 @@ const dataPelatihan = [
       nomor: '5',
       kegiatan: 'Pelatihan Mengajar',
       tanggal: '2024-05-21T05:24:00',
-      status: 'BELUM DIMULAIDIMULAI',
+      status: 'BELUM DIMULAI',
       action: 'Detail'
   },
   {
@@ -51,7 +51,7 @@ const dataPelatihan = [
       nomor: '6',
       kegiatan: 'Pelatihan Mengajar',
       tanggal: '2024-05-21T05:24:00',
-      status: 'BELUM DIAMBIL',
+      status: 'BELUM DIMULAI',
       action: 'Detail'
   },
   {

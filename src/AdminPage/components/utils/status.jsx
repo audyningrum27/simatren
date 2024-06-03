@@ -30,7 +30,7 @@ export function getPegawaiStatus(status) {
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			)
-		case 'TIDAK DIAMBIL':
+		case 'BELUM DIMULAI':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-red-500 bg-red-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}

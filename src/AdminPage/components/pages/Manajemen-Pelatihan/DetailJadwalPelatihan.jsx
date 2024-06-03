@@ -7,7 +7,7 @@ const detailPegawai = [
     tgl_mulai: '2024-05-21T05:24:00',
     tgl_selesai: '2024-05-22T05:24:00',
     deskrisi_kegiatan: 'Lorem Ipsum is simply dummy text.',
-    status: 'SELESAI',
+    status: 'PROSES',
   }
 ]
 
