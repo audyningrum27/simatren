@@ -2,7 +2,7 @@ import { MdInsertChartOutlined, MdOutlineCalendarMonth } from "react-icons/md";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { TbWallet, TbLogout } from "react-icons/tb";
 // import { VscTools } from "react-icons/vsc";
-// import { AiOutlineLineChart } from "react-icons/ai";
+import { AiOutlineLineChart } from "react-icons/ai";
 
 export const DASHBOARD_SIDEBAR_LINKS = [
   {
@@ -35,12 +35,15 @@ export const DASHBOARD_SIDEBAR_LINKS = [
   //   path: "/manajemen_pelatihan",
   //   icon: <VscTools />
   // },
-  // {
-  //   key: "manajemen_kinerja",
-  //   label: "Manajemen Kinerja",
-  //   path: "/manajemen_kinerja",
-  //   icon: <AiOutlineLineChart />
-  // },
+]
+
+export const DASHBOARD_SIDEBAR_KINERJA = [
+  {
+    key: "manajemen_kinerja",
+    label: "Manajemen Kinerja",
+    path: "/AdminPage/manajemen_kinerja",
+    icon: <AiOutlineLineChart />
+  },
 ]
 
 export const DASHBOARD_SIDEBAR_BOTTOM_LINKS = [

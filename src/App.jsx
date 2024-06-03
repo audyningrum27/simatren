@@ -15,19 +15,24 @@ import JadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/Ja
 import TambahJadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/TambahJadwalPelatihan';
 import DetailJadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/DetailJadwalPelatihan';
 import DetailHistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/DetailHistoryPelatihan';
+import ManajemenKinerja from './AdminPage/components/pages/Manajemen-Kinerja/ManajemenKinerja';
+import GrafikManajemenKinerja from './AdminPage/components/pages/Manajemen-Kinerja/Grafik-Kinerja/GrafikManajemenKinerja';
+
 
 import LayoutUser from "./UserPage/components/content/LayoutUser";
 import ProfilEdit from "./UserPage/components/pages/ProfilEdit";
+import HistoriPresensi from './UserPage/components/pages/Presensi/HistoriPresensi';
 import Penggajian from './UserPage/components/pages/Penggajian';
 import PengajuanCuti from "./UserPage/components/pages/Cuti/PengajuanCuti";
 import HistoriCuti from "./UserPage/components/pages/Cuti/HistoriCuti";
 import PelaporanPelatihan from "./UserPage/components/pages/Pelatihan/PelaporanPelatihan";
 import HistoriPelatihan from "./UserPage/components/pages/Pelatihan/HistoriPelatihan";
+import JadwalPelatihanUser from './UserPage/components/pages/Pelatihan/JadwalPelatihan';
+import Kinerja from './UserPage/components/pages/Kinerja/Kinerja';
 
 import { AuthProvider } from './AuthContext';
 import PrivateRoute from './PrivateRoute';
-import JadwalPelatihanUser from './UserPage/components/pages/Pelatihan/JadwalPelatihan';
-import HistoriPresensi from './UserPage/components/pages/Presensi/HistoriPresensi';
+
 
 function App() {
   return (
@@ -51,6 +56,8 @@ function App() {
             <Route path="/AdminPage/detail_history_pelatihan" element={<DetailHistoryPelatihan />} />
             <Route path="/AdminPage/detail_jadwal_pelatihan" element={<DetailJadwalPelatihan />} />
             <Route path="/AdminPage/atur_jadwal_pelatihan" element={<TambahJadwalPelatihan />} />
+            <Route path="/AdminPage/manajemen_kinerja" element={<ManajemenKinerja />} />
+            <Route path="/AdminPage/grafik_kinerja" element={<GrafikManajemenKinerja />} />
           </Route>
 
           {/* User Page */}
@@ -63,7 +70,7 @@ function App() {
             <Route path="/UserPage/pelaporan_pelatihan" element={<PelaporanPelatihan />} />
             <Route path="/UserPage/histori_pelatihan" element={<HistoriPelatihan />} />
             <Route path="/UserPage/jadwal_pelatihan" element={<JadwalPelatihanUser />} />
-
+            <Route path="/UserPage/grafik_kinerja" element={<Kinerja />} />
           </Route>
 
           <Route path="logout" element={<LoginPage />} />
