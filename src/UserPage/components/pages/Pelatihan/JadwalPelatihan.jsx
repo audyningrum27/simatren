@@ -13,6 +13,14 @@ const dataPelatihan = [
     tanggal_selesai: '2024-05-14T05:24:00',
     action: 'KONFIRMASI'
   },
+  {
+    id: '2',
+    nomor: '2',
+    nama_kegiatan: 'Pelatihan Desain Grafis',
+    tanggal_mulai: '2024-05-14T05:24:00',
+    tanggal_selesai: '2024-05-14T05:24:00',
+    action: 'KONFIRMASI'
+  }
 ];
 
 function JadwalPelatihanUser() {
@@ -85,7 +93,7 @@ function JadwalPelatihanUser() {
 
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-md">
+          <div className="bg-white p-6 rounded-md shadow-md text-sm">
             <p>Apakah Anda yakin ingin mengonfirmasi?</p>
             <div className="flex justify-end mt-4">
               <button
