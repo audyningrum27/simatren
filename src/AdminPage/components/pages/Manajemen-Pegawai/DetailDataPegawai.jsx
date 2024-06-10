@@ -13,7 +13,7 @@ const detailPegawai = [
     no_telp: '0819373627636',
     email: 'user@gmail.com',
     role: 'Guru',
-    status_pegawai: 'AKTIF',
+    status_pegawai: 'Aktif',
     status_bpjs: 'Aktif',
     status_perkawinan: 'Sudah Menikah',
     data_keluarga:'Lorem Ipsum, Lorem Ipsum',
@@ -351,4 +351,3 @@ export default function DetailDataPegawai() {
     </div>
   );
 }
-

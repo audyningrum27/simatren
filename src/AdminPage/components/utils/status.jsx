@@ -1,18 +1,18 @@
 export function getPegawaiStatus(status) {
 	switch (status) {
-		case 'AKTIF':
+		case 'Aktif':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-green-600 bg-green-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			)
-		case 'TIDAK AKTIF':
+		case 'Tidak Aktif':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-red-500 bg-red-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			)
-		case 'CUTI':
+		case 'Cuti':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-sky-600 bg-sky-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}

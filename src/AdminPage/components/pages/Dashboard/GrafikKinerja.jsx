@@ -9,67 +9,13 @@ import {
   Bar 
 } from "recharts";
 
-const data = [
-  // {
-  //   name: "Jan",
-  //   Penurunan: 3,
-  //   Kenaikan: 97
-  // },
-  // {
-  //   name: "Feb",
-  //   Penurunan: 7,
-  //   Kenaikan: 93
-  // },
-  // {
-  //   name: "Mar",
-  //   Penurunan: 28,
-  //   Kenaikan: 72
-  // },
-  // {
-  //   name: "Apr",
-  //   Penurunan: 33,
-  //   Kenaikan: 67
-  // },
-  // {
-  //   name: "Mei",
-  //   Penurunan: 20,
-  //   Kenaikan: 80
-  // },
-  // {
-  //   name: "Jun",
-  //   Penurunan: 10,
-  //   Kenaikan: 90
-  // },
-  {
-    name: "Jul",
-    Penurunan: 17,
-    Kenaikan: 83
-  },
-  {
-    name: "Ags",
-    Penurunan: 55,
-    Kenaikan: 45
-  },
-  {
-    name: "Sep",
-    Penurunan: 67,
-    Kenaikan: 33
-  },
-  {
-    name: "Okt",
-    Penurunan: 28,
-    Kenaikan: 72
-  },
-  {
-    name: "Nov",
-    Penurunan: 73,
-    Kenaikan: 27
-  },
-  {
-    name: "Des",
-    Penurunan: 25,
-    Kenaikan: 75
-  },
+const dataKinerja = [
+  { name: "Jul", Penurunan: 17, Kenaikan: 83 },
+  { name: "Ags", Penurunan: 55, Kenaikan: 45 },
+  { name: "Sep", Penurunan: 67, Kenaikan: 33 },
+  { name: "Okt", Penurunan: 28, Kenaikan: 72 },
+  { name: "Nov", Penurunan: 73, Kenaikan: 27 },
+  { name: "Des", Penurunan: 25, Kenaikan: 75 },
 ]
 
 function GrafikKinerja() {
@@ -81,7 +27,7 @@ function GrafikKinerja() {
           <BarChart
             width={500}
             height={300}
-            data={data}
+            data={dataKinerja}
             margin={{
               top: 20,
               right: 10,

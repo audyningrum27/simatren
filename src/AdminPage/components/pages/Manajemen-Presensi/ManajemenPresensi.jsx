@@ -1,111 +1,48 @@
+import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi'
 // import { HiChevronRight } from "react-icons/hi2";
 
-const dataPresensi = [
-  {
-      id: '1',
-      nomor: '1',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-  {
-      id: '1',
-      nomor: '2',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-  {
-      id: '1',
-      nomor: '3',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-  {
-      id: '1',
-      nomor: '4',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-  {
-      id: '1',
-      nomor: '5',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-  {
-      id: '1',
-      nomor: '6',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-  {
-      id: '1',
-      nomor: '7',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-  {
-      id: '1',
-      nomor: '8',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-  {
-      id: '1',
-      nomor: '9',
-      nip: '19860926201500',
-      nama: 'Laela Anggraeni',
-      tanggal: '2024-05-14T05:24:00',
-      jam_masuk: '08.00',
-      jam_keluar: '17.00',
-      total_jam: '9 jam'
-  },
-]
-
 function ManajemenPresensi() {
+  const [dataPresensi, setDataPresensi] = useState([]);
+
+  useEffect(() => {
+    fetchDataPresensi();
+  }, []);
+
+  const fetchDataPresensi = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/data_presensi/presensi');
+      const data = await response.json();
+      setDataPresensi(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredPresensi = dataPresensi.filter((data) =>
+    data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    data.nip.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
       <p className="text-xl font-bold px-5">Manajemen Presensi</p>
 
       <div>
         <div className="relative py-4 w-full justify-between flex flex-row">
-          <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />              
+          <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search..."
             className="text-sm focus:outline-none active:outline-none bg-gray-200 border border-gray-200 w-full h-10 pl-11 pr-4 rounded-sm"
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
         </div>
 
@@ -125,23 +62,23 @@ function ManajemenPresensi() {
               </thead>
 
               <tbody>
-                {dataPresensi.map((presensi) => (
-                <tr key={presensi.id}>
-                  <td className="p-1 pt-2">{presensi.nomor}</td>
-                  <td>{presensi.nip}</td>
-                  <td>{presensi.nama}</td>
-                  <td>{new Date(presensi.tanggal).toLocaleDateString()}</td>
-                  <td>{presensi.jam_masuk}</td>
-                  <td>{presensi.jam_keluar}</td>
-                  <td>{presensi.total_jam}</td>
-                </tr>
+                {filteredPresensi.map((data, index) => (
+                  <tr key={index}>
+                    <td className="p-1 pt-2">{index + 1}</td>
+                    <td>{data.nip}</td>
+                    <td>{data.nama_pegawai}</td>
+                    <td>{new Date(data.tanggal_presensi).toLocaleDateString()}</td>
+                    <td>{data.jam_masuk}</td>
+                    <td>{data.jam_keluar}</td>
+                    <td>{data.total_jam_kerja}</td>
+                  </tr>
                 ))}
               </tbody>
             </table>
           </div>
         </div>
 
-            {/* <div className='py-2 justify-end flex flex-row items-center'>
+        {/* <div className='py-2 justify-end flex flex-row items-center'>
                 <button><HiChevronLeft fontSize={18} className='mr-2' /></button>
                 <div className='flex gap-4'>
                     <BoxWrapper>1</BoxWrapper>

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
+import axios from 'axios';
 import { useAuth } from './AuthContext';
 
 const LoginPage = () => {
@@ -8,32 +9,37 @@ const LoginPage = () => {
   const [selectedOption, setSelectedOption] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  const handleLogin = () => {
-    // Dummy user data for demonstration
-    const adminCredentials = { email: "admin@admin.com", password: "admin123" };
-    const userCredentials = { email: "user@user.com", password: "user123" };
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        email,
+        password,
+        role: selectedOption,
+      });
 
-    if (selectedOption === 'admin') {
-      if (email === adminCredentials.email && password === adminCredentials.password) {
-        login('admin');
+      console.log('Login successful:', response.data);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('role', selectedOption);
+
+      // Panggil fungsi login dari AuthContext untuk memperbarui state
+      login(selectedOption);
+
+      // Redirect ke halaman dashboard sesuai role
+      if (selectedOption === 'admin') {
         navigate('/AdminPage');
       } else {
-        alert('Email atau Password Admin Salah');
-      }
-    } else if (selectedOption === 'user') {
-      if (email === userCredentials.email && password === userCredentials.password) {
-        login('user');
         navigate('/UserPage');
-      } else {
-        alert('Email atau Password Admin Salah');
       }
-    } else {
-      alert('Lengkapi Data Terlebih Dahulu');
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Login failed. Please check your email, password, and role.');
+      
     }
   };
 
@@ -108,6 +114,8 @@ const LoginPage = () => {
               </div>
             </form>
           </div>
+
+          {error && <p style={{ color: 'red' }}>{error}</p>}
 
           <div className="w-full flex flex-col py-5">
             <button onClick={handleLogin} className="text-white bg-green-900 rounded-md p-2 text-center flex items-center justify-center">

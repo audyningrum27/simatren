@@ -9,67 +9,13 @@ import {
   Bar 
 } from "recharts";
 
-const data = [
-  // {
-  //   name: "Jan",
-  //   Penurunan: 3,
-  //   Kenaikanv: 7
-  // },
-  // {
-  //   name: "Feb",
-  //   Penurunan: 12,
-  //   Kenaikan: 6
-  // },
-  // {
-  //   name: "Mar",
-  //   Penurunan: 7,
-  //   Kenaikan: 15
-  // },
-  // {
-  //   name: "Apr",
-  //   Penurunan: 7,
-  //   Kenaikan: 2
-  // },
-  // {
-  //   name: "Mei",
-  //   Penurunan: 8,
-  //   Kenaikan: 9
-  // },
-  // {
-  //   name: "Jun",
-  //   Penurunan: 19,
-  //   Kenaikan: 2
-  // },
-  {
-    name: "Jul",
-    Penurunan: 11,
-    Kenaikan: 6
-  },
-  {
-    name: "Ags",
-    Penurunan: 6,
-    Kenaikan: 7
-  },
-  {
-    name: "Sep",
-    Penurunan: 18,
-    Kenaikan: 2
-  },
-  {
-    name: "Okt",
-    Penurunan: 17,
-    Kenaikan: 2
-  },
-  {
-    name: "Nov",
-    Penurunan: 8,
-    Kenaikan: 15
-  },
-  {
-    name: "Des",
-    Penurunan: 1,
-    Kenaikan: 8
-  },
+const dataPelatihan = [
+  { name: "Jul", Penurunan: 11, Kenaikan: 6 },
+  { name: "Ags", Penurunan: 6, Kenaikan: 7 },
+  { name: "Sep", Penurunan: 18, Kenaikan: 2 },
+  { name: "Okt", Penurunan: 17, Kenaikan: 2 },
+  { name: "Nov", Penurunan: 8, Kenaikan: 15 },
+  { name: "Des", Penurunan: 1, Kenaikan: 8 },
 ]
 
 function GrafikPelatihan () {
@@ -81,7 +27,7 @@ function GrafikPelatihan () {
           <BarChart
             width={500}
             height={300}
-            data={data}
+            data={dataPelatihan}
             margin={{
               top: 20,
               right: 10,
