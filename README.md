@@ -1,3 +1,8 @@
+Menampilkan data dari database. Yang Perlu diinstall (cd ke folder backend dulu sebelum diinstall):
+- npm init -y
+- npm install express mysql2 bcryptjs jsonwebtoken cors
+- npm install --save-dev nodemon
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
