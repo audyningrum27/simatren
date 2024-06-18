@@ -6,32 +6,30 @@ const hashPassword = async (plainPassword) => {
     return await bcrypt.hash(plainPassword, saltRounds);
 };
 
-const createAdmin = async () => {
-    const email = 'admin@admin.com';
-    const plainPassword = 'admin123';
-    const hashedPassword = await hashPassword(plainPassword);
-    const role = 'admin';
+// const createAdmin = async () => {
+//     const email = 'admin@gmail.com';
+//     const plainPassword = 'admin123';
+//     const hashedPassword = await hashPassword(plainPassword);
 
-    const query = 'INSERT INTO admins (email, password, role) VALUES (?, ?, ?)';
+//     const query = 'INSERT INTO admin (email, password) VALUES (?, ?)';
 
-    db.query(query, [email, hashedPassword, role], (err, results) => {
-        if (err) {
-            console.error('Error inserting admin:', err);
-        } else {
-            console.log('Admin created successfully');
-        }
-    });
-};
+//     db.query(query, [email, hashedPassword], (err, results) => {
+//         if (err) {
+//             console.error('Error inserting admin:', err);
+//         } else {
+//             console.log('Admin created successfully');
+//         }
+//     });
+// };
 
 const createUser = async () => {
-    const email = 'user@user.com';
-    const plainPassword = 'user123';
+    const email = 'laela@gmail.com';
+    const plainPassword = 'laela123';
     const hashedPassword = await hashPassword(plainPassword);
-    const role = 'user';
 
-    const query = 'INSERT INTO users (email, password, role) VALUES (?, ?, ?)';
+    const query = 'INSERT INTO users (email, password) VALUES (?, ?)';
 
-    db.query(query, [email, hashedPassword, role], (err, results) => {
+    db.query(query, [email, hashedPassword], (err, results) => {
         if (err) {
             console.error('Error inserting user:', err);
         } else {
@@ -40,5 +38,5 @@ const createUser = async () => {
     });
 };
 
-createAdmin();
+// createAdmin();
 createUser();

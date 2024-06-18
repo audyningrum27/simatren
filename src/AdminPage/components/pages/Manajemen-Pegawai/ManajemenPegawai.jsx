@@ -81,7 +81,7 @@ function ManajemenPegawai() {
                                         <td className='pr-4'>{data.role}</td>
                                         <td>{getPegawaiStatus(data.status_kepegawaian)}</td>
                                         <td className='font-semibold'>
-                                            <button onClick={() => navigate('/AdminPage/detail_data_pegawai')} className='flex justify-start items-center'>
+                                            <button  onClick={() => navigate(`/AdminPage/detail_pegawai/${data.id_pegawai}`)} className='flex justify-start items-center'>
                                                 Detail
                                                 <HiChevronRight fontSize={18} />
                                             </button>

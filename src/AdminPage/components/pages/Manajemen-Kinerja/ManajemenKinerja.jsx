@@ -12,7 +12,7 @@ const dataPegawai = [
     nama: 'Shirley A. Lape',
     gender: 'perempuan',
     role: 'guru',
-    status_pegawai: 'AKTIF'
+    status_pegawai: 'Aktif'
   },
   {
     id: '1',
@@ -21,7 +21,7 @@ const dataPegawai = [
     nama: 'Shirley A. Lape',
     gender: 'perempuan',
     role: 'guru',
-    status_pegawai: 'AKTIF'
+    status_pegawai: 'Aktif'
   },
   {
     id: '1',
@@ -30,7 +30,7 @@ const dataPegawai = [
     nama: 'Shirley A. Lape',
     gender: 'perempuan',
     role: 'guru',
-    status_pegawai: 'AKTIF'
+    status_pegawai: 'Aktif'
   },
   {
     id: '1',
@@ -39,7 +39,7 @@ const dataPegawai = [
     nama: 'Shirley A. Lape',
     gender: 'perempuan',
     role: 'guru',
-    status_pegawai: 'AKTIF'
+    status_pegawai: 'Aktif'
   },
   {
     id: '1',
@@ -48,7 +48,7 @@ const dataPegawai = [
     nama: 'Shirley A. Lape',
     gender: 'perempuan',
     role: 'guru',
-    status_pegawai: 'AKTIF'
+    status_pegawai: 'Aktif'
   },
   {
     id: '1',
@@ -57,7 +57,7 @@ const dataPegawai = [
     nama: 'Shirley A. Lape',
     gender: 'perempuan',
     role: 'guru',
-    status_pegawai: 'AKTIF'
+    status_pegawai: 'Aktif'
   },
 ]
 

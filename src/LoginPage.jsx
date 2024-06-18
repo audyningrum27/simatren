@@ -6,41 +6,38 @@ import { useAuth } from './AuthContext';
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [selectedOption, setSelectedOption] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
+  const [showError, setShowError] = useState(false);
 
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', {
         email,
         password,
-        role: selectedOption,
       });
 
       console.log('Login successful:', response.data);
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('role', selectedOption);
+      localStorage.setItem('email', response.data.email);
 
-      // Panggil fungsi login dari AuthContext untuk memperbarui state
-      login(selectedOption);
+      login(response.data.email);
 
-      // Redirect ke halaman dashboard sesuai role
-      if (selectedOption === 'admin') {
+      if (response.data.email === 'admin@gmail.com') {
         navigate('/AdminPage');
       } else {
         navigate('/UserPage');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setError('Login failed. Please check your email, password, and role.');
-      
+      setError('Login gagal. Email atau Password salah!');
+      setShowError(true);
     }
+  };
+
+  const closeModal = () => {
+    setShowError(false);
   };
 
   return (
@@ -60,7 +57,7 @@ const LoginPage = () => {
 
           <div className="w-full flex flex-col">
             <p className="text-sm font-sans py-4">Your email</p>
-            <input 
+            <input
               type="email"
               placeholder="name@company.com"
               className="w-full text-sm text-black bg-gray-100 border border-gray-300 rounded-md p-2"
@@ -69,7 +66,7 @@ const LoginPage = () => {
             />
 
             <p className="text-sm font-sans py-4">Password</p>
-            <input 
+            <input
               type="password"
               placeholder="******"
               className="w-full text-sm text-black bg-gray-100 border border-gray-300 rounded-md p-2"
@@ -78,46 +75,7 @@ const LoginPage = () => {
             />
           </div>
 
-          <hr className="border-t border-green-700 my-4 mt-8" />
-
-          <div>
-            <p className="text-xs font-sans mb-4 text-green-900">Masuk Sebagai :</p>
-
-            <form className="flex flex-row gap-4">
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  id="admin"
-                  name="options"
-                  value="admin"
-                  checked={selectedOption === 'admin'}
-                  onChange={handleOptionChange}
-                  className="form-radio text-green-900"
-                />
-                <label htmlFor="admin" className="ml-2 text-xs">
-                  Admin
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  type="radio"
-                  id="user"
-                  name="options"
-                  value="user"
-                  checked={selectedOption === 'user'}
-                  onChange={handleOptionChange}
-                  className="form-radio bg-green-900"
-                />
-                <label htmlFor="user" className="ml-2 text-xs">
-                  User
-                </label>
-              </div>
-            </form>
-          </div>
-
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-
-          <div className="w-full flex flex-col py-5">
+          <div className="w-full flex flex-col py-16">
             <button onClick={handleLogin} className="text-white bg-green-900 rounded-md p-2 text-center flex items-center justify-center">
               Log in
             </button>
@@ -128,6 +86,22 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
+
+      {showError && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-md shadow-md max-w-sm">
+            <p className="text-red-600">{error}</p>
+            <div className="flex justify-end">
+              <button
+                onClick={closeModal}
+                className="mt-4 px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+              >
+                Oke
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

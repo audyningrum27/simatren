@@ -2,14 +2,14 @@
 import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
-const PrivateRoute = ({ children, allowedRoles }) => {
+const PrivateRoute = ({ children, allowedEmail }) => {
   const { isAuthenticated, userType } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/" />;
   }
 
-  if (!allowedRoles.includes(userType)) {
+  if (!allowedEmail.includes(userType)) {
     return <Navigate to="/" />;
   }
 
