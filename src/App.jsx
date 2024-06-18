@@ -32,6 +32,7 @@ import Kinerja from './UserPage/components/pages/Kinerja/Kinerja';
 
 import { AuthProvider } from './AuthContext';
 import PrivateRoute from './PrivateRoute';
+import DetailPegawai from './AdminPage/components/pages/Manajemen-Pegawai/DetailPegawai';
 
 
 function App() {
@@ -43,11 +44,12 @@ function App() {
           <Route path="/" element={<LoginPage />} />
 
           {/* Admin Page */}
-          <Route path="/AdminPage" element={<PrivateRoute allowedRoles={['admin']}><Layout /></PrivateRoute>}>
+          <Route path="/AdminPage" element={<PrivateRoute allowedEmail={['admin@gmail.com']}><Layout /></PrivateRoute>}>
             <Route index element={<Dashboard />} />
             <Route path="/AdminPage/manajemen_pegawai" element={<ManajemenPegawai />} />
             <Route path="/AdminPage/tambah_data_pegawai" element={<TambahDataPegawai />} />
             <Route path="/AdminPage/detail_data_pegawai" element={<DetailDataPegawai />} />
+            <Route path="/AdminPage/detail_pegawai/:id_pegawai" element={<DetailPegawai />} />
             <Route path="/AdminPage/manajemen_gaji" element={<ManajemenGaji />} />
             <Route path="/AdminPage/tambah_data_gaji" element={<TambahDataGaji />} />
             <Route path="/AdminPage/manajemen_presensi" element={<ManajemenPresensi />} />
@@ -61,7 +63,7 @@ function App() {
           </Route>
 
           {/* User Page */}
-          <Route path="/UserPage" element={<PrivateRoute allowedRoles={['user']}><LayoutUser /></PrivateRoute>}>
+          <Route path="/UserPage" element={<LayoutUser />}>
             <Route index element={<ProfilEdit />} />
             <Route path="/UserPage/historipresensi" element={<HistoriPresensi />} />
             <Route path="/UserPage/penggajian" element={<Penggajian />} />

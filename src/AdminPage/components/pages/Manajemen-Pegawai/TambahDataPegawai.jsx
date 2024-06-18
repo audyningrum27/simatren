@@ -32,7 +32,7 @@ const TambahDataPegawai = () => {
           <div className="relative w-full gap-2 grid grid-cols-1 md:grid-cols-2">
             <div>
               <div className='flex flex-row mb-2'>
-                <span className='text-gray-900 text-sm font-medium'>Nama Awal</span>
+                <span className='text-gray-900 text-sm font-medium'>Nama Lengkap</span>
                 <span className='text-red-700'>*</span>
               </div>
               <input
@@ -44,19 +44,31 @@ const TambahDataPegawai = () => {
             </div>
             <div>
               <div className='flex flex-row mb-2'>
-                <span className='text-gray-900 text-sm font-medium'>Nama Akhir</span>
+                <span className='text-gray-900 text-sm font-medium'>NIP (Nomor Induk Pegawai)</span>
                 <span className='text-red-700'>*</span>
               </div>
               <input
                 type="text"
-                placeholder="Masukkan nama akhir"
+                placeholder="Masukkan Nomor Induk Pegawai"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
               />
             </div>
             <div>
               <div className='flex flex-row mb-2'>
-                <span className='text-gray-900 text-sm font-medium'>NIP (Nomor Induk Pegawai)</span>
+                <span className='text-gray-900 text-sm font-medium'>Tempat Lahir</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <input
+                type="text"
+                placeholder="Masukkan Nomor Induk Pegawai"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
+                required
+              />
+            </div>
+            <div>
+              <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Tanggal Lahir</span>
                 <span className='text-red-700'>*</span>
               </div>
               <input
@@ -80,24 +92,24 @@ const TambahDataPegawai = () => {
             </div>
             <div>
               <div className='flex flex-row mb-2'>
-                <span className='text-gray-900 text-sm font-medium'>Posisi</span>
+                <span className='text-gray-900 text-sm font-medium'>Alamat</span>
                 <span className='text-red-700'>*</span>
               </div>
               <input
                 type="text"
-                placeholder="Pilih posisi"
+                placeholder="Pilih jenis kelamin"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
               />
             </div>
             <div>
               <div className='flex flex-row mb-2'>
-                <span className='text-gray-900 text-sm font-medium'>Status</span>
+                <span className='text-gray-900 text-sm font-medium'>Nomor Telepon</span>
                 <span className='text-red-700'>*</span>
               </div>
               <input
                 type="text"
-                placeholder="Pilih status"
+                placeholder="Pilih jenis kelamin"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
               />
@@ -109,6 +121,30 @@ const TambahDataPegawai = () => {
               </div>
               <input
                 type="text"
+                placeholder="Pilih posisi"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
+                required
+              />
+            </div>
+            <div>
+              <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Posisi</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <input
+                type="text"
+                placeholder="Pilih status"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
+                required
+              />
+            </div>
+            <div>
+              <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Status BPJS</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <input
+                type="text"
                 placeholder="Masukkan email"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
@@ -116,11 +152,23 @@ const TambahDataPegawai = () => {
             </div>
             <div>
               <div className='flex flex-row mb-2'>
-                <span className='text-gray-900 text-sm font-medium'>Password</span>
+                <span className='text-gray-900 text-sm font-medium'>Status Perkawinan</span>
                 <span className='text-red-700'>*</span>
               </div>
               <input
-                type="password"
+                type="text"
+                placeholder="Masukkan email"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
+                required
+              />
+            </div>
+            <div>
+              <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Data Anggota Keluarga</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <input
+                type="text"
                 placeholder="Masukkan password"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
