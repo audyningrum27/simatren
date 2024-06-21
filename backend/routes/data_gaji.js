@@ -16,4 +16,18 @@ router.get('/gaji', (req, res) => {
     });
 });
 
+router.post('/gaji', (req, res) => {
+    const { nip, nama_pegawai, gaji_dasar, tunjangan, potongan } = req.body;
+    const query = 'INSERT INTO data_gaji (nip, nama_pegawai, gaji_dasar, tunjangan, potongan) VALUES (?, ?, ?, ?, ?)';
+
+    db.query(query, [nip, nama_pegawai, gaji_dasar, tunjangan, potongan], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        return res.status(201).json({ message: 'Data Gaji Berhasil Ditambahkan!' });
+    });
+});
+
 export default router;
