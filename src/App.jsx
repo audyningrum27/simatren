@@ -8,7 +8,6 @@ import ManajemenPegawai from './AdminPage/components/pages/Manajemen-Pegawai/Man
 import ManajemenGaji from './AdminPage/components/pages/Manajemen-Gaji/ManajemenGaji';
 import ManajemenPresensi from './AdminPage/components/pages/Manajemen-Presensi/ManajemenPresensi';
 import TambahDataPegawai from './AdminPage/components/pages/Manajemen-Pegawai/TambahDataPegawai';
-import DetailDataPegawai from './AdminPage/components/pages/Manajemen-Pegawai/DetailDataPegawai';
 import TambahDataGaji from './AdminPage/components/pages/Manajemen-Gaji/TambahDataGaji';
 import HistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/HistoryPelatihan';
 import JadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/JadwalPelatihan';
@@ -48,7 +47,6 @@ function App() {
             <Route index element={<Dashboard />} />
             <Route path="/AdminPage/manajemen_pegawai" element={<ManajemenPegawai />} />
             <Route path="/AdminPage/tambah_data_pegawai" element={<TambahDataPegawai />} />
-            <Route path="/AdminPage/detail_data_pegawai" element={<DetailDataPegawai />} />
             <Route path="/AdminPage/detail_pegawai/:id_pegawai" element={<DetailPegawai />} />
             <Route path="/AdminPage/manajemen_gaji" element={<ManajemenGaji />} />
             <Route path="/AdminPage/tambah_data_gaji" element={<TambahDataGaji />} />
