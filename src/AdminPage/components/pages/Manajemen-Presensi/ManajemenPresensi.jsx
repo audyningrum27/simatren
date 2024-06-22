@@ -1,3 +1,4 @@
+import moment from 'moment-timezone';
 import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi'
 // import { HiChevronRight } from "react-icons/hi2";
@@ -13,7 +14,11 @@ function ManajemenPresensi() {
     try {
       const response = await fetch('http://localhost:5000/api/data_presensi/presensi');
       const data = await response.json();
-      setDataPresensi(data);
+      const formattedData = data.map(item => ({
+        ...item,
+        tanggal_presensi: moment.utc(item.tanggal_presensi).tz('Asia/Jakarta').format('DD/MM/YYYY'),
+      }));
+      setDataPresensi(formattedData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -67,10 +72,13 @@ function ManajemenPresensi() {
                     <td className="p-1 pt-2">{index + 1}</td>
                     <td>{data.nip}</td>
                     <td>{data.nama_pegawai}</td>
-                    <td>{new Date(data.tanggal_presensi).toLocaleDateString()}</td>
+                    <td>{data.tanggal_presensi}</td>
                     <td>{data.jam_masuk}</td>
                     <td>{data.jam_keluar}</td>
-                    <td>{data.total_jam_kerja}</td>
+                    <div className='flex-row'>
+                      <td>{data.total_jam_kerja}</td>
+                      <td>Jam</td>
+                    </div>
                   </tr>
                 ))}
               </tbody>

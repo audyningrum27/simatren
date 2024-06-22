@@ -4,7 +4,7 @@ import db from '../db.js';
 const router = express.Router();
 
 router.get('/presensi', (req, res) => {
-    console.log("GET /api/data_presensi/presesnsi");
+    console.log("GET /api/data_presensi/presensi");
     const query = 'SELECT * FROM data_presensi';
     db.query(query, (err, results) => {
         if (err) {
