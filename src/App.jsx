@@ -53,8 +53,8 @@ function App() {
             <Route path="/AdminPage/manajemen_presensi" element={<ManajemenPresensi />} />
             <Route path="/AdminPage/histori_pelatihan" element={<HistoryPelatihan />} />
             <Route path="/AdminPage/jadwal_pelatihan" element={<JadwalPelatihan />} />
-            <Route path="/AdminPage/detail_history_pelatihan" element={<DetailHistoryPelatihan />} />
-            <Route path="/AdminPage/detail_jadwal_pelatihan" element={<DetailJadwalPelatihan />} />
+            <Route path="/AdminPage/detail_history_pelatihan/:id_historipelatihan" element={<DetailHistoryPelatihan />} />
+            <Route path="/AdminPage/detail_jadwal_pelatihan/:id_pelatihan" element={<DetailJadwalPelatihan />} />
             <Route path="/AdminPage/atur_jadwal_pelatihan" element={<TambahJadwalPelatihan />} />
             <Route path="/AdminPage/manajemen_kinerja" element={<ManajemenKinerja />} />
             <Route path="/AdminPage/grafik_kinerja" element={<GrafikManajemenKinerja />} />

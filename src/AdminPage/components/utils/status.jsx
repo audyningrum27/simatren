@@ -18,19 +18,19 @@ export function getPegawaiStatus(status) {
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			)
-		case 'SELESAI':
+		case 'Selesai':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-green-600 bg-green-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			)
-		case 'PROSES':
+		case 'Proses':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-sky-600 bg-sky-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			)
-		case 'BELUM DIMULAI':
+		case 'Belum Dimulai':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-red-500 bg-red-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}

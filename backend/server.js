@@ -5,8 +5,9 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import dataRoutes from './routes/data_pegawai.js';
 import gajiRoutes from './routes/data_gaji.js';
-import presensiRoutes from './routes/data_presensi.js'
-
+import presensiRoutes from './routes/data_presensi.js';
+import jadwalpelatihanRoutes from './routes/jadwal_pelatihan.js';
+import historipelatihanRoutes from './routes/histori_pelatihan.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,7 +28,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/data_pegawai', dataRoutes);
 app.use('/api/data_gaji', gajiRoutes);
 app.use('/api/data_presensi', presensiRoutes);
-
+app.use('/api/jadwal_pelatihan', jadwalpelatihanRoutes);
+app.use('/api/histori_pelatihan', historipelatihanRoutes);
 
 // Melayani file statis frontend
 app.use(express.static(path.join(__dirname, '../public')));

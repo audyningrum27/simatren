@@ -1,17 +1,35 @@
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { getPegawaiStatus } from "../../utils/status";
-
-const detailPegawai = [
-  {
-    id: '1',
-    nama_kegiatan: 'Pelatihan Mengajar',
-    tgl_mulai: '2024-05-21T05:24:00',
-    tgl_selesai: '2024-05-22T05:24:00',
-    deskrisi_kegiatan: 'Lorem Ipsum is simply dummy text.',
-    status: 'PROSES',
-  }
-]
+import moment from 'moment-timezone';
 
 const DetailJadwalPelatihan = () => {
+  const { id_pelatihan } = useParams();
+  const [pelatihan, setDataPelatihan] = useState(null);
+
+  useEffect(() => {
+    fetchDetailPelatihan();
+  }, [id_pelatihan]);
+
+  const fetchDetailPelatihan = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan/${id_pelatihan}`);
+      const data = await response.json();
+      const formattedData = {
+        ...data,
+        tanggal_mulai: moment.utc(data.tanggal_mulai).tz('Asia/Jakarta').format('DD/MM/YYYY'),
+        tanggal_selesai: moment.utc(data.tanggal_selesai).tz('Asia/Jakarta').format('DD/MM/YYYY'),
+      };
+      setDataPelatihan(formattedData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  if (!pelatihan) {
+    return <div>Loading...</div>;
+  }
+  
   return (
     <div className="px-5">
       <span className="text-2xl text-gray-950 font-semibold flex justify-center mb-5">Detail Jadwal Pelatihan</span>
@@ -22,41 +40,31 @@ const DetailJadwalPelatihan = () => {
             <div className="flex-1">
               <table className='w-full border-separate p-5 text-gray-950 text-sm'>
                 <tbody>
-                  {detailPegawai.map((pelatihan) => (
-                  <tr key={pelatihan.id}>
+                  <tr>
                     <td>Nama Kegiatan</td>
                     <td className="p-2">:</td>
                     <td className="px-2 border border-gray-400 rounded-md">{pelatihan.nama_kegiatan}</td>
-                  </tr>
-                  ))}                  
-                  {detailPegawai.map((pelatihan) => (
-                  <tr key={pelatihan.id}>
+                  </tr>                
+                  <tr>
                     <td>Tanggal Mulai</td>
                     <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">{new Date(pelatihan.tgl_mulai).toLocaleDateString()}</td>
+                    <td className="px-2 border border-gray-400 rounded-md">{pelatihan.tanggal_mulai}</td>
                   </tr>
-                  ))}
-                  {detailPegawai.map((pelatihan) => (
-                  <tr key={pelatihan.id}>
+                  <tr>
                     <td>Tanggal Selesai</td>
                     <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">{new Date(pelatihan.tgl_selesai).toLocaleDateString()}</td>
+                    <td className="px-2 border border-gray-400 rounded-md">{pelatihan.tanggal_selesai}</td>
                   </tr>
-                  ))}
-                  {detailPegawai.map((pelatihan) => (
-                  <tr key={pelatihan.id}>
+                  <tr>
                     <td>Deskripsi Kegiatan</td>
                     <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">{pelatihan.deskrisi_kegiatan}</td>
+                    <td className="px-2 border border-gray-400 rounded-md">{pelatihan.deskripsi_kegiatan}</td>
                   </tr>
-                  ))}
-                  {detailPegawai.map((pelatihan) => (
-                  <tr key={pelatihan.id}>
+                  <tr>
                     <td>Status</td>
                     <td className="p-2">:</td>
                     <td>{getPegawaiStatus(pelatihan.status)}</td>
                   </tr>
-                  ))}
                 </tbody>
               </table>
             </div>
