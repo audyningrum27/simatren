@@ -11,27 +11,27 @@ import {
 
 const data = [
   {
-    name: "Senin",
+    name: "17 Juni",
     Hadir: 120,
     Cuti: 3
   },
   {
-    name: "Selasa",
+    name: "18 Juni",
     Hadir: 121,
     Cuti: 2
   },
   {
-    name: "Rabu",
+    name: "19 Juni",
     Hadir: 118,
     Cuti: 7
   },
   {
-    name: "Kamis",
+    name: "20 Juni",
     Hadir: 118,
     Cuti: 20
   },
   {
-    name: "Jumat",
+    name: "21 Juni",
     Hadir: 120,
     Cuti: 50
   }

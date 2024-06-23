@@ -96,4 +96,63 @@ router.put('/pegawai/:id_pegawai', (req, res) => {
     });
 });
 
+// Menghitung Pegawai Aktif
+router.get('/pegawai/active/count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS active_count FROM data_pegawai WHERE status_kepegawaian = "Aktif"';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Hasil jumlah pegawai aktif:', results); // Log debug
+        return res.json(results[0]);
+    });
+});
+
+
+// Menghitung Total Pegawai
+router.get('/pegawai/total/count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS total_count FROM data_pegawai';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Hasil jumlah total pegawai:', results); // Log debug
+        return res.json(results[0]);
+    });
+});
+
+// Menghitung Pegawai Cuti
+router.get('/pegawai/cuti/count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS cuti_count FROM data_pegawai WHERE status_kepegawaian = "Cuti"';
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Hasil jumlah pegawai cuti:', results); // Log debug
+        return res.json(results[0]);
+    });
+});
+
+
 export default router;
+
+
+// Menghitung Role atau Kategori Pegawai
+router.get('/pegawai/role/count', (req, res) => {
+    const sql = `
+        SELECT role, COUNT(*) as count
+        FROM data_pegawai
+        GROUP BY role
+    `;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        return res.json(results);
+    });
+});
+

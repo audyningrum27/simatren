@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import { 
   PieChart, 
   Pie, 
@@ -6,11 +7,11 @@ import {
   Legend 
 } from 'recharts'
 
-const data = [
-	{ name: 'Guru', value: 540 },
-	{ name: 'TPA', value: 620 },
-	{ name: 'Non TPA', value: 210 }
-]
+// const data = [
+// 	{ name: 'Guru', value: 540 },
+// 	{ name: 'TPA', value: 620 },
+// 	{ name: 'Non TPA', value: 210 }
+// ]
 
 const RADIAN = Math.PI / 180
 const COLORS = ['rgb(20 83 45)', 'rgb(21 128 61)', 'rgb(34 197 94)']
@@ -28,6 +29,36 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 }
 
 export default function KategoriPegawaiChart() {
+	const [data, setData] = useState([]);
+
+	useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/data_pegawai/pegawai/role/count');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const result = await response.json();
+
+        // Calculate total count
+        const totalCount = result.reduce((sum, item) => sum + item.count, 0);
+
+        // Prepare data with percentages
+        const chartData = result.map(item => ({
+          name: item.role,
+          value: item.count,
+          percentage: ((item.count / totalCount) * 100).toFixed(2)
+        }));
+
+        setData(chartData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
 	return (
 		<div className="w-[20rem] md:w-[27rem] h-[22rem] bg-white p-4 shadow-md shadow-gray-400 rounded-sm border border-gray-200 flex flex-col">
 			<strong className="text-gray-700 font-medium">Kategori Pegawai</strong>
@@ -44,7 +75,7 @@ export default function KategoriPegawaiChart() {
 							fill="#8884d8"
 							dataKey="value"
 						>
-							{data.map((_, index) => (
+							{data.map((entry, index) => (
 								<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 							))}
 						</Pie>

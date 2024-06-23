@@ -1,6 +1,68 @@
 // import { MdOutlineCalendarMonth } from "react-icons/md";
+import React, { useEffect, useState } from 'react';
 
 const DashboardStatsGrid = () => {
+  const [activeCount, setActiveCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
+  const [activePercentage, setActivePercentage] = useState(0);
+
+  const [presensiCount, setPresensiCount] = useState(0);
+  const [presensiPercentage, setPresensiPercentage] = useState(0);
+
+  const [cutiCount, setCutiCount] = useState(0);
+  const [cutiPercentage, setCutiPercentage] = useState(0);
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const responseActive = await fetch('http://localhost:5000/api/data_pegawai/pegawai/active/count');
+        const responseTotal = await fetch('http://localhost:5000/api/data_pegawai/pegawai/total/count');
+        const responseCuti = await fetch('http://localhost:5000/api/data_pegawai/pegawai/cuti/count');
+        
+        if (!responseActive.ok || !responseTotal.ok || !responseCuti.ok) {
+          throw new Error('Failed to fetch employee counts');
+        }
+
+        const dataActive = await responseActive.json();
+        const dataTotal = await responseTotal.json();
+        const dataCuti = await responseCuti.json();
+
+        setActiveCount(dataActive.active_count);
+        setTotalCount(dataTotal.total_count);
+        setCutiCount(dataCuti.cuti_count);
+
+        const activePercentage = (dataActive.active_count / dataTotal.total_count) * 100;
+        const cutiPercentage = (dataCuti.cuti_count / dataTotal.total_count) * 100;
+        
+        setActivePercentage(formatPercentage(activePercentage));
+        setCutiPercentage(formatPercentage(cutiPercentage));
+      } catch (error) {
+        console.error('Error fetching employee counts:', error);
+      }
+    };
+
+    const fetchPresensiData = async () => {
+      try {
+        const responsePresensi = await fetch('http://localhost:5000/api/data_presensi/presensi/count');
+        if (!responsePresensi.ok) {
+          throw new Error('Failed to fetch presensi data');
+        }
+        const dataPresensi = await responsePresensi.json();
+        setPresensiCount(dataPresensi.presensi_count);
+        setPresensiPercentage(dataPresensi.presensi_percentage); // Persentase sudah dalam format yang sesuai
+      } catch (error) {
+        console.error('Error fetching presensi data:', error);
+      }
+    };
+
+    fetchCounts();
+    fetchPresensiData();
+  }, []);
+
+  function formatPercentage(value) {
+    return (value % 1 === 0) ? value.toFixed(0) : value.toFixed(2);
+  }
+
   return (
     <div className="w-fit">
       {/* Tambahkan Backend supaya dapat memilih tanggal
@@ -9,14 +71,14 @@ const DashboardStatsGrid = () => {
       </div> */}
 
       <div className="flex flex-col md:flex-row gap-5 py-2 px-3">
-        <BoxWrapper>
+      <BoxWrapper>
           <div>
             <h3 className="text-sm font-semibold">Pegawai Aktif</h3>
-            <h1 className="text-2xl font-bold">120 <span className="text-sm font-normal">Orang</span></h1>
+            <h1 className="text-2xl font-bold">{activeCount} <span className="text-sm font-normal">/ {totalCount} Orang</span></h1>
             <div>
-              <p className="ml-auto h-5 w-5 text-[10px] font-semibold">80%</p>
+              <p className="ml-auto h-5 w-5 text-[10px] font-semibold">{activePercentage}%</p>
               <div className="bg-gray-300 h-2 w-64 rounded">
-                <div className="bg-green-900 w-[80%] h-2 rounded"></div>
+                <div className="bg-green-900 h-2 rounded" style={{ width: `${activePercentage}%` }}></div>
               </div>
             </div>
           </div>
@@ -24,11 +86,11 @@ const DashboardStatsGrid = () => {
         <BoxWrapper>
           <div>
             <h3 className="text-sm font-semibold">Presensi</h3>
-            <h1 className="text-2xl font-bold">120 <span className="text-sm font-normal">/127 Orang</span></h1>
+            <h1 className="text-2xl font-bold">{presensiCount} <span className="text-sm font-normal">/ {activeCount} Orang</span></h1>
             <div>
-              <p className="ml-auto h-5 w-5 text-[10px] font-semibold">80%</p>
+              <p className="ml-auto h-5 w-5 text-[10px] font-semibold">{presensiPercentage}%</p>
               <div className="bg-gray-300 h-2 w-64 rounded">
-                <div className="bg-green-700 w-[80%] h-2 rounded"></div>
+                <div className="bg-green-700 h-2 rounded" style={{ width: `${presensiPercentage}%` }}></div>
               </div>
             </div>
           </div>
@@ -36,11 +98,11 @@ const DashboardStatsGrid = () => {
         <BoxWrapper>
           <div>
             <h3 className="text-sm font-semibold">Pegawai Cuti</h3>
-            <h1 className="text-2xl font-bold">120 <span className="text-sm font-normal">/127 Orang</span></h1>
+            <h1 className="text-2xl font-bold">{cutiCount} <span className="text-sm font-normal">/ {totalCount} Orang</span></h1>
             <div>
-              <p className="ml-auto h-5 w-5 text-[10px] font-semibold">80%</p>
+              <p className="ml-auto h-5 w-5 text-[10px] font-semibold">{cutiPercentage}%</p>
               <div className="flex bg-gray-300 h-2 w-64 rounded">
-                <div className="bg-green-500 w-[80%] h-2 rounded"></div>
+                <div className="bg-green-500 h-2 rounded" style={{ width: `${cutiPercentage}%` }}></div>
               </div>
             </div>
           </div>
