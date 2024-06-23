@@ -79,21 +79,43 @@ router.get('/presensi/count', (req, res) => {
 //     });
 // });
 
-router.get('/presensi/dates', (req, res) => {
+// data_presensi.js (atau file terkait)
+router.get('/presensi/daily', (req, res) => {
     const query = `
-        SELECT DISTINCT DATE_FORMAT(tanggal_presensi, '%Y-%m-%d') AS date
-        FROM data_presensi
-        ORDER BY date;
-    `;
+        SELECT 
+            DATE(tanggal_presensi) as date, 
+            COUNT(*) as Hadir
+        FROM data_presensi 
+        GROUP BY DATE(tanggal_presensi)
+        ORDER BY DATE(tanggal_presensi)`;
+
     db.query(query, (err, results) => {
         if (err) {
-            console.error(err);
+            console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-
-        return res.json(results);
+        console.log('Data presensi harian:', results); // Log data presensi
+        res.json(results);
     });
 });
+
+
+
+// router.get('/presensi/dates', (req, res) => {
+//     const query = `
+//         SELECT DISTINCT DATE_FORMAT(tanggal_presensi, '%Y-%m-%d') AS date
+//         FROM data_presensi
+//         ORDER BY date;
+//     `;
+//     db.query(query, (err, results) => {
+//         if (err) {
+//             console.error(err);
+//             return res.status(500).json({ message: 'Internal Server Error' });
+//         }
+
+//         return res.json(results);
+//     });
+// });
 
 
 export default router;
