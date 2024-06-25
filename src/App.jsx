@@ -17,7 +17,6 @@ import DetailHistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelat
 import ManajemenKinerja from './AdminPage/components/pages/Manajemen-Kinerja/ManajemenKinerja';
 import GrafikManajemenKinerja from './AdminPage/components/pages/Manajemen-Kinerja/Grafik-Kinerja/GrafikManajemenKinerja';
 
-
 import LayoutUser from "./UserPage/components/content/LayoutUser";
 import ProfilEdit from "./UserPage/components/pages/ProfilEdit";
 import HistoriPresensi from './UserPage/components/pages/Presensi/HistoriPresensi';
@@ -33,7 +32,6 @@ import { AuthProvider } from './AuthContext';
 import PrivateRoute from './PrivateRoute';
 import DetailPegawai from './AdminPage/components/pages/Manajemen-Pegawai/DetailPegawai';
 
-
 function App() {
   return (
     <AuthProvider>
@@ -43,7 +41,11 @@ function App() {
           <Route path="/" element={<LoginPage />} />
 
           {/* Admin Page */}
-          <Route path="/AdminPage" element={<PrivateRoute allowedEmail={['admin@gmail.com']}><Layout /></PrivateRoute>}>
+          <Route path="/AdminPage" element={
+            <PrivateRoute allowedUserTypes={['admin@gmail.com']}>
+              <Layout />
+            </PrivateRoute>
+          }>
             <Route index element={<Dashboard />} />
             <Route path="/AdminPage/manajemen_pegawai" element={<ManajemenPegawai />} />
             <Route path="/AdminPage/tambah_data_pegawai" element={<TambahDataPegawai />} />
@@ -53,15 +55,19 @@ function App() {
             <Route path="/AdminPage/manajemen_presensi" element={<ManajemenPresensi />} />
             <Route path="/AdminPage/histori_pelatihan" element={<HistoryPelatihan />} />
             <Route path="/AdminPage/jadwal_pelatihan" element={<JadwalPelatihan />} />
-            <Route path="/AdminPage/detail_history_pelatihan" element={<DetailHistoryPelatihan />} />
-            <Route path="/AdminPage/detail_jadwal_pelatihan" element={<DetailJadwalPelatihan />} />
+            <Route path="/AdminPage/detail_history_pelatihan/:id_historipelatihan" element={<DetailHistoryPelatihan />} />
+            <Route path="/AdminPage/detail_jadwal_pelatihan/:id_pelatihan" element={<DetailJadwalPelatihan />} />
             <Route path="/AdminPage/atur_jadwal_pelatihan" element={<TambahJadwalPelatihan />} />
             <Route path="/AdminPage/manajemen_kinerja" element={<ManajemenKinerja />} />
             <Route path="/AdminPage/grafik_kinerja" element={<GrafikManajemenKinerja />} />
           </Route>
 
           {/* User Page */}
-          <Route path="/UserPage" element={<LayoutUser />}>
+          <Route path="/UserPage" element={
+            <PrivateRoute>
+              <LayoutUser />
+            </PrivateRoute>
+          }>
             <Route index element={<ProfilEdit />} />
             <Route path="/UserPage/historipresensi" element={<HistoriPresensi />} />
             <Route path="/UserPage/penggajian" element={<Penggajian />} />

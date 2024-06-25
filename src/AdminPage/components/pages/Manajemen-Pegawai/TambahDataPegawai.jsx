@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import bcrypt from 'bcryptjs';
 
 const TambahDataPegawai = () => {
   const navigate = useNavigate()
@@ -17,6 +17,7 @@ const TambahDataPegawai = () => {
     alamat: '',
     no_telp: '',
     email: '',
+    password: '',
     role: '',
     status_bpjs: '',
     status_kawin: '',
@@ -34,7 +35,16 @@ const TambahDataPegawai = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/data_pegawai/pegawai', formData);
+      // Hash password
+      const salt = bcrypt.genSaltSync(10);
+      const hashedPassword = bcrypt.hashSync(formData.password, salt);
+
+      const formDataWithHashedPassword = {
+        ...formData,
+        password: hashedPassword,
+      };
+
+      const response = await axios.post('http://localhost:5000/api/data_pegawai/pegawai', formDataWithHashedPassword);
       setShowPopup(true);
       setErrorMessage('');
     } catch (error) {
@@ -171,6 +181,21 @@ const TambahDataPegawai = () => {
             </div>
             <div>
               <div className='flex flex-row'>
+                <span className='text-gray-900 text-sm font-medium'>Posisi</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <input
+                type="text"
+                name="role"
+                value={formData.role}
+                onChange={handleInputChange}
+                placeholder="Masukkan posisi"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
+                required
+              />
+            </div>
+            <div>
+              <div className='flex flex-row'>
                 <span className='text-gray-900 text-sm font-medium'>Email</span>
                 <span className='text-red-700'>*</span>
               </div>
@@ -186,16 +211,16 @@ const TambahDataPegawai = () => {
             </div>
             <div>
               <div className='flex flex-row'>
-                <span className='text-gray-900 text-sm font-medium'>Posisi</span>
+                <span className='text-gray-900 text-sm font-medium'>Password</span>
                 <span className='text-red-700'>*</span>
               </div>
               <input
-                type="text"
-                name="role"
-                value={formData.role}
+                type="password"
+                name="password"
+                value={formData.password}
                 onChange={handleInputChange}
-                placeholder="Masukkan posisi"
-                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
+                placeholder="Masukkan password"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 p-2 rounded-md"
                 required
               />
             </div>
@@ -231,7 +256,6 @@ const TambahDataPegawai = () => {
                 <option value="" disabled hidden>Pilih status</option>
                 <option value="Belum Menikah" className='text-black'>Belum Menikah</option>
                 <option value="Menikah" className='text-black'>Menikah</option>
-                <option value="Cerai" className='text-black'>Cerai</option>
               </select>
             </div>
             <div>

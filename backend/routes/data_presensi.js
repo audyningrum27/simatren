@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Data Pegawai di Admin
 router.get('/presensi', (req, res) => {
-    console.log("GET /api/data_presensi/presesnsi");
+    console.log("GET /api/data_presensi/presensi");
     const query = 'SELECT * FROM data_presensi';
     db.query(query, (err, results) => {
         if (err) {

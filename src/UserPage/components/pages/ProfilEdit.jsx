@@ -71,82 +71,182 @@ const ProfilEdit = () => {
         </div>
 
         <div className="flex-1">
-        <h1 className="flex px-6 pt-4 text-xs font-thin">INFORMASI PRIBADI</h1>
+          <h1 className="flex px-6 pt-4 text-xs font-thin">INFORMASI PRIBADI</h1>
           <table className='w-full border-separate px-10 py-3 text-gray-950 text-sm'>
             <tbody>
               {profil.map((data) => (
-              <React.Fragment key={data.id}>
-                <tr>
-                  <td>Nama Lengkap</td>
-                  <td className="p-2">:</td>
-                  <td className="px-2 border border-gray-400 rounded-md">
-                    <input
-                      type="text"
-                      name="nama_lengkap"
-                      value={data.nama_lengkap}
-                      readOnly={!isEditable}
-                      onChange={(e) => handleChange(e, data.id)}
-                      className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Gmail</td>
-                  <td className="p-2">:</td>
-                  <td className="px-2 border border-gray-400 rounded-md">
-                    <input
-                      type="text"
-                      name="gmail"
-                      value={data.gmail}
-                      readOnly={!isEditable}
-                      onChange={(e) => handleChange(e, data.id)}
-                      className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Password</td>
-                  <td className="p-2">:</td>
-                  <td className="px-2 border border-gray-400 rounded-md">
-                    <input
-                      type="text"
-                      name="password"
-                      value={data.password}
-                      readOnly={!isEditable}
-                      onChange={(e) => handleChange(e, data.id)}
-                      className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Tempat, Tanggal Lahir</td>
-                  <td className="p-2">:</td>
-                  <td className="px-2 border border-gray-400 rounded-md">
-                    <input
-                      type="text"
-                      name="ttl"
-                      value={data.ttl}
-                      readOnly={!isEditable}
-                      onChange={(e) => handleChange(e, data.id)}
-                      className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Alamat</td>
-                  <td className="p-2">:</td>
-                  <td className="px-2 border border-gray-400 rounded-md">
-                    <input
-                      type="text"
-                      name="alamat"
-                      value={data.alamat}
-                      readOnly={!isEditable}
-                      onChange={(e) => handleChange(e, data.id)}
-                      className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                    />
-                  </td>
-                </tr>
-              </React.Fragment>
+                <React.Fragment key={data.id}>
+                  <tr>
+                    <td>Nama Lengkap</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="text"
+                        name="nama_lengkap"
+                        value={data.nama_lengkap}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleChange(e, data.id)}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Email</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="email"
+                        name="email"
+                        value={data.gmail}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleChange(e, data.id)}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Password</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="password"
+                        name="password"
+                        value={data.password}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleChange(e, data.id)}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Tempat, Tanggal Lahir</td>
+                    <td className="p-2">:</td>
+                    <td className="flex items-center gap-2">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          name="tempat_lahir"
+                          // value={pegawai.tempat_lahir}
+                          readOnly={!isEditable}
+                          onChange={handleChange}
+                          className={`w-full border border-gray-400 rounded-md px-2 py-2 bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                        />
+                      </div>
+                      <div className="flex-none w-1/3">
+                        <input
+                          type="date"
+                          name="tanggal_lahir"
+                          // value={pegawai.tanggal_lahir}
+                          readOnly={!isEditable}
+                          onChange={handleChange}
+                          className={`w-full border border-gray-400 rounded-md px-2 py-2 bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Alamat</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="text"
+                        name="alamat"
+                        value={data.alamat}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleChange(e, data.id)}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Nomor Telepon</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="text"
+                        name="no_telp"
+                        // value={data.alamat}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleChange(e, data.id)}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Posisi</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="text"
+                        name="role"
+                        // value={data.alamat}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleChange(e, data.id)}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Status BPJS</td>
+                    <td className="p-2">:</td>
+                    <td className="px-1 border border-gray-400 rounded-md">
+                      <select
+                        name="status_bpjs"
+                        // value={pegawai.status_bpjs}
+                        disabled={!isEditable}
+                        onChange={handleChange}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      >
+                        <option value="Aktif">Aktif</option>
+                        <option value="Nonaktif">Nonaktif</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Status Perkawinan</td>
+                    <td className="p-2">:</td>
+                    <td className="px-1 border border-gray-400 rounded-md">
+                      <select
+                        name="status_kawin"
+                        // value={pegawai.status_bpjs}
+                        disabled={!isEditable}
+                        onChange={handleChange}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      >
+                        <option value="Menikah">Menikah</option>
+                        <option value="Belum Menikah">Belum Menikah</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Data Anggota Keluarga</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="text"
+                        name="anggota_keluarga"
+                        // value={data.alamat}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleChange(e, data.id)}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Jumlah Tanggungan</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="number"
+                        name="jumlah_tanggungan"
+                        // value={data.alamat}
+                        readOnly={!isEditable}
+                        onChange={(e) => handleChange(e, data.id)}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                </React.Fragment>
               ))}
             </tbody>
           </table>

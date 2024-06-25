@@ -21,12 +21,16 @@ const LoginPage = () => {
       console.log('Login successful:', response.data);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('email', response.data.email);
+      localStorage.setItem('nama_pegawai', response.data.nama_pegawai);
+      localStorage.setItem('nip', response.data.nip);
 
-      login(response.data.email);
+      login(response.data.email, response.data.nama_pegawai, response.data.nip);
 
       if (response.data.email === 'admin@gmail.com') {
+        console.log('Navigating to /AdminPage');
         navigate('/AdminPage');
       } else {
+        console.log('Navigating to /UserPage');
         navigate('/UserPage');
       }
     } catch (error) {
