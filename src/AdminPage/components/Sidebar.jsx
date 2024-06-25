@@ -68,7 +68,7 @@ export default function Sidebar({ isOpen }) {
 
       <hr className="p-1 border-t border-green-700 mx-5" />
 
-      <div className="flex-initial w-64 px-5">
+      <div className="flex-initial w-64 px-2">
         {DASHBOARD_SIDEBAR_BOTTOM_LINKS.map((item) => (
           <SidebarLink key={item.key} item={item} />
         ))}

@@ -4,13 +4,13 @@ import db from '../db.js';
 const router = express.Router();
 
 router.post('/pegawai', (req, res) => {
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kawin, anggota_keluarga, jumlah_tanggungan } = req.body;
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kawin, anggota_keluarga, jumlah_tanggungan } = req.body;
     const status_kepegawaian = 'Aktif'; // Default status kepegawaian "Aktif"
     const sql = `
-        INSERT INTO data_pegawai (nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, status_kawin, anggota_keluarga, jumlah_tanggungan)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO data_pegawai (nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, status_kawin, anggota_keluarga, jumlah_tanggungan)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, status_kawin, anggota_keluarga, jumlah_tanggungan];
+    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, status_kawin, anggota_keluarga, jumlah_tanggungan];
     db.query(sql, values, (err, result) => {
         if (err) {
             console.error('Error executing query:', err);

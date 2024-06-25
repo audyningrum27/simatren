@@ -7,9 +7,10 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userType, setUserType] = useState(null);
 
-  const login = (type) => {
+  const login = (email, nama_pegawai, nip) => {
     setIsAuthenticated(true);
-    setUserType(type);
+    setUserType({ email, nama_pegawai , nip });
+    console.log('Login function called:', email);
   };
 
   const logout = () => {

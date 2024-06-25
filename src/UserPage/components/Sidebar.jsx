@@ -8,11 +8,13 @@ import { RiHistoryFill } from "react-icons/ri";
 import { BiQrScan } from "react-icons/bi";
 import classNames from "classnames";
 import { useState } from "react";
+import { useAuth } from "../../AuthContext";
 
 const linkClasses = "flex items-center gap-3 font-semibold px-4 py-3 hover:scale-95 hover:bg-[#98FB98] hover:text-green-900 hover:no-underline active:bg-[#98FB98] rounded-md text-sm";
 
 // eslint-disable-next-line react/prop-types
 export default function Sidebar({ isOpen }) {
+  const { userType } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -30,12 +32,12 @@ export default function Sidebar({ isOpen }) {
           <FaUserCircle className="w-7 h-7" />
         </div>
         <div className="px-5">
-          <p className="text-sm font-bold">S!MATREN</p>
-          <p className="text-[10px] font-thin">NIP. 1737268</p>
+          <p className="text-sm font-bold">{userType?.nama_pegawai || 'S!MATREN'}</p>
+          <p className="text-[10px] font-thin">NIP. {userType?.nip || '1737268'}</p>
         </div>
       </div>
- 
-      <hr className="pt-2 border-t border-white"/>
+
+      <hr className="pt-2 border-t border-white" />
 
       <div>
         <h1 className="flex py-2 px-6 text-xs font-thin">MENU</h1>
@@ -67,11 +69,11 @@ export default function Sidebar({ isOpen }) {
         ))}
       </div>
 
-      <hr className="p-1 border-t border-green-700 mx-5"/>
-  
+      <hr className="p-1 border-t border-green-700 mx-5" />
+
       <div className="flex-initial w-64 px-5">
         {DASHBOARD_SIDEBAR_BOTTOM_LINKS.map((item) => (
-          <SidebarLink key={item.key} item={item}/>
+          <SidebarLink key={item.key} item={item} />
         ))}
       </div>
     </div>
@@ -95,7 +97,7 @@ function DropdownLink({ to, label, icon }) {
   const { pathname } = useLocation();
   return (
     <Link to={to} className={classNames(
-      pathname === to ? "bg-[#98FB98] text-green-900" : "bg-green-900 text-white", 
+      pathname === to ? "bg-[#98FB98] text-green-900" : "bg-green-900 text-white",
       linkClasses)}>
       <span className="text-xl">{icon}</span>
       {label}

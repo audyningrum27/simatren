@@ -19,7 +19,7 @@ router.post('/login', (req, res) => {
         query = 'SELECT * FROM admin WHERE email = ?';
         queryParams = [email];
     } else {
-        query = 'SELECT * FROM users WHERE email = ?';
+        query = 'SELECT * FROM data_pegawai WHERE email = ?';
         queryParams = [email];
     }
 
@@ -41,7 +41,12 @@ router.post('/login', (req, res) => {
 
             const token = jwt.sign({ id: user.id, email: user.email }, 'secretkey', { expiresIn: '1h' });
 
-            return res.json({ token, email: user.email });
+            return res.json({
+                token,
+                email: user.email,
+                nama_pegawai: user.nama_pegawai,
+                nip: user.nip
+            });
         });
     });
 });
