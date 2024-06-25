@@ -1,14 +1,11 @@
-// import { MdOutlineCalendarMonth } from "react-icons/md";
 import React, { useEffect, useState } from 'react';
 
-const DashboardStatsGrid = () => {
+const DashboardStatsGrid = ({ selectedDate }) => {
   const [activeCount, setActiveCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
   const [activePercentage, setActivePercentage] = useState(0);
-
   const [presensiCount, setPresensiCount] = useState(0);
   const [presensiPercentage, setPresensiPercentage] = useState(0);
-
   const [cutiCount, setCutiCount] = useState(0);
   const [cutiPercentage, setCutiPercentage] = useState(0);
 
@@ -27,6 +24,10 @@ const DashboardStatsGrid = () => {
         const dataTotal = await responseTotal.json();
         const dataCuti = await responseCuti.json();
 
+        console.log("Data Active:", dataActive);
+        console.log("Data Total:", dataTotal);
+        console.log("Data Cuti:", dataCuti);
+
         setActiveCount(dataActive.active_count);
         setTotalCount(dataTotal.total_count);
         setCutiCount(dataCuti.cuti_count);
@@ -43,13 +44,19 @@ const DashboardStatsGrid = () => {
 
     const fetchPresensiData = async () => {
       try {
-        const responsePresensi = await fetch('http://localhost:5000/api/data_presensi/presensi/count');
+        const formattedDate = selectedDate.toISOString().split('T')[0]; // Format tanggal
+        const responsePresensi = await fetch(`http://localhost:5000/api/data_presensi/presensi/count?date=${formattedDate}`);
+        
         if (!responsePresensi.ok) {
           throw new Error('Failed to fetch presensi data');
         }
+        
         const dataPresensi = await responsePresensi.json();
+        
+        console.log("Data Presensi:", dataPresensi);
+
         setPresensiCount(dataPresensi.presensi_count);
-        setPresensiPercentage(dataPresensi.presensi_percentage); // Persentase sudah dalam format yang sesuai
+        setPresensiPercentage(dataPresensi.presensi_percentage);
       } catch (error) {
         console.error('Error fetching presensi data:', error);
       }
@@ -57,7 +64,7 @@ const DashboardStatsGrid = () => {
 
     fetchCounts();
     fetchPresensiData();
-  }, []);
+  }, [selectedDate]);
 
   function formatPercentage(value) {
     return (value % 1 === 0) ? value.toFixed(0) : value.toFixed(2);
@@ -65,13 +72,8 @@ const DashboardStatsGrid = () => {
 
   return (
     <div className="w-fit">
-      {/* Tambahkan Backend supaya dapat memilih tanggal
-      <div className="w-64 px-3 py-2">
-        <div className="text-sm rounded-sm border border-gray-400 flex justify-center items-center ">20 Feb 2024 - 26 Feb 2024 <MdOutlineCalendarMonth /> </div>
-      </div> */}
-
       <div className="flex flex-col md:flex-row gap-5 py-2 px-3">
-      <BoxWrapper>
+        <BoxWrapper>
           <div>
             <h3 className="text-sm font-semibold">Pegawai Aktif</h3>
             <h1 className="text-2xl font-bold">{activeCount} <span className="text-sm font-normal">/ {totalCount} Orang</span></h1>
@@ -109,7 +111,7 @@ const DashboardStatsGrid = () => {
         </BoxWrapper>
       </div>
     </div>
-  )
+  );
 }
 
 export default DashboardStatsGrid;
@@ -117,6 +119,8 @@ export default DashboardStatsGrid;
 // eslint-disable-next-line react/prop-types
 function BoxWrapper({ children }) {
   return (
-    <div className="shadow-md shadow-gray-400 rounded-sm p-4 flex-1 border border-gray-200 flex items-center">{children}</div>
-  )
+    <div className="shadow-md shadow-gray-400 rounded-sm p-4 flex-1 border border-gray-200 flex items-center">
+      {children}
+    </div>
+  );
 }

@@ -19,11 +19,17 @@ router.get('/presensi', (req, res) => {
 
 // Dashboard
 router.get('/presensi/count', (req, res) => {
-    const queryPresensi = 'SELECT COUNT(*) AS presensi_count FROM data_presensi';
+    const date = req.query.date; // Mengambil parameter tanggal dari query string
+    let queryPresensi;
+    if (date) {
+        queryPresensi = 'SELECT COUNT(*) AS presensi_count FROM data_presensi WHERE DATE(tanggal_presensi) = ?';
+    } else {
+        queryPresensi = 'SELECT COUNT(*) AS presensi_count FROM data_presensi';
+    }
     const queryPegawaiAktif = 'SELECT COUNT(*) AS active_count FROM data_pegawai WHERE status_kepegawaian = "aktif"';
 
     // Mendapatkan jumlah presensi
-    db.query(queryPresensi, (errPresensi, resultsPresensi) => {
+    db.query(queryPresensi, [date], (errPresensi, resultsPresensi) => {
         if (errPresensi) {
             console.error('Error executing presensi query:', errPresensi);
             return res.status(500).json({ error: 'Internal server error' });
@@ -44,15 +50,15 @@ router.get('/presensi/count', (req, res) => {
 
             let formattedPercentage;
             if (Number.isInteger(presensiPercentage)) {
-            formattedPercentage = presensiPercentage.toFixed(0);
+                formattedPercentage = presensiPercentage.toFixed(0);
             } else {
-            formattedPercentage = presensiPercentage.toFixed(2);
+                formattedPercentage = presensiPercentage.toFixed(2);
             }
             
             const responseData = {
-            presensi_count: presensiCount,
-            total_active_pegawai: activeCount,
-            presensi_percentage: formattedPercentage,
+                presensi_count: presensiCount,
+                total_active_pegawai: activeCount,
+                presensi_percentage: formattedPercentage,
             };
 
             res.json(responseData);
@@ -61,25 +67,6 @@ router.get('/presensi/count', (req, res) => {
 });
 
 // // Endpoint untuk mendapatkan jumlah presensi per tanggal
-// router.get('/presensi/daily', (req, res) => {
-//     const query = `
-//         SELECT 
-//             DATE(tanggal_presensi) as date, 
-//             COUNT(*) as Hadir
-//         FROM data_presensi 
-//         GROUP BY DATE(tanggal_presensi)
-//         ORDER BY DATE(tanggal_presensi)`;
-
-//     db.query(query, (err, results) => {
-//         if (err) {
-//             console.error('Error executing query:', err);
-//             return res.status(500).json({ message: 'Internal Server Error' });
-//         }
-//         res.json(results);
-//     });
-// });
-
-// data_presensi.js (atau file terkait)
 router.get('/presensi/daily', (req, res) => {
     const query = `
         SELECT 
@@ -98,24 +85,5 @@ router.get('/presensi/daily', (req, res) => {
         res.json(results);
     });
 });
-
-
-
-// router.get('/presensi/dates', (req, res) => {
-//     const query = `
-//         SELECT DISTINCT DATE_FORMAT(tanggal_presensi, '%Y-%m-%d') AS date
-//         FROM data_presensi
-//         ORDER BY date;
-//     `;
-//     db.query(query, (err, results) => {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).json({ message: 'Internal Server Error' });
-//         }
-
-//         return res.json(results);
-//     });
-// });
-
 
 export default router;

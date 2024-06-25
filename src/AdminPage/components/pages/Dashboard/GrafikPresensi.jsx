@@ -11,13 +11,14 @@ import {
   Bar 
 } from "recharts";
 
-const GrafikPresensi = () => {
+const GrafikPresensi = ({ selectedDate }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/data_presensi/presensi/daily');
+        const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
+        const response = await fetch(`http://localhost:5000/api/data_presensi/presensi/daily?date=${formattedDate}`);
 
         if (!response.ok) {
           throw new Error('Failed to fetch data');
@@ -26,7 +27,7 @@ const GrafikPresensi = () => {
         const presensiData = await response.json();
         console.log('Presensi Data:', presensiData); // Log data yang diterima
 
-        const today = new Date();
+        const today = new Date(selectedDate);
         const startDate = new Date(today.setDate(today.getDate() - today.getDay() + 1)); // Start of the week (Monday)
         const endDate = new Date(today.setDate(startDate.getDate() + 4)); // End of the week (Friday)
 
@@ -58,7 +59,7 @@ const GrafikPresensi = () => {
     };
 
     fetchData();
-  }, []);
+  }, [selectedDate]);
 
   const createWeeklyDateRange = (startDate, endDate) => {
     const dates = [];
