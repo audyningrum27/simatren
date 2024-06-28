@@ -68,6 +68,7 @@ function JadwalPelatihan() {
             <thead className="sticky top-0 bg-white">
               <tr className="border-b-[1.5px]">
                 <td className='font-bold py-4'>No.</td>
+                <td className='font-bold py-4'>Nama Penyelenggara</td>
                 <td className='font-bold py-4'>Nama Kegiatan</td>
                 <td className='font-bold py-4'>Tanggal Mulai</td>
                 <td className='font-bold py-4'>Status</td>
@@ -79,6 +80,7 @@ function JadwalPelatihan() {
               {filteredPelatihan.map((data, index) => (
                 <tr key={index}>
                   <td className="p-1 pt-2">{index + 1}</td>
+                  <td>{data.nama_penyelenggara}</td>
                   <td>{data.nama_kegiatan}</td>
                   <td>{data.tanggal_mulai}</td>
                   <td>{getPegawaiStatus(data.status)}</td>

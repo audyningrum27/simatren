@@ -94,7 +94,7 @@ const TambahDataPegawai = () => {
                 <span className='text-red-700'>*</span>
               </div>
               <input
-                type="text"
+                type="number"
                 name="nip"
                 value={formData.nip}
                 onChange={handleInputChange}
@@ -170,7 +170,7 @@ const TambahDataPegawai = () => {
                 <span className='text-red-700'>*</span>
               </div>
               <input
-                type="text"
+                type="number"
                 name="no_telp"
                 value={formData.no_telp}
                 onChange={handleInputChange}
@@ -184,15 +184,18 @@ const TambahDataPegawai = () => {
                 <span className='text-gray-900 text-sm font-medium'>Posisi</span>
                 <span className='text-red-700'>*</span>
               </div>
-              <input
-                type="text"
+              <select
                 name="role"
                 value={formData.role}
                 onChange={handleInputChange}
-                placeholder="Masukkan posisi"
-                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
+                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-1 rounded-md ${formData.role ? 'text-black' : 'text-gray-400'}`}
                 required
-              />
+              >
+                <option value="" disabled hidden>Pilih Posisi</option>
+                <option value="guru" className='text-black'>Guru</option>
+                <option value="tpa" className='text-black'>TPA</option>
+                <option value="non_tpa" className='text-black'>Non TPA</option>
+              </select>
             </div>
             <div>
               <div className='flex flex-row'>
@@ -268,7 +271,7 @@ const TambahDataPegawai = () => {
                 name="anggota_keluarga"
                 value={formData.anggota_keluarga}
                 onChange={handleInputChange}
-                placeholder="Masukkan data keluarga"
+                placeholder="Masukkan data keluarga (Cth : Andi, Boby, Cecil)"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
               />

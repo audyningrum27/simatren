@@ -1,10 +1,15 @@
 import moment from 'moment-timezone';
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch } from 'react-icons/hi'
+import { HiOutlineSearch } from 'react-icons/hi';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { MdOutlineCalendarMonth } from 'react-icons/md';
 // import { HiChevronRight } from "react-icons/hi2";
 
 function ManajemenPresensi() {
   const [dataPresensi, setDataPresensi] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchDataPresensi();
@@ -24,20 +29,30 @@ function ManajemenPresensi() {
     }
   };
 
-  const [searchTerm, setSearchTerm] = useState('');
-
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredPresensi = dataPresensi.filter((data) =>
-    data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nip.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredPresensi = dataPresensi.filter((data) => {
+    const dateMatches = moment(data.tanggal_presensi, 'DD/MM/YYYY').isSame(selectedDate, 'day');
+    const searchMatches = data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) || data.nip.toLowerCase().includes(searchTerm.toLowerCase());
+    return dateMatches && searchMatches;
+  });
 
   return (
     <div>
       <p className="text-xl font-bold px-5">Manajemen Presensi</p>
+
+      <div className="w-36 pt-5 py-3">
+        <div className="text-sm rounded-sm border border-gray-400 flex justify-between items-center">
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date) => setSelectedDate(date)}
+            dateFormat="dd MMM yyyy"
+            customInput={<CustomInput />}
+          />
+        </div>
+      </div>
 
       <div>
         <div className="relative py-4 w-full justify-between flex flex-row">
@@ -108,5 +123,16 @@ function ManajemenPresensi() {
 //     <button className="bg-neutral-100 rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold hover:bg-green-900 active:bg-green-900 focus:outline-none focus:bg focus:bg-green-900">{children}</button>
 //     )
 // }
+
+const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
+  <button
+    className="text-sm flex-grow flex items-center justify-between px-2 py-1"
+    onClick={onClick}
+    ref={ref}
+  >
+    <span>{value || "Select Date"}</span>
+    <MdOutlineCalendarMonth className="ml-2" />
+  </button>
+));
 
 export default ManajemenPresensi;

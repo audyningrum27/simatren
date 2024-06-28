@@ -61,6 +61,11 @@ export default function DetailHistoryPelatihan() {
                     <td className="px-2 border border-gray-400 rounded-md">{pelatihan.tanggal_selesai}</td>
                   </tr>
                   <tr>
+                    <td>Nama Penyelenggara</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">{pelatihan.nama_penyelenggara}</td>
+                  </tr>
+                  <tr>
                     <td>Nama Kegiatan</td>
                     <td className="p-2">:</td>
                     <td className="px-2 border border-gray-400 rounded-md">{pelatihan.nama_kegiatan}</td>

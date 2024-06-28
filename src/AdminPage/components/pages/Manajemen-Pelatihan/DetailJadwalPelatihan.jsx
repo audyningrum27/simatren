@@ -41,6 +41,11 @@ const DetailJadwalPelatihan = () => {
               <table className='w-full border-separate p-5 text-gray-950 text-sm'>
                 <tbody>
                   <tr>
+                    <td>Nama Penyelenggara</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">{pelatihan.nama_kegiatan}</td>
+                  </tr>  
+                  <tr>
                     <td>Nama Kegiatan</td>
                     <td className="p-2">:</td>
                     <td className="px-2 border border-gray-400 rounded-md">{pelatihan.nama_kegiatan}</td>

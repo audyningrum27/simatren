@@ -7,6 +7,7 @@ const TambahJadwalPelatihan = () => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [formData, setFormData] = useState({
+    nama_penyelenggara: '',
     nama_kegiatan: '',
     tanggal_mulai: '',
     tanggal_selesai: '',
@@ -26,7 +27,7 @@ const TambahJadwalPelatihan = () => {
       const response = await axios.post('http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan', formData);
       setShowPopup(true);
     } catch (error) {
-      console.error('Error saving data:', error);
+      console.error('Error saving data:', error.response ? error.response.data : error.message);
     }
   };
 
@@ -48,6 +49,21 @@ const TambahJadwalPelatihan = () => {
       <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-between'>
         <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
           <div className="relative w-full gap-2 grid grid-cols-1 md:grid-cols-2">
+          <div>
+              <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Nama Penyelenggara</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <input
+                type="text"
+                name="nama_penyelenggara"
+                value={formData.nama_penyelenggara}
+                onChange={handleInputChange}
+                placeholder="Masukkan nama penyelenggara"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
+                required
+              />
+            </div>
             <div>
               <div className='flex flex-row mb-2'>
                 <span className='text-gray-900 text-sm font-medium'>Nama Kegiatan</span>

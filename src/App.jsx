@@ -42,7 +42,7 @@ function App() {
 
           {/* Admin Page */}
           <Route path="/AdminPage" element={
-            <PrivateRoute allowedUserTypes={['admin@gmail.com']}>
+            <PrivateRoute>
               <Layout />
             </PrivateRoute>
           }>

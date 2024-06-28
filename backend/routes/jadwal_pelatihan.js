@@ -4,13 +4,13 @@ import db from '../db.js';
 const router = express.Router();
 
 router.post('/jadwalpelatihan', (req, res) => {
-    const { nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan } = req.body;
-    const status = 'Belum Dimulai'; // Default status "Belum Dimulai"
+    const { nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan } = req.body;
+    const status = 'Belum Dimulai'; // Contoh nilai default
     const sql = `
-        INSERT INTO jadwal_pelatihan (nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO jadwal_pelatihan (nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status)
+        VALUES (?, ?, ?, ?, ?, ?)
     `;
-    const values = [nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status];
+    const values = [nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status];
     db.query(sql, values, (err, result) => {
         if (err) {
             console.error('Error executing query:', err);

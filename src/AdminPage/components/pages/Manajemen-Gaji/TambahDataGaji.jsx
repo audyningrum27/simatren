@@ -59,7 +59,7 @@ const TambahDataGaji = () => {
                   <td className="p-2">:</td>
                   <td className="p-2">
                     <input
-                      type="text"
+                      type="number"
                       name="nip"
                       id="nip"
                       value={nip}

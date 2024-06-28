@@ -148,7 +148,7 @@ export default function DetailPegawai() {
                                         <td className="p-2">:</td>
                                         <td className="px-2 border border-gray-400 rounded-md">
                                             <input
-                                                type="text"
+                                                type="number"
                                                 name="nip"
                                                 value={pegawai.nip}
                                                 readOnly={!isEditable}
@@ -218,7 +218,7 @@ export default function DetailPegawai() {
                                         <td className="p-2">:</td>
                                         <td className="px-2 border border-gray-400 rounded-md">
                                             <input
-                                                type="text"
+                                                type="number"
                                                 name="no_telp"
                                                 value={pegawai.no_telp || ''}
                                                 readOnly={!isEditable}
@@ -245,14 +245,17 @@ export default function DetailPegawai() {
                                         <td>Posisi</td>
                                         <td className="p-2">:</td>
                                         <td className="px-2 border border-gray-400 rounded-md">
-                                            <input
-                                                type="text"
+                                        <select
                                                 name="role"
-                                                value={pegawai.role || ''}
-                                                readOnly={!isEditable}
+                                                value={pegawai.role}
+                                                disabled={!isEditable}
                                                 onChange={handleChange}
                                                 className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                                            />
+                                            >
+                                                <option value="guru">Guru</option>
+                                                <option value="tpa">TPA</option>
+                                                <option value="non_tpa">Non TPA</option>
+                                            </select>
                                         </td>
                                     </tr>
                                     <tr>
@@ -284,7 +287,6 @@ export default function DetailPegawai() {
                                             >
                                                 <option value="Belum Menikah">Belum Menikah</option>
                                                 <option value="Menikah">Menikah</option>
-                                                <option value="Cerai">Cerai</option>
                                             </select>
                                         </td>
                                     </tr>

@@ -7,11 +7,13 @@ import { RiHistoryFill, RiCalendarScheduleLine } from "react-icons/ri";
 import { DASHBOARD_SIDEBAR_BOTTOM_LINKS, DASHBOARD_SIDEBAR_KINERJA, DASHBOARD_SIDEBAR_LINKS } from "./content/Navigation";
 import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames";
+import { useAuth } from "../../AuthContext";
 
 const linkClasses = "flex items-center gap-3 font-semibold px-4 py-3 hover:scale-95 hover:bg-[#98FB98] hover:text-green-900 hover:no-underline active:bg-[#98FB98] rounded-md text-sm";
 
 // eslint-disable-next-line react/prop-types
 export default function Sidebar({ isOpen }) {
+  const { userType } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -29,7 +31,7 @@ export default function Sidebar({ isOpen }) {
           <FaUserCircle className="w-7 h-7" />
         </div>
         <div className="px-5">
-          <p className="text-sm font-bold">S!MATREN</p>
+          <p className="text-sm font-bold">{userType?.nama_pegawai || 'S!MATREN'}</p>
           <p className="text-[10px] font-thin">Admin</p>
         </div>
       </div>
