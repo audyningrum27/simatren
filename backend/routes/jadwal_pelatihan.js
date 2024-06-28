@@ -1,11 +1,24 @@
 import express from 'express';
 import db from '../db.js';
+import moment from 'moment';
 
 const router = express.Router();
 
+// Function to determine status based on dates
+const determineStatus = (tanggal_mulai, tanggal_selesai) => {
+    const now = moment();
+    if (now.isBefore(tanggal_mulai)) {
+        return 'Belum Dimulai';
+    } else if (now.isBetween(tanggal_mulai, tanggal_selesai)) {
+        return 'Proses';
+    } else {
+        return 'Selesai';
+    }
+};
+
 router.post('/jadwalpelatihan', (req, res) => {
     const { nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan } = req.body;
-    const status = 'Belum Dimulai'; // Contoh nilai default
+    const status = determineStatus(moment(tanggal_mulai), moment(tanggal_selesai));
     const sql = `
         INSERT INTO jadwal_pelatihan (nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -29,8 +42,13 @@ router.get('/jadwalpelatihan', (req, res) => {
             console.error(err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
+        
+        const updatedResults = results.map((item) => ({
+            ...item,
+            status: determineStatus(moment(item.tanggal_mulai), moment(item.tanggal_selesai))
+        }));
 
-        return res.json(results);
+        return res.json(updatedResults);
     });
 });
 
@@ -43,7 +61,11 @@ router.get('/jadwalpelatihan/:id_pelatihan', (req, res) => {
             res.status(500).json({ error: 'Internal server error' });
         } else {
             if (result.length > 0) {
-                res.json(result[0]);
+                const updatedResult = {
+                    ...result[0],
+                    status: determineStatus(moment(result[0].tanggal_mulai), moment(result[0].tanggal_selesai))
+                };
+                res.json(updatedResult);
             } else {
                 res.status(404).json({ error: 'Pelatihan not found' });
             }

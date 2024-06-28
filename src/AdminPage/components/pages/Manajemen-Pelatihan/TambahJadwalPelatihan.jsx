@@ -27,7 +27,7 @@ const TambahJadwalPelatihan = () => {
       const response = await axios.post('http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan', formData);
       setShowPopup(true);
     } catch (error) {
-      console.error('Error saving data:', error.response ? error.response.data : error.message);
+      console.error('Error saving data:', error);
     }
   };
 

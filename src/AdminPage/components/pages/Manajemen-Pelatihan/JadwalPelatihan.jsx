@@ -96,25 +96,8 @@ function JadwalPelatihan() {
           </table>
         </div>
       </div>
-
-      {/* <div className='py-2 justify-end flex flex-row items-center'>
-        <button><HiChevronLeft fontSize={18} className='mr-2' /></button>
-          <div className='flex gap-4'>
-            <BoxWrapper>1</BoxWrapper>
-            <BoxWrapper>2</BoxWrapper>
-            <BoxWrapper>..</BoxWrapper>
-            <BoxWrapper>8</BoxWrapper>
-          </div>
-        <button><HiChevronRight fontSize={18} className='ml-2' /></button>
-      </div> */}
-
     </div>
-  )
+  );
 }
 
-// eslint-disable-next-line react/prop-types
-// function BoxWrapper({ children }) {
-//   return <button className="bg-neutral-100 rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold hover:bg-green-900 active:bg-green-900 focus:outline-none focus:bg focus:bg-green-900">{children}</button>
-// }
-
-export default JadwalPelatihan
+export default JadwalPelatihan;
