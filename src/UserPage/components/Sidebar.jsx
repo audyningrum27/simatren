@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import React, { useEffect, useState } from 'react';
 import { FaUserCircle } from "react-icons/fa";
 import { DASHBOARD_SIDEBAR_BOTTOM_LINKS, DASHBOARD_SIDEBAR_LINKS, DASHBOARD_SIDEBAR_TOP_LINKS } from "./content/Navigation";
 import { Link, useLocation } from "react-router-dom";
@@ -7,8 +8,9 @@ import { HiOutlineUserGroup } from "react-icons/hi2";
 import { RiHistoryFill } from "react-icons/ri";
 import { BiQrScan } from "react-icons/bi";
 import classNames from "classnames";
-import { useState } from "react";
 import { useAuth } from "../../AuthContext";
+import axios from 'axios';
+
 
 const linkClasses = "flex items-center gap-3 font-semibold px-4 py-3 hover:scale-95 hover:bg-[#98FB98] hover:text-green-900 hover:no-underline active:bg-[#98FB98] rounded-md text-sm";
 
@@ -16,6 +18,29 @@ const linkClasses = "flex items-center gap-3 font-semibold px-4 py-3 hover:scale
 export default function Sidebar({ isOpen }) {
   const { userType } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [profil, setProfil] = useState({
+    foto_profil: ''
+  });
+
+  const fetchProfil = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const id_pegawai = localStorage.getItem('id_pegawai');
+
+      const response = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${id_pegawai}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setProfil(response.data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProfil();
+  }, []);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -28,12 +53,20 @@ export default function Sidebar({ isOpen }) {
       </div>
 
       <div className="flex flex-row py-3 px-5 pt-2 border-t border-white">
-        <div className="py-1">
-          <FaUserCircle className="w-7 h-7" />
+        <div className="flex flex-col justify-center items-center rounded-full mt-1">
+          {profil.foto_profil ? (
+            <img
+              src={`data:image/${profil.foto_profil.type};base64,${profil.foto_profil.data}`}
+              alt="Foto Profil"
+              className="w-8 h-8 rounded-full"
+            />
+          ) : (
+            <FaUserCircle className="w-8 h-8" />
+          )}
         </div>
         <div className="px-5">
-          <p className="text-sm font-bold">{userType?.nama_pegawai || 'S!MATREN'}</p>
-          <p className="text-[10px] font-thin">NIP. {userType?.nip || '1737268'}</p>
+          <p className="text-sm font-bold">{profil.nama_pegawai || 'S!MATREN'}</p>
+          <p className="text-[10px] font-thin">NIP. {profil.nip || '1737268'}</p>
         </div>
       </div>
 

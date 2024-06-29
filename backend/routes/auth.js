@@ -45,7 +45,8 @@ router.post('/login', (req, res) => {
                 token,
                 email: user.email,
                 nama_pegawai: user.nama_pegawai,
-                nip: user.nip
+                nip: user.nip,
+                id_pegawai: user.id_pegawai
             });
         });
     });
