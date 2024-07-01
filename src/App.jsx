@@ -16,6 +16,7 @@ import DetailJadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelati
 import DetailHistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/DetailHistoryPelatihan';
 import ManajemenKinerja from './AdminPage/components/pages/Manajemen-Kinerja/ManajemenKinerja';
 import GrafikManajemenKinerja from './AdminPage/components/pages/Manajemen-Kinerja/Grafik-Kinerja/GrafikManajemenKinerja';
+import ManajemenCuti from './AdminPage/components/pages/Manajemen-Cuti/ManajemenCuti';
 
 import LayoutUser from "./UserPage/components/content/LayoutUser";
 import ProfilEdit from "./UserPage/components/pages/ProfilEdit";
@@ -60,6 +61,7 @@ function App() {
             <Route path="/AdminPage/atur_jadwal_pelatihan" element={<TambahJadwalPelatihan />} />
             <Route path="/AdminPage/manajemen_kinerja" element={<ManajemenKinerja />} />
             <Route path="/AdminPage/grafik_kinerja" element={<GrafikManajemenKinerja />} />
+            <Route path="/AdminPage/manajemen_cuti" element={<ManajemenCuti />} />
           </Route>
 
           {/* User Page */}
