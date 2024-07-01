@@ -1,150 +1,103 @@
+import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi';
 import { IoDownloadOutline } from "react-icons/io5";
-import { getStatus } from "../utils/status";
+import moment from 'moment-timezone';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-
-const dataGaji = [
-  {
-    id: '1',
-    nomor: '1',
-    bulan: 'Agustus',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '2',
-    nomor: '2',
-    bulan: 'September',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '3',
-    nomor: '3',
-    bulan: 'Oktober',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '4',
-    nomor: '4',
-    bulan: 'November',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '5',
-    nomor: '5',
-    bulan: 'Desember',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '6',
-    nomor: '6',
-    bulan: 'Januari',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '7',
-    nomor: '7',
-    bulan: 'Februari',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '8',
-    nomor: '8',
-    bulan: 'Maret',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '9',
-    nomor: '9',
-    bulan: 'April',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  },
-  {
-    id: '10',
-    nomor: '10',
-    bulan: 'Mei',
-    gaji: 'Rp 5.000.000',
-    tunjangan: 'Rp 5.000.000',
-    potongan: 'Rp 5.000.000',
-    total: 'Rp 5.000.000',
-    status_gaji: 'Lunas',
-    action: 'Download Slip'
-  }
-];
+import axios from 'axios';
+import { getStatus } from '../utils/status';
+import { formatCurrency } from '../utils/formatCurrency';
+import { formatMonth, formatDate } from '../utils/formatDate';
 
 function Penggajian() {
+  const [dataGaji, setDataGaji] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchDataGaji();
+  }, []);
+
+  const fetchDataGaji = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const id_pegawai = localStorage.getItem('id_pegawai');
+      if (!id_pegawai) {
+        console.error('id_pegawai is undefined');
+        return;
+      }
+      const response = await axios.get(`http://localhost:5000/api/data_gaji/gaji/${id_pegawai}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data = response.data.map(item => ({
+        ...item,
+        bulan_gaji_formatted: formatMonth(item.bulan_gaji),
+        bulan_gaji_date: formatDate(item.bulan_gaji)
+        // bulan_gaji: moment.tz(item.bulan_gaji, 'Asia/Jakarta').format('DD/MM/YYYY')
+      }));
+      setDataGaji(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredGaji = dataGaji.filter((data) =>
+    data.bulan_gaji_formatted.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const downloadPDF = (id) => {
-    const rowData = dataGaji.find(row => row.id === id);
+    const rowData = dataGaji.find(row => row.id_gaji === id);
     if (!rowData) return;
 
-    const doc = new jsPDF();
-    doc.text(`Slip Gaji - ${rowData.bulan}`, 14, 16);
-
-    const tableColumn = ["No.", "Bulan", "Gaji", "Tunjangan", "Potongan", "Total", "Status"];
-    const tableRows = [
-      [
-        rowData.nomor,
-        rowData.bulan,
-        rowData.gaji,
-        rowData.tunjangan,
-        rowData.potongan,
-        rowData.total,
-        rowData.status_gaji
-      ]
-    ];
-
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-      startY: 20,
+    const doc = new jsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: [100, 150]
     });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    doc.setFont('Courier');
 
-    doc.save(`Data Gaji_${rowData.id}.pdf`);
+    // Header
+    doc.setFontSize(14);
+    doc.text(`Slip Gaji`, pageWidth / 2, 20, { align: 'center' });
+
+    doc.setFontSize(10);
+    doc.text(`Bulan: ${rowData.bulan_gaji_formatted}`, 14, 30);
+    doc.text(`Tanggal: ${rowData.bulan_gaji_date}`, 14, 40);
+
+    // Body
+    doc.setFontSize(10);
+    let yPos = 50;
+    const lineHeight = 10;
+    const labelXPos = 14;
+    const colonXPos = 50;
+    const valueXPos = 55;
+
+    const addTextRow = (label, value) => {
+      doc.text(label, labelXPos, yPos);
+      doc.text(':', colonXPos, yPos);
+      doc.text(value, valueXPos, yPos);
+      yPos += lineHeight;
+    };
+
+    addTextRow('Nama Pegawai', rowData.nama_pegawai);
+    addTextRow('NIP', rowData.nip);
+    addTextRow('Gaji Dasar', `${formatCurrency(rowData.gaji_dasar)}`);
+    addTextRow('Tunjangan', `${formatCurrency(rowData.tunjangan)}`);
+    addTextRow('Potongan', `${formatCurrency(rowData.potongan)}`);
+    addTextRow('Total', `${formatCurrency(rowData.total)}`);
+    addTextRow('Status Gaji', rowData.status_gaji);
+
+    // Footer
+    doc.setFontSize(10);
+    doc.text('Terima kasih atas kerja keras Anda!', 14, yPos + 20);
+
+    doc.save(`Slip Gaji_${rowData.bulan_gaji_formatted}.pdf`);
   };
 
   return (
@@ -158,6 +111,8 @@ function Penggajian() {
             type="text"
             placeholder="Search..."
             className="text-sm focus:outline-none active:outline-none bg-gray-200 border border-gray-200 w-full h-10 pl-11 pr-4 rounded-sm"
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
         </div>
 
@@ -168,7 +123,8 @@ function Penggajian() {
                 <tr className="border-b-[1.5px]">
                   <td className='font-bold py-4'>No.</td>
                   <td className='font-bold py-4'>Bulan</td>
-                  <td className='font-bold py-4'>Gaji</td>
+                  <td className='font-bold py-4'>Tanggal</td>
+                  <td className='font-bold py-4'>Gaji Dasar</td>
                   <td className='font-bold py-4'>Tunjangan</td>
                   <td className='font-bold py-4'>Potongan</td>
                   <td className='font-bold py-4'>Total</td>
@@ -177,18 +133,19 @@ function Penggajian() {
                 </tr>
               </thead>
               <tbody>
-                {dataGaji.map((data) => (
-                  <tr key={data.nomor}>
-                    <td className="p-1 pt-2">{data.nomor}</td>
-                    <td>{data.bulan}</td>
-                    <td>{data.gaji}</td>
-                    <td>{data.tunjangan}</td>
-                    <td>{data.potongan}</td>
-                    <td>{data.total}</td>
-                    <td>{getStatus(data.status_gaji)}</td>
+                {filteredGaji.map((data, index) => (
+                  <tr key={index}>
+                    <td className="p-1 pt-2">{index + 1}</td>
+                    <td>{data.bulan_gaji_formatted}</td>
+                    <td>{data.bulan_gaji_date}</td>
+                    <td>{formatCurrency(data.gaji_dasar)}</td>
+                    <td>{formatCurrency(data.tunjangan)}</td>
+                    <td>{formatCurrency(data.potongan)}</td>
+                    <td>{formatCurrency(data.total)}</td>
+                    <td>{data.status_gaji ? getStatus(data.status_gaji) : 'Status tidak tersedia'}</td>
                     <td className='font-semibold'>
-                      <button onClick={() => downloadPDF(data.id)} className='flex justify-start items-center'>
-                        {data.action}
+                      <button onClick={() => downloadPDF(data.id_gaji)} className='flex justify-start items-center'>
+                        Download Slip
                         <IoDownloadOutline fontSize={18} />
                       </button>
                     </td>

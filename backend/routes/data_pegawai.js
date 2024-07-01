@@ -48,7 +48,19 @@ router.get('/pegawai/:id_pegawai', (req, res) => {
             res.status(500).json({ error: 'Internal server error' });
         } else {
             if (result.length > 0) {
-                res.json(result[0]);
+                const pegawai = result[0];
+                if (pegawai.foto_profil) {
+                    let imageType = 'jpeg'; // Default
+                    const buffer = Buffer.from(pegawai.foto_profil, 'base64');
+                    if (buffer.slice(0, 4).toString('hex') === '89504e47') {
+                        imageType = 'png';
+                    }
+                    pegawai.foto_profil = {
+                        data: buffer.toString('base64'),
+                        type: imageType
+                    };
+                }
+                res.json(pegawai);
             } else {
                 res.status(404).json({ error: 'Pegawai not found' });
             }

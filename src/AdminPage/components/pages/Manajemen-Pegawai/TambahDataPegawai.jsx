@@ -94,7 +94,7 @@ const TambahDataPegawai = () => {
                 <span className='text-red-700'>*</span>
               </div>
               <input
-                type="text"
+                type="number"
                 name="nip"
                 value={formData.nip}
                 onChange={handleInputChange}

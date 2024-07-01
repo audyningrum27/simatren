@@ -2,7 +2,7 @@ export function getStatus(status, handleConfirm, id) {
 	switch (status) {
 		case 'Lunas':
 			return (
-				<span className="capitalize py-1 px-2 rounded-md text-xs text-green-600 bg-green-100 font-semibold">
+				<span className="capitalize py-1 px-2 rounded-md text-xs text-green-600 bg-green-100 font-semibold ">
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			);
