@@ -12,6 +12,7 @@ export default function DetailPegawai() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [showPopupEdit, setShowPopupEdit] = useState(false);
+    
 
     useEffect(() => {
         fetchPegawaiDetail();
@@ -22,8 +23,8 @@ export default function DetailPegawai() {
             const response = await fetch(`http://localhost:5000/api/data_pegawai/pegawai/${id_pegawai}`);
             const data = await response.json();
             if (data.tanggal_lahir) {
-                const tanggalLahir = moment.utc(data.tanggal_lahir).tz('Asia/Jakarta'); 
-                const formattedDate = tanggalLahir.format('YYYY-MM-DD'); 
+                const tanggalLahir = moment.utc(data.tanggal_lahir).tz('Asia/Jakarta');
+                const formattedDate = tanggalLahir.format('YYYY-MM-DD');
                 data.tanggal_lahir = formattedDate;
             }
             setPegawai(data);
@@ -117,7 +118,17 @@ export default function DetailPegawai() {
                 <div className="box-border rounded-sm border border-gray-200 flex-1 shadow-lg overflow-auto">
                     <div className="flex flex-col md:flex-row">
                         <div className="box-border relative md:w-1/5 h-56 bg-gray-300 justify-center items-center flex flex-col rounded-sm mx-10 mt-6">
-                            <FaUserCircle className="text-8xl text-gray-500" />
+                            <div className="relative flex flex-col justify-center items-center border border-gray-400 rounded-full w-24 h-24">
+                                {pegawai.foto_profil ? (
+                                    <img
+                                        src={`data:image/${pegawai.foto_profil.type};base64,${pegawai.foto_profil.data}`}
+                                        alt="Foto Profil"
+                                        className="border border-gray-400 rounded-full w-24 h-24"
+                                    />
+                                ) : (
+                                    <FaUserCircle className="text-8xl text-gray-500" />
+                                )}
+                            </div>
                             <p className="mt-2 text-sm">{pegawai.nama_pegawai}</p>
                             <p className="mt-2 text-sm">{pegawai.nip}</p>
                             <div className="flex flex-row w-56 justify-center mt-5">

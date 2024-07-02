@@ -23,8 +23,9 @@ const LoginPage = () => {
       localStorage.setItem('email', response.data.email);
       localStorage.setItem('nama_pegawai', response.data.nama_pegawai);
       localStorage.setItem('nip', response.data.nip);
-
-      login(response.data.email, response.data.nama_pegawai, response.data.nip);
+      localStorage.setItem('id_pegawai', response.data.id_pegawai);
+      
+      login(response.data.email, response.data.nama_pegawai, response.data.nip, response.data.id_pegawai);
 
       if (response.data.email === 'admin@gmail.com') {
         console.log('Navigating to /AdminPage');

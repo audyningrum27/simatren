@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch } from 'react-icons/hi'
 import { HiMiniPlus } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
+import { formatCurrency } from '../../utils/formarCurrency';
+import { formatDate } from '../../utils/formatDate';
 
 function ManajemenGaji() {
   const [dataGaji, setDataGaji] = useState([]);
@@ -14,8 +16,17 @@ function ManajemenGaji() {
   const fetchDataGaji = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/data_gaji/gaji');
-      const data = await response.json();
-      setDataGaji(data);
+      const result = await response.json();
+
+      if (result && Array.isArray(result)) {
+        const data = result.map(item => ({
+          ...item,
+          bulan_gaji_formatted: formatDate(item.bulan_gaji),
+        }));
+        setDataGaji(data);
+      } else {
+        console.error('Unexpected response data format:', result);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -62,6 +73,7 @@ function ManajemenGaji() {
                 <td className='font-bold py-4'>No.</td>
                 <td className='font-bold py-4'>NIP</td>
                 <td className='font-bold py-4'>Nama</td>
+                <td className='font-bold py-4'>Tanggal</td>
                 <td className='font-bold py-4'>Gaji Dasar</td>
                 <td className='font-bold py-4'>Tunjangan</td>
                 <td className='font-bold py-4'>Potongan</td>
@@ -75,10 +87,11 @@ function ManajemenGaji() {
                   <td className="p-1 pt-2">{index + 1}</td>
                   <td>{data.nip}</td>
                   <td>{data.nama_pegawai}</td>
-                  <td>{data.gaji_dasar}</td>
-                  <td>{data.tunjangan}</td>
-                  <td>{data.potongan}</td>
-                  <td>{data.total}</td>
+                  <td>{data.bulan_gaji_formatted}</td>
+                  <td>{formatCurrency(data.gaji_dasar)}</td>
+                  <td>{formatCurrency(data.tunjangan)}</td>
+                  <td>{formatCurrency(data.potongan)}</td>
+                  <td>{formatCurrency(data.total)}</td>
                 </tr>
               ))}
             </tbody>

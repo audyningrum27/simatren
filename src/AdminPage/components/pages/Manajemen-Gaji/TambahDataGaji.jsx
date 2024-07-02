@@ -1,29 +1,40 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios'; // pastikan Anda telah menginstal axios dengan `npm install axios`
+import axios from 'axios';
 
 const TambahDataGaji = () => {
   const navigate = useNavigate();
-  const [nip, setNip] = useState('');
-  const [namaPegawai, setNamaPegawai] = useState('');
+  const [idPegawai, setIdPegawai] = useState('');
+  const [pegawaiList, setPegawaiList] = useState([]);
   const [gajiDasar, setGajiDasar] = useState('');
   const [tunjangan, setTunjangan] = useState('');
   const [potongan, setPotongan] = useState('');
+  const [tanggalGaji, setTanggalGaji] = useState(''); 
   const [showPopup, setShowPopup] = useState(false);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/data_pegawai/pegawai')
+      .then(response => {
+        setPegawaiList(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the employee data!', error);
+      });
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataGaji = { nip, nama_pegawai: namaPegawai, gaji_dasar: gajiDasar, tunjangan, potongan };
+    const dataGaji = { id_pegawai: idPegawai, bulan_gaji: tanggalGaji, gaji_dasar: gajiDasar, tunjangan, potongan };
 
     axios.post('http://localhost:5000/api/data_gaji/gaji', dataGaji)
       .then(response => {
         console.log(response.data);
         // Reset form setelah submit
-        setNip('');
-        setNamaPegawai('');
+        setIdPegawai('');
         setGajiDasar('');
         setTunjangan('');
         setPotongan('');
+        setTanggalGaji('');
         // Menampilkan pop up
         setShowPopup(true);
       })
@@ -55,33 +66,38 @@ const TambahDataGaji = () => {
             <div>
               <table className="w-full">
                 <tr>
-                  <td className="p-2 text-sm">NIP<span className="text-red-600">*</span></td>
-                  <td className="p-2">:</td>
-                  <td className="p-2">
-                    <input
-                      type="number"
-                      name="nip"
-                      id="nip"
-                      value={nip}
-                      onChange={(e) => setNip(e.target.value)}
-                      className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="Nomor Induk Pegawai"
-                      required
-                    />
-                  </td>
-                </tr>
-                <tr>
                   <td className="p-2 text-sm">Nama Pegawai<span className="text-red-600">*</span></td>
                   <td className="p-2">:</td>
                   <td className="p-2">
+                    <select
+                      name="id_pegawai"
+                      id="id_pegawai"
+                      value={idPegawai}
+                      onChange={(e) => setIdPegawai(e.target.value)}
+                      className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${idPegawai ? 'text-black' : 'text-gray-400'}`}
+                      required
+                    >
+                      <option value="">Pilih Pegawai</option>
+                      {pegawaiList.map((pegawai) => (
+                        <option className='text-black' key={pegawai.id_pegawai} value={pegawai.id_pegawai}>
+                          {pegawai.nama_pegawai} - {pegawai.nip}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="p-2 text-sm">Tanggal Gaji<span className="text-red-600">*</span></td>
+                  <td className="p-2">:</td>
+                  <td className="p-2">
                     <input
-                      type="text"
-                      name="nama_lengkap"
-                      id="nama_lengkap"
-                      value={namaPegawai}
-                      onChange={(e) => setNamaPegawai(e.target.value)}
-                      className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="Nama Lengkap Pegawai"
+                      type="date"
+                      name="bulan_gaji"
+                      id="bulan_gaji"
+                      value={tanggalGaji}
+                      onChange={(e) => setTanggalGaji(e.target.value)}
+                      className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${tanggalGaji ? 'text-black' : 'text-gray-400'}`}
+                      placeholder="3.000.000"
                       required
                     />
                   </td>
