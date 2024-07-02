@@ -1,8 +1,8 @@
 import { MdInsertChartOutlined, MdOutlineCalendarMonth } from "react-icons/md";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { TbWallet, TbLogout } from "react-icons/tb";
-// import { VscTools } from "react-icons/vsc";
 import { AiOutlineLineChart } from "react-icons/ai";
+import { TbCalendarMonth } from "react-icons/tb";
 
 export const DASHBOARD_SIDEBAR_LINKS = [
   {
@@ -29,12 +29,12 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     path: "/AdminPage/manajemen_presensi",
     icon: <MdOutlineCalendarMonth />
   },
-  // {
-  //   key: "manajemen_pelatihan",
-  //   label: "Manajemen Pelatihan",
-  //   path: "/manajemen_pelatihan",
-  //   icon: <VscTools />
-  // },
+  {
+    key: "manajemen_cuti",
+    label: "Manajemen Cuti",
+    path: "/AdminPage/manajemen_cuti",
+    icon: <TbCalendarMonth />
+  },
 ]
 
 export const DASHBOARD_SIDEBAR_KINERJA = [

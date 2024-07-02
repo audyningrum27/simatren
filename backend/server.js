@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.js';
 import dataRoutes from './routes/data_pegawai.js';
 import gajiRoutes from './routes/data_gaji.js';
 import presensiRoutes from './routes/data_presensi.js';
+import cutiRoutes from './routes/data_cuti.js'
 import jadwalpelatihanRoutes from './routes/jadwal_pelatihan.js';
 import historipelatihanRoutes from './routes/histori_pelatihan.js';
 
@@ -28,6 +29,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/data_pegawai', dataRoutes);
 app.use('/api/data_gaji', gajiRoutes);
 app.use('/api/data_presensi', presensiRoutes);
+app.use('/api/data_cuti', cutiRoutes);
 app.use('/api/jadwal_pelatihan', jadwalpelatihanRoutes);
 app.use('/api/histori_pelatihan', historipelatihanRoutes);
 
