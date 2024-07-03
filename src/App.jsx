@@ -5,10 +5,13 @@ import LoginPage from './LoginPage';
 import Layout from './AdminPage/components/content/Layout';
 import Dashboard from './AdminPage/components/pages/Dashboard/Dashboard';
 import ManajemenPegawai from './AdminPage/components/pages/Manajemen-Pegawai/ManajemenPegawai';
-import ManajemenGaji from './AdminPage/components/pages/Manajemen-Gaji/ManajemenGaji';
-import ManajemenPresensi from './AdminPage/components/pages/Manajemen-Presensi/ManajemenPresensi';
 import TambahDataPegawai from './AdminPage/components/pages/Manajemen-Pegawai/TambahDataPegawai';
+import DetailPegawai from './AdminPage/components/pages/Manajemen-Pegawai/DetailPegawai';
+import ManajemenGaji from './AdminPage/components/pages/Manajemen-Gaji/ManajemenGaji';
 import TambahDataGaji from './AdminPage/components/pages/Manajemen-Gaji/TambahDataGaji';
+import ManajemenPresensi from './AdminPage/components/pages/Manajemen-Presensi/ManajemenPresensi';
+import ManajemenCuti from './AdminPage/components/pages/Manajemen-Cuti/ManajemenCuti';
+import HistoriCutiPegawai from './AdminPage/components/pages/Manajemen-Cuti/HistoriCutiPegawai';
 import HistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/HistoryPelatihan';
 import JadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/JadwalPelatihan';
 import TambahJadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/TambahJadwalPelatihan';
@@ -31,7 +34,7 @@ import Kinerja from './UserPage/components/pages/Kinerja/Kinerja';
 
 import { AuthProvider } from './AuthContext';
 import PrivateRoute from './PrivateRoute';
-import DetailPegawai from './AdminPage/components/pages/Manajemen-Pegawai/DetailPegawai';
+
 
 function App() {
   return (
@@ -54,6 +57,8 @@ function App() {
             <Route path="/AdminPage/manajemen_gaji" element={<ManajemenGaji />} />
             <Route path="/AdminPage/tambah_data_gaji" element={<TambahDataGaji />} />
             <Route path="/AdminPage/manajemen_presensi" element={<ManajemenPresensi />} />
+            <Route path="/AdminPage/manajemen_cuti" element={<ManajemenCuti />} />
+            <Route path="/AdminPage/histori_cuti_pegawai" element={<HistoriCutiPegawai />} />
             <Route path="/AdminPage/histori_pelatihan" element={<HistoryPelatihan />} />
             <Route path="/AdminPage/jadwal_pelatihan" element={<JadwalPelatihan />} />
             <Route path="/AdminPage/detail_history_pelatihan/:id_historipelatihan" element={<DetailHistoryPelatihan />} />
