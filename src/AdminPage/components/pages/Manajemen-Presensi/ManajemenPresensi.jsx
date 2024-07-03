@@ -1,15 +1,16 @@
 import moment from 'moment-timezone';
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch } from 'react-icons/hi';
+import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MdOutlineCalendarMonth } from 'react-icons/md';
-// import { HiChevronRight } from "react-icons/hi2";
 
 function ManajemenPresensi() {
   const [dataPresensi, setDataPresensi] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Jumlah item per halaman
 
   useEffect(() => {
     fetchDataPresensi();
@@ -38,6 +39,30 @@ function ManajemenPresensi() {
     const searchMatches = data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) || data.nip.toLowerCase().includes(searchTerm.toLowerCase());
     return dateMatches && searchMatches;
   });
+
+  // Membagi data ke halaman-halaman
+  const totalPages = Math.ceil(filteredPresensi.length / itemsPerPage);
+  const currentPageData = filteredPresensi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  // Fungsi untuk navigasi halaman
+  const goToPreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const BoxWrapper = ({ children, isActive, onClick }) => (
+    <button
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
+        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+      }`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
 
   return (
     <div>
@@ -82,9 +107,9 @@ function ManajemenPresensi() {
               </thead>
 
               <tbody>
-                {filteredPresensi.map((data, index) => (
+                {currentPageData.map((data, index) => (
                   <tr key={index}>
-                    <td className="p-1 pt-2">{index + 1}</td>
+                    <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td>{data.nip}</td>
                     <td>{data.nama_pegawai}</td>
                     <td>{data.tanggal_presensi}</td>
@@ -100,29 +125,25 @@ function ManajemenPresensi() {
             </table>
           </div>
         </div>
-
-        {/* <div className='py-2 justify-end flex flex-row items-center'>
-                <button><HiChevronLeft fontSize={18} className='mr-2' /></button>
-                <div className='flex gap-4'>
-                    <BoxWrapper>1</BoxWrapper>
-                    <BoxWrapper>2</BoxWrapper>
-                    <BoxWrapper>..</BoxWrapper>
-                    <BoxWrapper>8</BoxWrapper>
-                </div>
-                <button><HiChevronRight fontSize={18} className='ml-2' /></button>
-
-            </div> */}
+        <div className='py-2 justify-end flex flex-row items-center'>
+          <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
+            <div className='flex gap-4'>
+              {Array.from({ length: totalPages }, (_, index) => (
+                <BoxWrapper
+                  key={index}
+                  isActive={currentPage === index + 1}
+                  onClick={() => setCurrentPage(index + 1)}
+                >
+                  {index + 1}
+                </BoxWrapper>
+              ))}
+            </div>
+          <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
+        </div>
       </div>
     </div>
-  )
+  );
 }
-
-// eslint-disable-next-line react/prop-types
-// function BoxWrapper({ children }) {
-//     return (
-//     <button className="bg-neutral-100 rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold hover:bg-green-900 active:bg-green-900 focus:outline-none focus:bg focus:bg-green-900">{children}</button>
-//     )
-// }
 
 const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
   <button
