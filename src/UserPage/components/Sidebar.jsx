@@ -93,7 +93,7 @@ export default function Sidebar({ isOpen }) {
           {isDropdownOpen && (
             <div className="pl-7">
               <DropdownLink to="/UserPage/historipresensi" label="Histori Presensi" icon={<RiHistoryFill />} />
-              <DropdownLink to="#" label="Scan QR" icon={<BiQrScan />} />
+              <DropdownLink to="/UserPage/scan-qr" label="Scan QR" icon={<BiQrScan />} />
             </div>
           )}
         </div>

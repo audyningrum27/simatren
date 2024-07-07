@@ -172,7 +172,7 @@ const ProfilEdit = () => {
       <div className="relative py-4 w-fit md:w-full justify-between flex flex-row">
         <p className="text-xl font-bold mb-4 px-5">Profil</p>
 
-        <div className="absolute md:right-0 md:mx-4 mx-auto">
+        <div className="absolute right-4">
           <button
             type="button"
             onClick={handleEditClick}
