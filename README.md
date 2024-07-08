@@ -23,12 +23,13 @@ penggajian
 - select data download & all select✅
 
 cuti
-- data pengajuan langsung masuk ke admin
-- status awal => proses
-- admin menyetujui => status berubah jadi => Disetujui
-- admin menolak => status berubah jadi => Ditolak
+- data pengajuan langsung masuk ke admin✅
+- status awal => proses✅
+- admin menyetujui => status berubah jadi => Disetujui✅
+- admin menolak => status berubah jadi => Ditolak✅
 - button lihat histori => typo dan ganggu penempatannya
-- tab table
+- tab table✅
+- hubungin sama status data pegawai biar bisa masuk dashboard
 
 pelatihan
 - masukkan nama kegiatan
