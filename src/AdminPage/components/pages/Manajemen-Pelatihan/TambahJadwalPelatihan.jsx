@@ -4,31 +4,45 @@ import axios from 'axios';
 
 const TambahJadwalPelatihan = () => {
   const navigate = useNavigate();
-
+  const [idPegawai, setIdPegawai] = useState('');
+  const [pegawaiList, setPegawaiList] = useState([]);
+  const [nama_penyelenggara, setPenyelenggara] = useState('');
+  const [nama_kegiatan, setKegiatan] = useState('');
+  const [deskripsi_kegiatan, setDeskripsi] = useState('');
+  const [tanggal_mulai, setTanggalMulai] = useState('');
+  const [tanggal_selesai, setTanggalSelesai] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-  const [formData, setFormData] = useState({
-    nama_penyelenggara: '',
-    nama_kegiatan: '',
-    tanggal_mulai: '',
-    tanggal_selesai: '',
-    deskripsi_kegiatan: '',
-  });
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/data_pegawai/pegawai')
+      .then(response => {
+        setPegawaiList(response.data);
+      })
+      .catch(error => {
+        console.error('There was an error fetching the employee data!', error);
+      });
+  }, []);
 
-  const handleSave = async () => {
-    try {
-      const response = await axios.post('http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan', formData);
-      setShowPopup(true);
-    } catch (error) {
-      console.error('Error saving data:', error);
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const dataPelatihan = { id_pegawai: idPegawai, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan };
+
+    axios.post('http://localhost:5000/api/data_pelatihan/pelatihan', dataPelatihan)
+      .then(response => {
+        console.log(response.data);
+        // Reset form setelah submit
+        setIdPegawai('');
+        setPenyelenggara('');
+        setKegiatan('');
+        setTanggalMulai('');
+        setTanggalSelesai('');
+        setDeskripsi('');
+        // Menampilkan pop up
+        setShowPopup(true);
+      })
+      .catch(error => {
+        console.error('There was an error adding the data!', error);
+      });
   };
 
   useEffect(() => {
@@ -45,11 +59,32 @@ const TambahJadwalPelatihan = () => {
   return (
     <div className='px-5'>
       <span className="text-2xl text-gray-950 font-semibold flex justify-center">Tambah Jadwal Pelatihan</span>
-      
+
       <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-between'>
         <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
           <div className="relative w-full gap-2 grid grid-cols-1 md:grid-cols-2">
-          <div>
+            <div>
+              <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Nama Pegawai</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <select
+                name="id_pegawai"
+                id="id_pegawai"
+                value={idPegawai}
+                onChange={(e) => setIdPegawai(e.target.value)}
+                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md ${idPegawai ? 'text-black' : 'text-gray-400'}`}
+                required
+              >
+                <option value="">Pilih Pegawai</option>
+                {pegawaiList.map((pegawai) => (
+                  <option className='text-black' key={pegawai.id_pegawai} value={pegawai.id_pegawai}>
+                    {pegawai.nama_pegawai} - {pegawai.nip}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
               <div className='flex flex-row mb-2'>
                 <span className='text-gray-900 text-sm font-medium'>Nama Penyelenggara</span>
                 <span className='text-red-700'>*</span>
@@ -57,8 +92,8 @@ const TambahJadwalPelatihan = () => {
               <input
                 type="text"
                 name="nama_penyelenggara"
-                value={formData.nama_penyelenggara}
-                onChange={handleInputChange}
+                value={nama_penyelenggara}
+                onChange={(e) => setPenyelenggara(e.target.value)}
                 placeholder="Masukkan nama penyelenggara"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
@@ -72,8 +107,8 @@ const TambahJadwalPelatihan = () => {
               <input
                 type="text"
                 name="nama_kegiatan"
-                value={formData.nama_kegiatan}
-                onChange={handleInputChange}
+                value={nama_kegiatan}
+                onChange={(e) => setKegiatan(e.target.value)}
                 placeholder="Masukkan nama kegiatan"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
@@ -87,10 +122,10 @@ const TambahJadwalPelatihan = () => {
               <input
                 type="date"
                 name="tanggal_mulai"
-                value={formData.tanggal_mulai}
-                onChange={handleInputChange}
+                value={tanggal_mulai}
+                onChange={(e) => setTanggalMulai(e.target.value)}
                 placeholder="Pilih tanggal mulai"
-                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 pr-2 rounded-md ${formData.tanggal_mulai ? 'text-black' : 'text-gray-400'}`}
+                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 pr-2 rounded-md ${tanggal_mulai ? 'text-black' : 'text-gray-400'}`}
                 required
               />
             </div>
@@ -102,10 +137,10 @@ const TambahJadwalPelatihan = () => {
               <input
                 type="date"
                 name="tanggal_selesai"
-                value={formData.tanggal_selesai}
-                onChange={handleInputChange}
+                value={tanggal_selesai}
+                onChange={(e) => setTanggalSelesai(e.target.value)}
                 placeholder="Pilih tanggal selesai"
-                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 pr-2 rounded-md ${formData.tanggal_selesai ? 'text-black' : 'text-gray-400'}`}
+                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 pr-2 rounded-md ${tanggal_selesai ? 'text-black' : 'text-gray-400'}`}
                 required
               />
             </div>
@@ -117,8 +152,8 @@ const TambahJadwalPelatihan = () => {
               <input
                 type="text"
                 name="deskripsi_kegiatan"
-                value={formData.deskripsi_kegiatan}
-                onChange={handleInputChange}
+                value={deskripsi_kegiatan}
+                onChange={(e) => setDeskripsi(e.target.value)}
                 placeholder="Masukkan deskripsi kegiatan"
                 className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
                 required
@@ -139,7 +174,7 @@ const TambahJadwalPelatihan = () => {
         <button
           type="submit"
           className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-          onClick={handleSave}
+          onClick={handleSubmit}
         >
           Simpan
         </button>

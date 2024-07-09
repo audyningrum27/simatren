@@ -115,6 +115,8 @@ const ProfilEdit = () => {
             type: response.data.foto_profil.type
           }
         }));
+      } else {
+        fetchProfil(); 
       }
       setSelectedFile(null); 
     } catch (error) {
@@ -192,7 +194,7 @@ const ProfilEdit = () => {
           <div className="flex flex-row py-3 px-5 pt-2 border-t border-white">
             {/* Upload Foto Profil */}
             <div className="relative flex flex-col justify-center items-center border border-gray-400 rounded-full w-24 h-24">
-              {profil.foto_profil ? (
+              {profil.foto_profil && profil.foto_profil.data ? (
                 <img
                   src={`data:image/${profil.foto_profil.type};base64,${profil.foto_profil.data}`}
                   alt="Foto Profil"
@@ -209,9 +211,8 @@ const ProfilEdit = () => {
               )}
               <input
                 type="file"
-                id="foto_profil"
                 name="foto_profil"
-                accept=".jpg, .jpeg, .png"
+                accept="image/jpeg', 'image/jpg', 'image/png"
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
                 disabled={!isEditable}

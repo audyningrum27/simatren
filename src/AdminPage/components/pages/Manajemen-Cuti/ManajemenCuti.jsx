@@ -128,7 +128,7 @@ function ManajemenCuti() {
           />
           {/* Tombol Histori Cuti */}
           <div className='flex justify-between mx-2 md:mx-10'>
-            <button onClick={() => navigate('/AdminPage/histori_cuti_pegawai')} className="text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
+            <button onClick={() => navigate('/AdminPage/histori_cuti_pegawai')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
               Histori Cuti
             </button>
           </div>

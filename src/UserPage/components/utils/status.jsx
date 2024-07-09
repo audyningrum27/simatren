@@ -1,4 +1,4 @@
-export function getStatus(status, handleConfirm, id) {
+export function getStatus(status) {
 	switch (status) {
 		case 'Lunas':
 			return (
@@ -12,18 +12,24 @@ export function getStatus(status, handleConfirm, id) {
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			);
-		case 'SELESAI':
+		case 'Selesai':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-green-600 bg-green-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
-			);
+			)
 		case 'Proses':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-sky-600 bg-sky-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
-			);
+			)
+		case 'Belum Dimulai':
+			return (
+				<span className="capitalize py-1 px-2 rounded-md text-xs text-red-500 bg-red-100 font-semibold">
+					{status.replaceAll('_', ' ').toLowerCase()}
+				</span>
+			)
 		case 'Diterima':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-green-600 bg-green-100 font-semibold">
@@ -35,15 +41,6 @@ export function getStatus(status, handleConfirm, id) {
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-red-500 bg-red-100 font-semibold">
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
-			);
-		case 'KONFIRMASI':
-			return (
-				<button
-					onClick={() => handleConfirm(id)}
-					className="capitalize mt-1 py-2 px-4 rounded-md text-xs bg-green-400 font-semibold"
-				>
-					{status.replaceAll('_', ' ').toLowerCase()}
-				</button>
 			);
 		default:
 			return (

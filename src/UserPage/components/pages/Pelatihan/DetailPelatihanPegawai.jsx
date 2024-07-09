@@ -1,19 +1,14 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getPegawaiStatus } from "../../utils/status";
 import moment from 'moment-timezone';
 import { MdImage } from "react-icons/md";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { TbUpload } from "react-icons/tb";
+import { TbDownload } from "react-icons/tb";
 import { MdZoomOutMap } from "react-icons/md";
+import { getStatus } from '../../utils/status';
 
-const DetailHistoryPelatihan = () => {
+const DetailPelatihanPegawai = () => {
   const { id_pelatihan } = useParams();
   const [pelatihan, setDataPelatihan] = useState(null);
-  const [uploadingId, setUploadingId] = useState(null);
-  const fileInputRef = useRef(null);
-  const [popupMessage, setPopupMessage] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     fetchDetailPelatihan();
@@ -21,7 +16,7 @@ const DetailHistoryPelatihan = () => {
 
   const fetchDetailPelatihan = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`);
+      const response = await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}?timestamp=${new Date().getTime()}`);
       const data = await response.json();
       const formattedData = {
         ...data,
@@ -38,61 +33,23 @@ const DetailHistoryPelatihan = () => {
     return <div>Loading...</div>;
   }
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file && uploadingId) {
-      await handleUpload(uploadingId, file);
-    }
-  };
-
-  const handleUpload = async (id_pelatihan, file) => {
-    if (!file) {
-      setPopupMessage("Pilih file terlebih dahulu!");
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 2000);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("sertifikat", file);
-
-    try {
-      const response = await fetch(`http://localhost:5000/api/data_pelatihan/upload/${id_pelatihan}`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        setPopupMessage("Sertifikat berhasil diupload.");
-        setShowPopup(true);
-        setTimeout(() => setShowPopup(false), 2000);
-        setUploadingId(null);
-        fetchDetailPelatihan();
-      } else {
-        setPopupMessage("Sertifikat gagal diupload. Coba Lagi!");
-        setShowPopup(true);
-        setTimeout(() => setShowPopup(false), 2000);
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      setPopupMessage("Error uploading file.");
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 2000);
-    }
-  };
-
-  const handleViewSertifikat = async (id_pelatihan) => {
+  const handleDownloadSertifikat = async (id_pelatihan, nama_pegawai) => {
     try {
       const response = await fetch(`http://localhost:5000/api/data_pelatihan/sertifikat/${id_pelatihan}`);
       if (!response.ok) {
-        throw new Error('Failed to view sertifikat');
+        throw new Error('Failed to download sertifikat');
       }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
-      window.open(url, '_blank').focus();
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Sertifikat_${nama_pegawai}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
     } catch (error) {
-      console.error('Error viewing sertifikat:', error);
-      alert('Failed to view sertifikat');
+      console.error('Error downloading sertifikat:', error);
+      alert('Failed to download sertifikat');
     }
   };
 
@@ -114,30 +71,6 @@ const DetailHistoryPelatihan = () => {
               <table className='w-full border-separate p-5 text-gray-950 text-sm'>
                 <tbody>
                   <tr>
-                    <td>Nomor Induk Pegawai</td>
-                    <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">
-                      <input
-                        type="number"
-                        name="nip"
-                        value={pelatihan.nip}
-                        className="w-full border-none bg-transparent focus:outline-none"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Nama Pegawai</td>
-                    <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">
-                      <input
-                        type="text"
-                        name="nama_pegawai"
-                        value={pelatihan.nama_pegawai}
-                        className="w-full border-none bg-transparent focus:outline-none"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
                     <td>Nama Penyelenggara</td>
                     <td className="p-2">:</td>
                     <td className="px-2 border border-gray-400 rounded-md">
@@ -148,11 +81,6 @@ const DetailHistoryPelatihan = () => {
                         className="w-full border-none bg-transparent focus:outline-none"
                       />
                     </td>
-                  </tr>
-                  <tr>
-                    <td>Nama Penyelenggara</td>
-                    <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">{pelatihan.nama_penyelenggara}</td>
                   </tr>
                   <tr>
                     <td>Nama Kegiatan</td>
@@ -205,7 +133,7 @@ const DetailHistoryPelatihan = () => {
                   <tr>
                     <td>Status</td>
                     <td className="p-2">:</td>
-                    <td>{getPegawaiStatus(pelatihan.status)}</td>
+                    <td>{getStatus(pelatihan.status)}</td>
                   </tr>
                   <tr>
                     <td>Bukti Pelaksanaan</td>
@@ -240,29 +168,18 @@ const DetailHistoryPelatihan = () => {
                       {pelatihan.sertifikat ? (
                         <button
                           className='flex justify-start items-center bg-green-500 px-3 py-1 rounded-sm'
-                          onClick={() => handleViewSertifikat(pelatihan.id_pelatihan)}
+                          onClick={() => handleDownloadSertifikat(pelatihan.id_pelatihan, pelatihan.nama_pegawai)}
                         >
-                          Lihat Sertifikat
-                          <MdOutlineRemoveRedEye fontSize={16} className='ml-1' />
+                          Download Sertifikat
+                          <TbDownload fontSize={16} className='ml-1' />
                         </button>
                       ) : (
                         <div>
                           <button
-                            className='flex justify-start items-center bg-red-500 px-3 py-1 rounded-sm'
-                            onClick={() => {
-                              setUploadingId(pelatihan.id_pelatihan);
-                              fileInputRef.current.click();
-                            }}>
-                            Upload Sertifikat
-                            <TbUpload fontSize={18} className='ml-1' />
+                            className='flex justify-start items-center bg-gray-300 px-2 py-1 text-gray-900'
+                          >
+                            Belum ada sertifikat
                           </button>
-                          <input
-                            type="file"
-                            accept="application/pdf"
-                            ref={fileInputRef}
-                            style={{ display: 'none' }}
-                            onChange={handleFileChange}
-                          />
                         </div>
                       )}
                     </td>
@@ -273,16 +190,8 @@ const DetailHistoryPelatihan = () => {
           </div>
         </div>
       </div>
-
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
-            <p>{popupMessage}</p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
 
-export default DetailHistoryPelatihan;
+export default DetailPelatihanPegawai;

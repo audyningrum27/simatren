@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi'
 import { HiMiniPlus } from "react-icons/hi2";
 import { getPegawaiStatus } from '../../utils/status';
 import { useNavigate } from 'react-router-dom';
@@ -76,7 +76,7 @@ function ManajemenPegawai() {
                     {/* Tombol tambah pegawai */}
                     <div className='flex justify-between mx-2 md:mx-10'>
                         <HiMiniPlus fontSize={22} className="text-neutral-50 absolute top-1/2 -translate-y-1/2 ml-2" />
-                        <button onClick={() => navigate('/AdminPage/tambah_data_pegawai')} className="text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
+                        <button onClick={() => navigate('/AdminPage/tambah_data_pegawai')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
                             Tambah Pegawai
                         </button>
                     </div>
@@ -109,7 +109,7 @@ function ManajemenPegawai() {
                                         <td className='font-semibold'>
                                             <button onClick={() => navigate(`/AdminPage/detail_pegawai/${data.id_pegawai}`)} className='flex justify-start items-center'>
                                                 Detail
-                                                <HiChevronRight fontSize={18} />
+                                                <HiChevronRight fontSize={18} className='ml-1' />
                                             </button>
                                         </td>
                                     </tr>

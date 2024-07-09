@@ -7,7 +7,6 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-
 //ADMIN
 router.post('/pegawai', (req, res) => {
     const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kawin, anggota_keluarga, jumlah_tanggungan } = req.body;
@@ -210,7 +209,7 @@ router.put('/pegawai/profil/:id_pegawai', upload.single('foto_profil'), (req, re
         foto_profil = req.file.buffer.toString('base64');
     }
     
-    const getFotoProfilSql = 'SELECT foto_profil FROM data_pegawai WHERE id_pegawai = ?';
+    const getFotoProfilSql = `SELECT foto_profil FROM data_pegawai WHERE id_pegawai = ?`;
     db.query(getFotoProfilSql, [id_pegawai], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -238,7 +237,13 @@ router.put('/pegawai/profil/:id_pegawai', upload.single('foto_profil'), (req, re
                         console.error('Error executing query:', err);
                         res.status(500).json({ error: 'Internal server error' });
                     } else {
-                        res.json({ message: 'Pegawai updated successfully' });
+                        res.json({ 
+                            message: 'Pegawai updated successfully',
+                            foto_profil: {
+                                data: finalFotoProfil,
+                                type: req.file ? req.file.mimetype.split('/')[1] : 'jpeg' 
+                            }
+                        });
                     }
                 });
             } else {
@@ -247,6 +252,5 @@ router.put('/pegawai/profil/:id_pegawai', upload.single('foto_profil'), (req, re
         }
     });
 });
-
 
 export default router;

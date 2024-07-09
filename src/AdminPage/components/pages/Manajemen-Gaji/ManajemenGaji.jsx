@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { HiMiniPlus } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
-import { formatCurrency } from '../../utils/formarCurrency';
+import { formatCurrency } from '../../utils/formatCurrency';
 import { formatDate } from '../../utils/formatDate';
 
 function ManajemenGaji() {
@@ -83,7 +83,7 @@ function ManajemenGaji() {
 
         <div className='flex justify-between mx-2 md:mx-10'>
           <HiMiniPlus fontSize={22} className="text-neutral-50 absolute top-1/2 -translate-y-1/2 ml-2" />
-          <button onClick={() => navigate('/AdminPage/tambah_data_gaji')} className="text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
+          <button onClick={() => navigate('/AdminPage/tambah_data_gaji')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
             Tambah Data Gaji
           </button>
         </div>

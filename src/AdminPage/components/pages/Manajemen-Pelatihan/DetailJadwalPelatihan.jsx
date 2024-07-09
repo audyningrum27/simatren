@@ -18,12 +18,12 @@ const DetailJadwalPelatihan = () => {
 
   const fetchDetailPelatihan = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan/${id_pelatihan}`);
+      const response = await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`);
       const data = await response.json();
       const formattedData = {
         ...data,
-        tanggal_mulai: moment.utc(data.tanggal_mulai).tz('Asia/Jakarta').format('DD/MM/YYYY'),
-        tanggal_selesai: moment.utc(data.tanggal_selesai).tz('Asia/Jakarta').format('DD/MM/YYYY'),
+        tanggal_mulai: moment.utc(data.tanggal_mulai).tz('Asia/Jakarta').format('YYYY-MM-DD'),
+        tanggal_selesai: moment.utc(data.tanggal_selesai).tz('Asia/Jakarta').format('YYYY-MM-DD'),
       };
       setDataPelatihan(formattedData);
     } catch (error) {
@@ -33,35 +33,35 @@ const DetailJadwalPelatihan = () => {
 
   const handleEditClick = async () => {
     if (isEditable) {
-        try {
-            const updatedPelatihan = { ...pelatihan };
-            if (pelatihan.tanggal_mulai) {
-                updatedPelatihan.tanggal_mulai = moment(pelatihan.tanggal_mulai, 'DD/MM/YYYY').format('YYYY-MM-DD');
-            }
-            if (pelatihan.tanggal_selesai) {
-                updatedPelatihan.tanggal_selesai = moment(pelatihan.tanggal_selesai, 'DD/MM/YYYY').format('YYYY-MM-DD');
-            }
-            console.log('Updating pelatihan:', updatedPelatihan);
-
-            const response = await fetch(`http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan/${id_pelatihan}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updatedPelatihan),
-            });
-            const data = await response.json();
-            if (response.ok) {
-                setShowPopupEdit(true);
-                setTimeout(() => {
-                    navigate('/AdminPage/jadwal_pelatihan');
-                }, 2000);
-            } else {
-                console.error('Error updating data:', data.error);
-            }
-        } catch (error) {
-            console.error('Error updating data:', error);
+      try {
+        const updatedPelatihan = { ...pelatihan };
+        if (pelatihan.tanggal_mulai) {
+          updatedPelatihan.tanggal_mulai = moment(pelatihan.tanggal_mulai, 'YYYY-MM-DD').format('YYYY-MM-DD');
         }
+        if (pelatihan.tanggal_selesai) {
+          updatedPelatihan.tanggal_selesai = moment(pelatihan.tanggal_selesai, 'YYYY-MM-DD').format('YYYY-MM-DD');
+        }
+        console.log('Updating pelatihan:', updatedPelatihan);
+
+        const response = await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedPelatihan),
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setShowPopupEdit(true);
+          setTimeout(() => {
+            navigate('/AdminPage/jadwal_pelatihan');
+          }, 2000);
+        } else {
+          console.error('Error updating data:', data.error);
+        }
+      } catch (error) {
+        console.error('Error updating data:', error);
+      }
     }
     setIsEditable(!isEditable);
   };
@@ -69,8 +69,8 @@ const DetailJadwalPelatihan = () => {
   useEffect(() => {
     if (showPopupEdit) {
       const timer = setTimeout(() => {
-          setShowPopupEdit(false);
-          navigate('/AdminPage/jadwal_pelatihan');
+        setShowPopupEdit(false);
+        navigate('/AdminPage/jadwal_pelatihan');
       }, 2000);
 
       return () => clearTimeout(timer);
@@ -83,24 +83,24 @@ const DetailJadwalPelatihan = () => {
 
   const confirmDelete = async () => {
     try {
-        await fetch(`http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan/${id_pelatihan}`, {
-            method: 'DELETE',
-        });
-        setShowPopup(true);
-        setIsDeleting(false);
+      await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`, {
+        method: 'DELETE',
+      });
+      setShowPopup(true);
+      setIsDeleting(false);
     } catch (error) {
-        console.error('Error deleting data:', error);
+      console.error('Error deleting data:', error);
     }
   };
 
   useEffect(() => {
     if (showPopup) {
-        const timer = setTimeout(() => {
-            setShowPopup(false);
-            navigate('/AdminPage/jadwal_pelatihan');
-        }, 2000);
+      const timer = setTimeout(() => {
+        setShowPopup(false);
+        navigate('/AdminPage/jadwal_pelatihan');
+      }, 2000);
 
-        return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
     }
   }, [showPopup, navigate]);
 
@@ -116,7 +116,7 @@ const DetailJadwalPelatihan = () => {
   if (!pelatihan) {
     return <div>Loading...</div>;
   }
-  
+
   return (
     <div className="px-5">
       <span className="text-2xl text-gray-950 font-semibold flex justify-center mb-5">Detail Jadwal Pelatihan</span>
@@ -127,6 +127,32 @@ const DetailJadwalPelatihan = () => {
             <div className="flex-1">
               <table className='w-full border-separate p-5 text-gray-950 text-sm'>
                 <tbody>
+                  <tr>
+                    <td>Nomor Induk Pegawai</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="number"
+                        name="nip"
+                        value={pelatihan.nip}
+                        readOnly={!isEditable}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Nama Pegawai</td>
+                    <td className="p-2">:</td>
+                    <td className="px-2 border border-gray-400 rounded-md">
+                      <input
+                        type="text"
+                        name="nama_pegawai"
+                        value={pelatihan.nama_pegawai}
+                        readOnly={!isEditable}
+                        className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                      />
+                    </td>
+                  </tr>
                   <tr>
                     <td>Nama Penyelenggara</td>
                     <td className="p-2">:</td>
@@ -140,7 +166,7 @@ const DetailJadwalPelatihan = () => {
                         className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
                       />
                     </td>
-                  </tr>  
+                  </tr>
                   <tr>
                     <td>Nama Kegiatan</td>
                     <td className="p-2">:</td>
@@ -154,7 +180,7 @@ const DetailJadwalPelatihan = () => {
                         className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
                       />
                     </td>
-                  </tr>                
+                  </tr>
                   <tr>
                     <td>Tanggal Mulai</td>
                     <td className="p-2">:</td>
@@ -162,7 +188,7 @@ const DetailJadwalPelatihan = () => {
                       <input
                         type="date"
                         name="tanggal_mulai"
-                        value={moment(pelatihan.tanggal_mulai, 'DD/MM/YYYY').format('YYYY-MM-DD')}
+                        value={pelatihan.tanggal_mulai}
                         readOnly={!isEditable}
                         onChange={handleChange}
                         className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
@@ -176,7 +202,7 @@ const DetailJadwalPelatihan = () => {
                       <input
                         type="date"
                         name="tanggal_selesai"
-                        value={moment(pelatihan.tanggal_selesai, 'DD/MM/YYYY').format('YYYY-MM-DD')}
+                        value={pelatihan.tanggal_selesai}
                         readOnly={!isEditable}
                         onChange={handleChange}
                         className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
@@ -187,7 +213,7 @@ const DetailJadwalPelatihan = () => {
                     <td>Deskripsi Kegiatan</td>
                     <td className="p-2">:</td>
                     <td className="px-2 border border-gray-400 rounded-md">
-                    <input
+                      <input
                         type="text"
                         name="deskripsi_kegiatan"
                         value={pelatihan.deskripsi_kegiatan}
@@ -230,41 +256,41 @@ const DetailJadwalPelatihan = () => {
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
             <div className="bg-white p-5 rounded-lg shadow-lg text-sm">
               <p className="mb-4">Apakah Anda yakin ingin menghapus data ini?</p>
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    onClick={cancelDelete}
-                    className="mr-4 px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400"
-                  >
-                    Batal
-                  </button>
-                  <button
-                    type="button"
-                    onClick={confirmDelete}
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
-                  >
-                    Hapus
-                  </button>
-                </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={cancelDelete}
+                  className="mr-4 px-4 py-2 bg-gray-300 text-black rounded-lg hover:bg-gray-400"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-700"
+                >
+                  Hapus
+                </button>
               </div>
             </div>
-          )}
+          </div>
+        )}
 
-          {showPopup && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
-                <p>Data pelatihan berhasil dihapus.</p>
-              </div>
+        {showPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
+              <p>Data pelatihan berhasil dihapus.</p>
             </div>
-          )}
+          </div>
+        )}
 
-          {showPopupEdit && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
-                <p>Data pelatihan berhasil diperbarui.</p>
-              </div>
+        {showPopupEdit && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
+              <p>Data pelatihan berhasil diperbarui.</p>
             </div>
-          )}
+          </div>
+        )}
 
       </div>
     </div>

@@ -6,7 +6,6 @@ import moment from 'moment-timezone';
 import { getPegawaiStatus } from "../../utils/status";
 
 function JadwalPelatihan() {
-  // State dan fungsi tetap sama
   const [dataPelatihan, setDataPelatihan] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Jumlah item per halaman
@@ -31,8 +30,8 @@ function JadwalPelatihan() {
   };
 
   const fetchDataPelatihan = async () => {
-    try {
-      const response = await fetch('http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan');
+    try 
+      {const response = await fetch('http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan');
       const data = await response.json();
       const formattedData = data.map(item => {
         const formattedTanggalMulai = moment.utc(item.tanggal_mulai).tz('Asia/Jakarta').format('DD/MM/YYYY');
@@ -59,7 +58,7 @@ function JadwalPelatihan() {
 
   const filteredPelatihan = dataPelatihan.filter((data) =>
     data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.status.toLowerCase().includes(searchTerm.toLowerCase())
+    data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Membagi data ke halaman-halaman
@@ -114,9 +113,10 @@ function JadwalPelatihan() {
             <thead className="sticky top-0 bg-white">
               <tr className="border-b-[1.5px]">
                 <td className='font-bold py-4'>No.</td>
-                <td className='font-bold py-4'>Nama Penyelenggara</td>
+                <td className='font-bold py-4'>NIP</td>
+                <td className='font-bold py-4'>Nama Pegawai</td>
+                <td className='font-bold py-4'>Penyelenggara</td>
                 <td className='font-bold py-4'>Nama Kegiatan</td>
-                <td className='font-bold py-4'>Tanggal Mulai</td>
                 <td className='font-bold py-4'>Status</td>
                 <td className='font-bold py-4'>Action</td>
               </tr>
@@ -126,6 +126,8 @@ function JadwalPelatihan() {
               {currentPageData.map((data, index) => (
                 <tr key={index}>
                   <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  <td>{data.nip}</td>
+                  <td>{data.nama_pegawai}</td>
                   <td>{data.nama_penyelenggara}</td>
                   <td>{data.nama_kegiatan}</td>
                   <td>{data.tanggal_mulai}</td>
@@ -133,7 +135,7 @@ function JadwalPelatihan() {
                   <td className='font-semibold'>
                     <button onClick={() => navigate(`/AdminPage/detail_jadwal_pelatihan/${data.id_pelatihan}`)} className='flex justify-start items-center'>
                       Detail
-                      <HiChevronRight fontSize={18} className='ml-2' />
+                      <HiChevronRight fontSize={18} className='ml-1' />
                     </button>
                   </td>
                 </tr>

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import { HiOutlineSearch , HiChevronRight, HiChevronLeft} from 'react-icons/hi';
+import { TbCheck } from "react-icons/tb";
+import { IoMdClose } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment-timezone';
+import { getPegawaiStatus } from '../../utils/status';
 
 function HistoryPelatihan() {
   const [historiPelatihan, setHistoriPelatihan] = useState([]);
@@ -36,7 +38,7 @@ function HistoryPelatihan() {
 
   const filteredPelatihan = historiPelatihan.filter((data) =>
     data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase())
+    data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase()) 
   );
 
   // Membagi data ke halaman-halaman
@@ -68,7 +70,7 @@ function HistoryPelatihan() {
       <p className="text-xl font-bold px-5">Histori Pelatihan</p>
 
       <div className="relative py-4 w-full justify-between flex flex-row">
-        <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />              
+        <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
         <input
           type="text"
           placeholder="Search..."
@@ -86,35 +88,42 @@ function HistoryPelatihan() {
                 <td className='font-bold py-4'>No.</td>
                 <td className='font-bold py-4'>NIP</td>
                 <td className='font-bold py-4'>Nama Pegawai</td>
+                <td className='font-bold py-4'>Penyelenggara</td>
                 <td className='font-bold py-4'>Nama Kegiatan</td>
-                <td className='font-bold py-4'>Tanggal Mulai</td>
-                <td className='font-bold py-4'>Tanggal Selesai</td>
+                <td className='font-bold py-4'>Status</td>
+                <td className='font-bold py-4'>Sertifikat</td>
                 <td className='font-bold py-4'>Action</td>
               </tr>
             </thead>
 
             <tbody>
               {currentPageData.map((data, index) => (
-              <tr key={index}>
-                <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                <td>{data.nip}</td>
-                <td>{data.nama_pegawai}</td>
-                <td>{data.nama_kegiatan}</td>
-                <td>{data.tanggal_mulai}</td>
-                <td>{data.tanggal_selesai}</td>
-                <td className='font-semibold'>
-                  <button onClick={() => navigate(`/AdminPage/detail_history_pelatihan/${data.id_historipelatihan}`)} className='flex justify-start items-center'>
-                    Detail
-                    <HiChevronRight fontSize={18} className='ml-2' />
-                  </button>
-                </td>
-              </tr>
+                <tr key={index}>
+                  <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                  <td>{data.nip}</td>
+                  <td>{data.nama_pegawai}</td>
+                  <td>{data.nama_penyelenggara}</td>
+                  <td>{data.nama_kegiatan}</td>
+                  <td>{getPegawaiStatus(data.status)}</td>
+                  <td className='flex items-center justify-center pt-2'>
+                    {data.sertifikat ?
+                      <TbCheck fontSize={18} className='text-green-600' />
+                      :
+                      <IoMdClose fontSize={18} className='text-red-600' />
+                    }
+                  </td>
+                  <td className='font-semibold'>
+                    <button onClick={() => navigate(`/AdminPage/detail_history_pelatihan/${data.id_pelatihan}`)} className='flex justify-start items-center'>
+                      Detail
+                      <HiChevronRight fontSize={18} className='ml-1' />
+                    </button>
+                  </td>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
-
       {/* Navigasi Halaman */}
       <div className='py-2 justify-end flex flex-row items-center'>
         <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>

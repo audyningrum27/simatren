@@ -28,8 +28,9 @@ import Penggajian from './UserPage/components/pages/Penggajian';
 import PengajuanCuti from "./UserPage/components/pages/Cuti/PengajuanCuti";
 import HistoriCuti from "./UserPage/components/pages/Cuti/HistoriCuti";
 import PelaporanPelatihan from "./UserPage/components/pages/Pelatihan/PelaporanPelatihan";
-import HistoriPelatihan from "./UserPage/components/pages/Pelatihan/HistoriPelatihan";
-import JadwalPelatihanUser from './UserPage/components/pages/Pelatihan/JadwalPelatihan';
+import HistoriPelatihanPegawai from './UserPage/components/pages/Pelatihan/HistoriPelatihanPegawai';
+import DetailPelatihanPegawai from './UserPage/components/pages/Pelatihan/DetailPelatihanPegawai';
+import JadwalPelatihanPegawai from './UserPage/components/pages/Pelatihan/JadwalPelatihanPegawai';
 import Kinerja from './UserPage/components/pages/Kinerja/Kinerja';
 
 import { AuthProvider } from './AuthContext';
@@ -61,7 +62,7 @@ function App() {
             <Route path="/AdminPage/histori_cuti_pegawai" element={<HistoriCutiPegawai />} />
             <Route path="/AdminPage/histori_pelatihan" element={<HistoryPelatihan />} />
             <Route path="/AdminPage/jadwal_pelatihan" element={<JadwalPelatihan />} />
-            <Route path="/AdminPage/detail_history_pelatihan/:id_historipelatihan" element={<DetailHistoryPelatihan />} />
+            <Route path="/AdminPage/detail_history_pelatihan/:id_pelatihan" element={<DetailHistoryPelatihan />} />
             <Route path="/AdminPage/detail_jadwal_pelatihan/:id_pelatihan" element={<DetailJadwalPelatihan />} />
             <Route path="/AdminPage/atur_jadwal_pelatihan" element={<TambahJadwalPelatihan />} />
             <Route path="/AdminPage/manajemen_kinerja" element={<ManajemenKinerja />} />
@@ -82,8 +83,9 @@ function App() {
             <Route path="/UserPage/pengajuan_cuti" element={<PengajuanCuti />} />
             <Route path="/UserPage/histori_cuti" element={<HistoriCuti />} />
             <Route path="/UserPage/pelaporan_pelatihan" element={<PelaporanPelatihan />} />
-            <Route path="/UserPage/histori_pelatihan" element={<HistoriPelatihan />} />
-            <Route path="/UserPage/jadwal_pelatihan" element={<JadwalPelatihanUser />} />
+            <Route path="/UserPage/histori_pelatihan_pegawai" element={<HistoriPelatihanPegawai />} />
+            <Route path="/UserPage/jadwal_pelatihan_pegawai" element={<JadwalPelatihanPegawai />} />
+            <Route path="/UserPage/detail_pelatihan_pegawai/:id_pelatihan" element={<DetailPelatihanPegawai />} />
             <Route path="/UserPage/grafik_kinerja" element={<Kinerja />} />
           </Route>
 
