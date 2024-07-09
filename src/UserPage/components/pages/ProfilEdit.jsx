@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaCirclePlus } from "react-icons/fa6";
 import axios from 'axios';
 import { useAuth } from '../../../AuthContext';
@@ -9,6 +9,7 @@ import bcrypt from 'bcryptjs';
 const ProfilEdit = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [showPopupEdit, setShowPopupEdit] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State untuk menampilkan password
   const [profil, setProfil] = useState({
     nama_pegawai: '',
     email: '',
@@ -161,10 +162,13 @@ const ProfilEdit = () => {
     }
   };
 
-
   const fileInputRef = useRef(null);
   const handleIconClick = () => {
     fileInputRef.current.click();
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -256,16 +260,22 @@ const ProfilEdit = () => {
               <tr>
                 <td>Password</td>
                 <td className="p-2">:</td>
-                <td className="px-2 border border-gray-400 rounded-md">
-                  <input
-                    type="password"
-                    name="password"
-                    value={profil.password}
-                    readOnly={!isEditable}
-                    onChange={handleChange}
-                    className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                  />
-                </td>
+                <td className="px-2 border border-gray-400 rounded-md relative">
+                <input
+                  type={showPassword ? 'text' : 'password'} // Menggunakan state showPassword
+                  name="password"
+                  value={profil.password}
+                  readOnly={!isEditable}
+                  onChange={handleChange}
+                  className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                />
+                {/* Icon mata untuk melihat/sembunyikan password */}
+                {isEditable && (
+                  <div className="absolute right-2 top-2 cursor-pointer" onClick={toggleShowPassword}>
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </div>
+                )}
+              </td>
               </tr>
               <tr>
                 <td>Tempat, Tanggal Lahir</td>
@@ -325,19 +335,23 @@ const ProfilEdit = () => {
                 <td>Posisi</td>
                 <td className="p-2">:</td>
                 <td className="px-2 border border-gray-400 rounded-md">
-                  <input
-                    type="text"
+                  <select
                     name="role"
                     value={profil.role}
-                    readOnly={!isEditable}
-                    className='w-full border-none bg-transparent focus:outline-none'
-                  />
+                    disabled={!isEditable}
+                    onChange={handleChange}
+                    className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                  >
+                  <option value="Guru">Guru</option>
+                  <option value="TPA">TPA</option>
+                  <option value="Non-TPA">Non TPA</option>
+                  </select>
                 </td>
               </tr>
               <tr>
                 <td>Status BPJS</td>
                 <td className="p-2">:</td>
-                <td className="px-1 border border-gray-400 rounded-md">
+                <td className="px-2 border border-gray-400 rounded-md">
                   <select
                     name="status_bpjs"
                     value={profil.status_bpjs}
@@ -353,7 +367,7 @@ const ProfilEdit = () => {
               <tr>
                 <td>Status Perkawinan</td>
                 <td className="p-2">:</td>
-                <td className="px-1 border border-gray-400 rounded-md">
+                <td className="px-2 border border-gray-400 rounded-md">
                   <select
                     name="status_kawin"
                     value={profil.status_kawin}

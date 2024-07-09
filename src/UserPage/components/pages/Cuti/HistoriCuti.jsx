@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch } from 'react-icons/hi';
+import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import axios from 'axios';
 import { formatDate } from '../../utils/formatDate';
 import { getStatus } from '../../utils/status';
@@ -7,6 +7,8 @@ import { getStatus } from '../../utils/status';
 function HistoriCuti() {
   const [dataCuti, setDataCuti] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Jumlah item per halaman
 
   useEffect(() => {
     fetchDataCuti();
@@ -38,12 +40,24 @@ function HistoriCuti() {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
   };
 
   const filteredCuti = dataCuti.filter((data) =>
     data.status_cuti.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
+  const totalPages = Math.ceil(filteredCuti.length / itemsPerPage);
+  const currentPageData = filteredCuti.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
   return (
     <div>
       <p className="text-xl font-bold px-5">Histori Cuti</p>
@@ -73,9 +87,16 @@ function HistoriCuti() {
             </thead>
 
             <tbody>
-              {filteredCuti.map((data, index) => (
+              {currentPageData.length === 0 && (
+                <tr>
+                  <td colSpan="5" className="text-center py-4">
+                    Tidak ada data cuti untuk ditampilkan.
+                  </td>
+                </tr>
+              )}
+              {currentPageData.map((data, index) => (
                 <tr key={index}>
-                  <td className="p-1 pt-2">{index + 1}</td>
+                  <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td>{data.tanggalMulai}</td>
                   <td>{data.tanggalSelesai}</td>
                   <td>{data.alasan_cuti}</td>
@@ -85,6 +106,24 @@ function HistoriCuti() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div className='py-2 justify-end flex flex-row items-center'>
+        <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
+        <div className='flex gap-4'>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index}
+              className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
+                currentPage === index + 1 ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+              }`}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
+        <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
       </div>
     </div>
   )

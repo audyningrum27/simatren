@@ -102,7 +102,7 @@ const HistoriPresensi = () => {
                     <td>{new Date(presensi.tanggal_presensi).toLocaleDateString()}</td>
                     <td>{presensi.jam_masuk}</td>
                     <td>{presensi.jam_keluar}</td>
-                    <td>{presensi.total_jam_kerja}</td>
+                    <td>{presensi.total_jam_kerja} Jam</td>
                   </tr>
                 ))}
               </tbody>

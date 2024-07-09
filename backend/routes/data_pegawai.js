@@ -7,6 +7,7 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+
 //ADMIN
 router.post('/pegawai', (req, res) => {
     const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kawin, anggota_keluarga, jumlah_tanggungan } = req.body;
@@ -113,7 +114,6 @@ router.put('/pegawai/:id_pegawai', (req, res) => {
     });
 });
 
-
 // Menghitung Pegawai Aktif
 router.get('/pegawai/active/count', (req, res) => {
     const query = 'SELECT COUNT(*) AS active_count FROM data_pegawai WHERE status_kepegawaian = "Aktif"';
@@ -126,7 +126,6 @@ router.get('/pegawai/active/count', (req, res) => {
         return res.json(results[0]);
     });
 });
-
 
 // Menghitung Total Pegawai
 router.get('/pegawai/total/count', (req, res) => {
@@ -173,7 +172,7 @@ router.get('/pegawai/role/count', (req, res) => {
 //USER
 router.get('/pegawai/profil/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    const sql = `SELECT * FROM data_pegawai WHERE id_pegawai = ?`;
+    const sql = 'SELECT * FROM data_pegawai WHERE id_pegawai = ?';
     db.query(sql, [id_pegawai], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -202,13 +201,16 @@ router.get('/pegawai/profil/:id_pegawai', (req, res) => {
 
 router.put('/pegawai/profil/:id_pegawai', upload.single('foto_profil'), (req, res) => {
     const { id_pegawai } = req.params;
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, anggota_keluarga, jumlah_tanggungan } = req.body;
+    const { 
+        nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, 
+        email, password, role, status_bpjs, status_kepegawaian, anggota_keluarga, jumlah_tanggungan 
+    } = req.body;
     let foto_profil = null;
     if (req.file) {
         foto_profil = req.file.buffer.toString('base64');
     }
     
-    const getFotoProfilSql = `SELECT foto_profil FROM data_pegawai WHERE id_pegawai = ?`;
+    const getFotoProfilSql = 'SELECT foto_profil FROM data_pegawai WHERE id_pegawai = ?';
     db.query(getFotoProfilSql, [id_pegawai], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -221,24 +223,16 @@ router.put('/pegawai/profil/:id_pegawai', upload.single('foto_profil'), (req, re
                 const sql = `
                     UPDATE data_pegawai
                     SET
-                        nama_pegawai = ?,
-                        nip = ?,
-                        tempat_lahir = ?,
-                        tanggal_lahir = ?,
-                        jenis_kelamin = ?,
-                        alamat = ?,
-                        no_telp = ?,
-                        email = ?,
-                        password = ?,
-                        role =  ?,
-                        status_bpjs = ?,
-                        status_kepegawaian = ?,
-                        anggota_keluarga = ?,
-                        jumlah_tanggungan = ?,
-                        foto_profil = ?
+                        nama_pegawai = ?, nip = ?, tempat_lahir = ?, tanggal_lahir = ?, jenis_kelamin = ?, 
+                        alamat = ?, no_telp = ?, email = ?, password = ?, role = ?, status_bpjs = ?, 
+                        status_kepegawaian = ?, anggota_keluarga = ?, jumlah_tanggungan = ?, foto_profil = ?
                     WHERE id_pegawai = ?
                 `;
-                const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, anggota_keluarga, jumlah_tanggungan, finalFotoProfil, id_pegawai];
+                const values = [
+                    nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, 
+                    email, password, role, status_bpjs, status_kepegawaian, anggota_keluarga, 
+                    jumlah_tanggungan, finalFotoProfil, id_pegawai
+                ];
                 db.query(sql, values, (err, result) => {
                     if (err) {
                         console.error('Error executing query:', err);
@@ -253,5 +247,6 @@ router.put('/pegawai/profil/:id_pegawai', upload.single('foto_profil'), (req, re
         }
     });
 });
+
 
 export default router;

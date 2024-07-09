@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch } from 'react-icons/hi';
+import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils/formatDate';
 
@@ -10,6 +10,9 @@ function ManajemenCuti() {
   const [selectedId, setSelectedId] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('');
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Sesuaikan dengan jumlah item per halaman yang Anda inginkan
 
   useEffect(() => {
     fetchDataCuti();
@@ -35,15 +38,15 @@ function ManajemenCuti() {
     }
   };
 
-  const [searchTerm, setSearchTerm] = useState('');
-
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+    setCurrentPage(1);
   };
 
   const filteredCuti = dataCuti.filter((data) =>
-    data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nip.toLowerCase().includes(searchTerm.toLowerCase())
+    (data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    data.nip.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    data.status_cuti !== 'Diterima' && data.status_cuti !== 'Ditolak'
   );
 
   const handleConfirm = (id_cuti, status_cuti) => {
@@ -69,7 +72,7 @@ function ManajemenCuti() {
       });
 
       if (response.ok) {
-        // Menghapus data cuti dari state setelah diperbarui
+        // Hapus data cuti dari state setelah diperbarui
         setDataCuti((prevData) => prevData.filter((cuti) => cuti.id_cuti !== selectedId));
         setShowSuccessPopup(true);
         setTimeout(() => {
@@ -77,13 +80,37 @@ function ManajemenCuti() {
           navigate('/AdminPage/histori_cuti_pegawai');
         }, 2000);
       } else {
-        console.error('Failed to update cuti status');
+        console.error('Gagal memperbarui status cuti');
       }
     } catch (error) {
       console.error('Error updating cuti status:', error);
     }
     handleClosePopup();
   };
+  
+  const totalPages = Math.ceil(filteredCuti.length / itemsPerPage);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentCutiData = filteredCuti.slice(startIndex, startIndex + itemsPerPage);
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const BoxWrapper = ({ children, isActive, onClick }) => (
+    <button
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
+        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+      }`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
 
   return (
     <div>
@@ -123,11 +150,11 @@ function ManajemenCuti() {
               </thead>
 
               <tbody>
-                {filteredCuti
+                {currentCutiData
                   .filter((data) => data.status_cuti !== 'Diterima' && data.status_cuti !== 'Ditolak')
                   .map((data, index) => (
                     <tr key={index}>
-                      <td className="p-1 pt-2">{index + 1}</td>
+                      <td className="p-1 pt-2">{startIndex + index + 1}</td>
                       <td>{data.nip}</td>
                       <td>{data.nama_pegawai}</td>
                       <td>{data.tanggalMulai}</td>
@@ -155,6 +182,21 @@ function ManajemenCuti() {
             </table>
           </div>
         </div>
+        <div className='py-2 justify-end flex flex-row items-center'>
+          <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
+          <div className='flex gap-4'>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <BoxWrapper
+                key={index}
+                isActive={currentPage === index + 1}
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </BoxWrapper>
+            ))}
+          </div>
+          <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
+        </div>
       </div>
 
       {showPopup && (
@@ -181,10 +223,10 @@ function ManajemenCuti() {
 
       {showSuccessPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-        <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
-          <p>Status cuti berhasil diperbarui!</p>
+          <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
+            <p>Status cuti berhasil diperbarui!</p>
+          </div>
         </div>
-      </div>
       )}
     </div>
   );
