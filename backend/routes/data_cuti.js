@@ -31,7 +31,6 @@ router.get('/cuti', (req, res) => {
     });
 });
 
-
 //Menambah Data Cuti Pada User
 router.post('/cuti', (req, res) => {
     const { id_pegawai, tanggalMulai, tanggalSelesai, alasanCuti } = req.body;
@@ -97,5 +96,27 @@ router.put('/cuti/:id_pegawai', (req, res) => {
         return res.status(200).json({ message: 'Status cuti berhasil diperbarui' });
     });
 });
+
+// Mengambil data cuti harian
+router.get('/cuti/daily', (req, res) => {
+    const { date } = req.query;
+    const query = `
+        SELECT 
+            COUNT(*) AS Cuti
+        FROM 
+            data_cuti
+        WHERE 
+            DATE(tanggal_mulai) <= ? AND DATE(tanggal_selesai) >= ?
+    `;
+    db.query(query, [date, date], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        return res.json(results[0]);
+    });
+});
+
 
 export default router;

@@ -48,16 +48,16 @@ const PengajuanCuti = () => {
 
   return (
     <div className="px-5">
-      <div className="relative py-4 w-fit md:w-full justify-between flex flex-row">
+      <div className="relative py-4 flex flex-row justify-between items-center w-full md:w-full">
         <p className="text-xl font-bold mb-4 px-5">Pengajuan Cuti</p>
 
-        <div className="mx-2">
+        <div className="flex justify-end w-full md:w-auto">
           <button
             type="button"
             onClick={() => navigate('/UserPage/histori_cuti')}
             className="w-fit text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
           >
-            Lihat History
+            Lihat Histori
           </button>
         </div>
       </div>

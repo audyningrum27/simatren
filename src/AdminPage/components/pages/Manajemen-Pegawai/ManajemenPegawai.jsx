@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi'
+import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { HiMiniPlus } from "react-icons/hi2";
 import { getPegawaiStatus } from '../../utils/status';
 import { useNavigate } from 'react-router-dom';
@@ -63,21 +63,22 @@ function ManajemenPegawai() {
         <div>
             <p className="text-xl font-bold px-5">Manajemen Pegawai</p>
             <div>
-                <div className="relative py-4 w-fit md:w-full justify-between flex flex-row">
+                <div className="relative py-4 flex flex-row justify-between items-center w-full md:w-full px-4 md:px-0">
                     {/* Form pencarian */}
-                    <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="text-sm focus:outline-none active:outline-none bg-gray-200 border border-gray-200 w-2/3 h-10 pl-11 rounded-sm"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                    />
+                    <div className="relative flex-1 mr-2">
+                        <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            className="text-sm focus:outline-none active:outline-none bg-gray-200 border border-gray-200 w-full h-10 pl-11 rounded-sm"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                        />
+                    </div>
                     {/* Tombol tambah pegawai */}
-                    <div className='flex justify-between mx-2 md:mx-10'>
-                        <HiMiniPlus fontSize={22} className="text-neutral-50 absolute top-1/2 -translate-y-1/2 ml-2" />
-                        <button onClick={() => navigate('/AdminPage/tambah_data_pegawai')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
-                            Tambah Pegawai
+                    <div className="flex items-center">
+                        <button onClick={() => navigate('/AdminPage/tambah_data_pegawai')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-10">
+                            <HiMiniPlus fontSize={22} className="inline mr-1" /> Tambah Pegawai
                         </button>
                     </div>
                 </div>
@@ -141,3 +142,4 @@ function ManajemenPegawai() {
 }
 
 export default ManajemenPegawai;
+ 

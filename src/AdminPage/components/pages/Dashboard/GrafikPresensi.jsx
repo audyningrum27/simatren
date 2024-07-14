@@ -18,14 +18,22 @@ const GrafikPresensi = ({ selectedDate }) => {
     const fetchData = async () => {
       try {
         const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
-        const response = await fetch(`http://localhost:5000/api/data_presensi/presensi/daily?date=${formattedDate}`);
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch data');
+        // Fetch data kehadiran
+        const presensiResponse = await fetch(`http://localhost:5000/api/data_presensi/presensi/daily?date=${formattedDate}`);
+        if (!presensiResponse.ok) {
+          throw new Error('Failed to fetch data presensi');
         }
+        const presensiData = await presensiResponse.json();
+        console.log('Presensi Data:', presensiData); // Log data kehadiran yang diterima
 
-        const presensiData = await response.json();
-        console.log('Presensi Data:', presensiData); // Log data yang diterima
+        // Fetch data cuti
+        const cutiResponse = await fetch(`http://localhost:5000/api/data_cuti/cuti?date=${formattedDate}`);
+        if (!cutiResponse.ok) {
+          throw new Error('Failed to fetch data cuti');
+        }
+        const cutiData = await cutiResponse.json();
+        console.log('Cuti Data:', cutiData); // Log data cuti yang diterima
 
         const today = new Date(selectedDate);
         const startDate = new Date(today.setDate(today.getDate() - today.getDay() + 1)); // Start of the week (Monday)
@@ -40,13 +48,27 @@ const GrafikPresensi = ({ selectedDate }) => {
           return acc;
         }, {});
 
+        const cutiDataMap = cutiData.reduce((acc, item) => {
+          let currentDate = moment(item.tanggal_mulai).tz('Asia/Jakarta');
+          const endDate = moment(item.tanggal_selesai).tz('Asia/Jakarta');
+          
+          while (currentDate <= endDate) {
+            const dateString = currentDate.format('YYYY-MM-DD');
+            acc[dateString] = (acc[dateString] || 0) + 1;
+            currentDate = currentDate.add(1, 'days');
+          }
+          return acc;
+        }, {});
+
         console.log('Presensi Data Map:', presensiDataMap); // Log presensi data map
+        console.log('Cuti Data Map:', cutiDataMap); // Log cuti data map
 
         const formattedData = dateRange.map(date => {
           const dateString = moment(date).tz('Asia/Jakarta').format('YYYY-MM-DD');
           return {
             name: moment(date).tz('Asia/Jakarta').format('ddd, D MMM'),
-            Hadir: presensiDataMap[dateString] || 0
+            Hadir: presensiDataMap[dateString] || 0,
+            Cuti: cutiDataMap[dateString] || 0
           };
         });
 
@@ -95,6 +117,7 @@ const GrafikPresensi = ({ selectedDate }) => {
             <Tooltip />
             <Legend />
             <Bar dataKey="Hadir" fill='rgb(21 128 61)' />
+            <Bar dataKey="Cuti" fill='rgb(34 197 94)' />
           </BarChart>
         </ResponsiveContainer>
       </div>
