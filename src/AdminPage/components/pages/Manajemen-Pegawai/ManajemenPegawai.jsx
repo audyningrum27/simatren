@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 function ManajemenPegawai() {
     const [dataPegawai, setDataPegawai] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10; // Jumlah item per halaman
+    const itemsPerPage = 10;
     const navigate = useNavigate();
 
     useEffect(() => {

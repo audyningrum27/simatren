@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch } from 'react-icons/hi';
+import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import axios from 'axios';
 import { formatDate } from '../../utils/formatDate';
 import { useNavigate } from 'react-router-dom';
@@ -10,6 +10,8 @@ function JadwalPelatihanPegawai() {
     const [searchTerm, setSearchTerm] = useState('');
     const [showPopup, setShowPopup] = useState(false);
     const navigate = useNavigate();
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         fetchDataPelatihan();
@@ -77,6 +79,32 @@ function JadwalPelatihanPegawai() {
         data.nama_penyelenggara.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    // Hitung total halaman berdasarkan data yang sudah difilter
+    const totalPages = Math.ceil(filteredPelatihan.length / itemsPerPage);
+
+    // Potong data berdasarkan halaman saat ini
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentPageData = filteredPelatihan.slice(startIndex, startIndex + itemsPerPage);
+
+    // Fungsi untuk navigasi halaman
+    const goToPreviousPage = () => {
+        if (currentPage > 1) setCurrentPage(currentPage - 1);
+    };
+
+    const goToNextPage = () => {
+        if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+    };
+
+    const BoxWrapper = ({ children, isActive, onClick }) => (
+        <button
+            className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+                }`}
+            onClick={onClick}
+        >
+            {children}
+        </button>
+    );
+
     return (
         <div>
             <p className="text-xl font-bold px-5">Jadwal Pelatihan</p>
@@ -108,9 +136,16 @@ function JadwalPelatihanPegawai() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredPelatihan.map((data, index) => (
+                                {currentPageData.length === 0 && (
+                                    <tr>
+                                        <td colSpan="10" className="text-center py-4">
+                                            Tidak ada jadwal pelatihan untuk ditampilkan.
+                                        </td>
+                                    </tr>
+                                )}
+                                {currentPageData.map((data, index) => (
                                     <tr key={index}>
-                                        <td className="p-1 pt-2">{index + 1}</td>
+                                        <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                                         <td>{data.nama_penyelenggara}</td>
                                         <td>{data.nama_kegiatan}</td>
                                         <td>{data.tanggalMulai}</td>
@@ -128,6 +163,22 @@ function JadwalPelatihanPegawai() {
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                <div className='py-2 justify-end flex flex-row items-center'>
+                    <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
+                    <div className='flex gap-4'>
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <BoxWrapper
+                                key={index}
+                                isActive={currentPage === index + 1}
+                                onClick={() => setCurrentPage(index + 1)}
+                            >
+                                {index + 1}
+                            </BoxWrapper>
+                        ))}
+                    </div>
+                    <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
                 </div>
             </div>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi'
 import { HiMiniPlus } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
 import { formatCurrency } from '../../utils/formatCurrency';
@@ -44,7 +44,7 @@ function ManajemenGaji() {
     data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
     data.nip.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   const totalPages = Math.ceil(filteredGaji.length / itemsPerPage);
   const currentPageData = filteredGaji.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -58,9 +58,8 @@ function ManajemenGaji() {
 
   const BoxWrapper = ({ children, isActive, onClick }) => (
     <button
-      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-      }`}
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
       onClick={onClick}
     >
       {children}
@@ -71,20 +70,27 @@ function ManajemenGaji() {
     <div>
       <p className="text-xl font-bold px-5">Manajemen Gaji</p>
 
-      <div className="relative py-4 w-fit md:w-full justify-between flex flex-row">
-        <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="text-sm focus:outline-none active:outline-none bg-gray-200 border border-gray-200 w-2/3 h-10 pl-11 rounded-sm"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
+      <div className="relative py-4 w-full justify-between flex flex-col md:flex-row">
+        <div className="relative flex flex-1 mb-4 md:mb-0 mr-4">
+          <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search..."
+            className="text-sm focus:outline-none active:outline-none bg-gray-200 border border-gray-200 w-full h-10 pl-11 rounded-sm"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </div>
 
-        <div className='flex justify-between mx-2 md:mx-10'>
-          <HiMiniPlus fontSize={22} className="text-neutral-50 absolute top-1/2 -translate-y-1/2 ml-2" />
-          <button onClick={() => navigate('/AdminPage/tambah_data_gaji')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
-            Tambah Data Gaji
+        <div className='flex flex-row gap-2'>
+          <button onClick={() => navigate('/AdminPage/tambah_data_gaji')} className="flex items-center justify-center font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-4">
+            <HiMiniPlus fontSize={22} className="text-neutral-50 mr-2" />
+            Tambah Manual
+          </button>
+
+          <button onClick={() => navigate('/AdminPage/tambah_data_gaji_excel')} className="flex items-center justify-center font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-4">
+            <HiMiniPlus fontSize={22} className="text-neutral-50 mr-2" />
+            Generate Excel
           </button>
         </div>
       </div>
@@ -106,6 +112,13 @@ function ManajemenGaji() {
             </thead>
 
             <tbody>
+              {currentPageData.length === 0 && (
+                <tr>
+                  <td colSpan="10" className="text-center py-4">
+                    Tidak ada data gaji untuk ditampilkan.
+                  </td>
+                </tr>
+              )}
               {currentPageData.map((data, index) => (
                 <tr key={index}>
                   <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
@@ -142,5 +155,6 @@ function ManajemenGaji() {
     </div>
   );
 }
+
 
 export default ManajemenGaji;

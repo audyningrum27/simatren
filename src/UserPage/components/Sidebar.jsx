@@ -40,6 +40,9 @@ export default function Sidebar({ isOpen }) {
 
   useEffect(() => {
     fetchProfil();
+    const interval = setInterval(fetchProfil, 2000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const toggleDropdown = () => {

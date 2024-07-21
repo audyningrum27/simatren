@@ -3,9 +3,37 @@ import db from '../db.js';
 
 const router = express.Router();
 
-//Menampilkan Data Cuti Pada Admin
-router.get('/cuti', (req, res) => {
-    console.log("GET /api/data_cuti/cuti");
+//Menampilkan Data Cuti Pada Manajemen Cuti
+router.get('/cuti/all', (req, res) => {
+    console.log("GET /api/data_cuti/cuti/all");
+    const query = `
+    SELECT 
+        p.nip,
+        p.nama_pegawai,
+        c.id_cuti,
+        c.id_pegawai,
+        c.tanggal_mulai,
+        c.tanggal_selesai,
+        c.alasan_cuti,
+        c.status_cuti
+    FROM 
+        data_cuti c
+    JOIN 
+        data_pegawai p ON c.id_pegawai = p.id_pegawai;
+    `;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        return res.json(results);
+    });
+});
+
+// Menampilkan data cuti dalam bentuk grafik
+router.get('/cuti/approved', (req, res) => {
+    console.log("GET /api/data_cuti/cuti/approved");
     const query = `
     SELECT 
         p.nip,
@@ -20,6 +48,8 @@ router.get('/cuti', (req, res) => {
         data_cuti c
     JOIN 
         data_pegawai p ON c.id_pegawai = p.id_pegawai
+    WHERE
+        c.status_cuti = 'Diterima';
     `;
     db.query(query, (err, results) => {
         if (err) {
@@ -117,6 +147,5 @@ router.get('/cuti/daily', (req, res) => {
         return res.json(results[0]);
     });
 });
-
 
 export default router;

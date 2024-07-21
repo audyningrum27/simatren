@@ -76,9 +76,8 @@ function Penggajian() {
 
   const BoxWrapper = ({ children, isActive, onClick }) => (
     <button
-      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-      }`}
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
       onClick={onClick}
     >
       {children}
@@ -194,8 +193,8 @@ function Penggajian() {
     <div>
       <p className="text-xl font-bold px-5">Data Gaji</p>
 
-      <div className="relative py-4 w-full flex justify-between items-center">
-        <div className="flex items-center w-2/3">
+      <div className="relative py-4 w-full justify-between flex flex-col md:flex-row">
+        <div className="relative flex flex-1 mb-4 md:mb-0 mr-4">
           <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
           <input
             type="text"
@@ -205,7 +204,8 @@ function Penggajian() {
             onChange={handleSearchChange}
           />
         </div>
-        <div className="flex space-x-2">
+
+        <div className="flex flex-row gap-2 font-semibold text-xs">
           <button
             onClick={selectMode ? () => downloadPDF(selectedRows) : toggleSelectMode}
             className='px-4 py-2 bg-green-900 text-white rounded'

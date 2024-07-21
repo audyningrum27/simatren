@@ -15,7 +15,7 @@ function HistoriCutiPegawai() {
 
   const fetchDataCuti = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_cuti/cuti');
+      const response = await fetch('http://localhost:5000/api/data_cuti/cuti/all');
       const result = await response.json();
 
       if (result && Array.isArray(result)) {

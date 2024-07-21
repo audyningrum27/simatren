@@ -4,12 +4,12 @@ import axios from 'axios';
 
 const TambahDataGaji = () => {
   const navigate = useNavigate();
-  const [idPegawai, setIdPegawai] = useState('');
+  const [idPegawai, setIdPegawai] = useState([]);
   const [pegawaiList, setPegawaiList] = useState([]);
   const [gajiDasar, setGajiDasar] = useState('');
   const [tunjangan, setTunjangan] = useState('');
   const [potongan, setPotongan] = useState('');
-  const [tanggalGaji, setTanggalGaji] = useState(''); 
+  const [tanggalGaji, setTanggalGaji] = useState('');
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
@@ -21,6 +21,15 @@ const TambahDataGaji = () => {
         console.error('There was an error fetching the employee data!', error);
       });
   }, []);
+
+  const handleSelectChange = (e) => {
+    const { value } = e.target;
+    if (value === 'ALL') {
+      setIdPegawai(pegawaiList.map(pegawai => pegawai.id_pegawai));
+    } else {
+      setIdPegawai([value]);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -72,12 +81,14 @@ const TambahDataGaji = () => {
                     <select
                       name="id_pegawai"
                       id="id_pegawai"
-                      value={idPegawai}
-                      onChange={(e) => setIdPegawai(e.target.value)}
-                      className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${idPegawai ? 'text-black' : 'text-gray-400'}`}
+                      value={idPegawai.length === 1 ? idPegawai[0] : idPegawai.length ? 'ALL' : ''}
+                      onChange={handleSelectChange}
+                      className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md ${idPegawai.length ? 'text-black' : 'text-gray-400'}`}
                       required
+                      defaultValue=""
                     >
-                      <option value="">Pilih Pegawai</option>
+                      <option value="" disabled selected className='text-gray-400'>Masukkan nama pegawai</option>
+                      <option value="ALL" className='text-black'>Pilih Semua Pegawai</option>
                       {pegawaiList.map((pegawai) => (
                         <option className='text-black' key={pegawai.id_pegawai} value={pegawai.id_pegawai}>
                           {pegawai.nama_pegawai} - {pegawai.nip}
@@ -113,7 +124,7 @@ const TambahDataGaji = () => {
                       value={gajiDasar}
                       onChange={(e) => setGajiDasar(e.target.value)}
                       className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="3.000.000"
+                      placeholder="3000000"
                       required
                     />
                   </td>
@@ -129,7 +140,7 @@ const TambahDataGaji = () => {
                       value={tunjangan}
                       onChange={(e) => setTunjangan(e.target.value)}
                       className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="2.500.000"
+                      placeholder="2500000"
                       required
                     />
                   </td>
@@ -145,7 +156,7 @@ const TambahDataGaji = () => {
                       value={potongan}
                       onChange={(e) => setPotongan(e.target.value)}
                       className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="500.000"
+                      placeholder="500000"
                       required
                     />
                   </td>

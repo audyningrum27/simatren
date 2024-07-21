@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaUserCircle } from "react-icons/fa";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { PiEmptyBold } from "react-icons/pi";
 import { getPegawaiStatus } from "../../utils/status";
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment-timezone';
@@ -12,7 +14,6 @@ export default function DetailPegawai() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [showPopupEdit, setShowPopupEdit] = useState(false);
-    
 
     useEffect(() => {
         fetchPegawaiDetail();
@@ -110,6 +111,12 @@ export default function DetailPegawai() {
 
     if (!pegawai) return <p>Loading...</p>;
 
+    //Menampilkan Kartu Keluarga
+    const viewKartuKeluarga = () => {
+        const url = `http://localhost:5000/api/data_pegawai/pegawai/view-kk/${id_pegawai}`;
+        window.open(url, '_blank');
+    };
+
     return (
         <div className="px-5">
             <span className="text-2xl text-gray-950 font-semibold flex justify-center mb-5">Detail Pegawai</span>
@@ -159,7 +166,7 @@ export default function DetailPegawai() {
                                         <td className="p-2">:</td>
                                         <td className="px-2 border border-gray-400 rounded-md">
                                             <input
-                                                type="number"
+                                                type="text"
                                                 name="nip"
                                                 value={pegawai.nip}
                                                 readOnly={!isEditable}
@@ -229,7 +236,7 @@ export default function DetailPegawai() {
                                         <td className="p-2">:</td>
                                         <td className="px-2 border border-gray-400 rounded-md">
                                             <input
-                                                type="number"
+                                                type="text"
                                                 name="no_telp"
                                                 value={pegawai.no_telp || ''}
                                                 readOnly={!isEditable}
@@ -256,16 +263,16 @@ export default function DetailPegawai() {
                                         <td>Posisi</td>
                                         <td className="p-2">:</td>
                                         <td className="px-2 border border-gray-400 rounded-md">
-                                        <select
+                                            <select
                                                 name="role"
-                                                value={pegawai.role}
+                                                value={pegawai.role || ''}
                                                 disabled={!isEditable}
                                                 onChange={handleChange}
                                                 className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
                                             >
-                                                <option value="guru">Guru</option>
-                                                <option value="tpa">TPA</option>
-                                                <option value="non_tpa">Non TPA</option>
+                                                <option value="Guru">Guru</option>
+                                                <option value="TPA">TPA</option>
+                                                <option value="Non TPA">Non TPA</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -298,35 +305,33 @@ export default function DetailPegawai() {
                                             >
                                                 <option value="Belum Menikah">Belum Menikah</option>
                                                 <option value="Menikah">Menikah</option>
+                                                <option value="Cerai">Cerai</option>
                                             </select>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Data Anggota Keluarga</td>
+                                        <td>Data Keluarga</td>
                                         <td className="p-2">:</td>
-                                        <td className="px-2 border border-gray-400 rounded-md">
-                                            <input
-                                                type='text'
-                                                name="anggota_keluarga"
-                                                value={pegawai.anggota_keluarga || ''}
-                                                readOnly={!isEditable}
-                                                onChange={handleChange}
-                                                className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                                            />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Jumlah Tanggungan</td>
-                                        <td className="p-2">:</td>
-                                        <td className="px-2 border border-gray-400 rounded-md">
-                                            <input
-                                                type="number"
-                                                name="jumlah_tanggungan"
-                                                value={pegawai.jumlah_tanggungan || ''}
-                                                readOnly={!isEditable}
-                                                onChange={handleChange}
-                                                className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                                            />
+                                        <td className='font-semibold'>
+                                            {pegawai.kartu_keluarga ? (
+                                                <button
+                                                    className='flex justify-start items-center bg-sky-400 px-3 py-1 rounded-sm'
+                                                    onClick={viewKartuKeluarga}
+                                                >
+                                                    <MdOutlineRemoveRedEye fontSize={16} className='mr-1' />
+                                                    Lihat
+                                                </button>
+                                            ) : (
+                                                <div>
+                                                    <button
+                                                        className='flex justify-start items-center bg-gray-300 px-3 py-1 rounded-sm text-gray-700'
+                                                        disabled
+                                                    >
+                                                        <PiEmptyBold fontSize={16} className='mr-1' />
+                                                        Belum ada data
+                                                    </button>
+                                                </div>
+                                            )}
                                         </td>
                                     </tr>
                                 </tbody>

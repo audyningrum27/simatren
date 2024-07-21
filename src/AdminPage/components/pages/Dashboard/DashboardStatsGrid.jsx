@@ -14,7 +14,8 @@ const DashboardStatsGrid = ({ selectedDate }) => {
       try {
         const responseActive = await fetch('http://localhost:5000/api/data_pegawai/pegawai/active/count');
         const responseTotal = await fetch('http://localhost:5000/api/data_pegawai/pegawai/total/count');
-        const responseCuti = await fetch('http://localhost:5000/api/data_pegawai/pegawai/cuti/count');
+        const formattedDate = selectedDate.toISOString().split('T')[0];
+        const responseCuti = await fetch(`http://localhost:5000/api/data_pegawai/pegawai/cuti/count?date=${formattedDate}`);
         
         if (!responseActive.ok || !responseTotal.ok || !responseCuti.ok) {
           throw new Error('Failed to fetch employee counts');

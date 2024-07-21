@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch , HiChevronRight, HiChevronLeft} from 'react-icons/hi';
+import { HiOutlineSearch, HiChevronRight, HiChevronLeft } from 'react-icons/hi';
 import { TbCheck } from "react-icons/tb";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { getPegawaiStatus } from '../../utils/status';
 function HistoryPelatihan() {
   const [historiPelatihan, setHistoriPelatihan] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Jumlah item per halaman
+  const itemsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,14 +17,10 @@ function HistoryPelatihan() {
 
   const fetchHistoriPelatihan = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/histori_pelatihan/historipelatihan');
+      const response = await fetch('http://localhost:5000/api/data_pelatihan/pelatihan');
       const data = await response.json();
-      const formattedData = data.map(item => ({
-        ...item,
-        tanggal_mulai: moment.utc(item.tanggal_mulai).tz('Asia/Jakarta').format('DD/MM/YYYY'),
-        tanggal_selesai: moment.utc(item.tanggal_selesai).tz('Asia/Jakarta').format('DD/MM/YYYY'),
-      }));
-      setHistoriPelatihan(formattedData);
+      const filteredData = data.filter(item => item.status === 'Selesai');
+      setHistoriPelatihan(filteredData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -38,7 +34,7 @@ function HistoryPelatihan() {
 
   const filteredPelatihan = historiPelatihan.filter((data) =>
     data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase()) 
+    data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Membagi data ke halaman-halaman
@@ -56,9 +52,8 @@ function HistoryPelatihan() {
 
   const BoxWrapper = ({ children, isActive, onClick }) => (
     <button
-      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-      }`}
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
       onClick={onClick}
     >
       {children}
@@ -91,12 +86,18 @@ function HistoryPelatihan() {
                 <td className='font-bold py-4'>Penyelenggara</td>
                 <td className='font-bold py-4'>Nama Kegiatan</td>
                 <td className='font-bold py-4'>Status</td>
-                <td className='font-bold py-4'>Sertifikat</td>
                 <td className='font-bold py-4'>Action</td>
               </tr>
             </thead>
 
             <tbody>
+              {currentPageData.length === 0 && (
+                <tr>
+                  <td colSpan="10" className="text-center py-4">
+                    Tidak ada histori pelatihan untuk ditampilkan.
+                  </td>
+                </tr>
+              )}
               {currentPageData.map((data, index) => (
                 <tr key={index}>
                   <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
@@ -105,13 +106,6 @@ function HistoryPelatihan() {
                   <td>{data.nama_penyelenggara}</td>
                   <td>{data.nama_kegiatan}</td>
                   <td>{getPegawaiStatus(data.status)}</td>
-                  <td className='flex items-center justify-center pt-2'>
-                    {data.sertifikat ?
-                      <TbCheck fontSize={18} className='text-green-600' />
-                      :
-                      <IoMdClose fontSize={18} className='text-red-600' />
-                    }
-                  </td>
                   <td className='font-semibold'>
                     <button onClick={() => navigate(`/AdminPage/detail_history_pelatihan/${data.id_pelatihan}`)} className='flex justify-start items-center'>
                       Detail
@@ -124,6 +118,7 @@ function HistoryPelatihan() {
           </table>
         </div>
       </div>
+
       {/* Navigasi Halaman */}
       <div className='py-2 justify-end flex flex-row items-center'>
         <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>

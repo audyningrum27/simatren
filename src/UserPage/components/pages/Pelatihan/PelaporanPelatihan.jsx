@@ -53,7 +53,7 @@ const PelaporanPelatihan = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    const fileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    const fileTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
     if (file && fileTypes.includes(file.type)) {
       setBuktiKegiatan(file);
     } else {
@@ -76,7 +76,6 @@ const PelaporanPelatihan = () => {
     } catch (error) {
       console.error('Error uploading bukti pelaksanaan:', error);
     }
-
     // Reset form setelah submit
     setSelectedPelatihan('');
     setNamaPenyelenggara('');
@@ -98,10 +97,10 @@ const PelaporanPelatihan = () => {
 
   return (
     <div className="px-5">
-      <div className="relative py-4 w-fit md:w-full justify-between flex flex-row">
+      <div className="relative py-4 w-fit md:w-full justify-between flex flex-col md:flex-row">
         <p className="text-xl font-bold mb-4 px-5">Pelaporan Pelatihan</p>
 
-        <div className="mx-2 flex justify-end gap-6">
+        <div className="mx-5 flex justify-end md:justify-end gap-6">
           <button
             type="button"
             onClick={() => navigate('/UserPage/jadwal_pelatihan_pegawai')}
@@ -119,8 +118,8 @@ const PelaporanPelatihan = () => {
         </div>
       </div>
 
-      <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-betwee'>
-        <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
+      <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-between'>
+        <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-4 md:p-10">
 
           {/* Form Pengajuan Cuti */}
           <form className="space-y-6">
@@ -193,18 +192,22 @@ const PelaporanPelatihan = () => {
                 </tr>
 
                 <tr>
-                  <td className="p-2 text-sm">Bukti Kegiatan<span className="text-red-600">*</span></td>
+                  <td className="p-2 text-sm">Bukti Pelaksanaan<span className="text-red-600">*</span></td>
                   <td className="p-2">:</td>
                   <td className="p-2">
                     <input
                       type="file"
                       name="bukti_pelaksanaan"
                       id="bukti_pelaksanaan"
-                      accept="image/jpeg, image/jpg, image/png"
+                      accept=".jpeg, .jpg, .png, .pdf"
                       onChange={handleFileChange}
                       className="p-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer bg-gray-50 focus:outline-none"
                       required
                     />
+                    <p className="text-xs mt-1">
+                      <span className="text-red-600">*</span>
+                      <span className="text-gray-700"> Silahkan upload sertifikat pelatihan jika ada.</span>
+                    </p>
                   </td>
                 </tr>
               </table>

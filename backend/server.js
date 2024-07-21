@@ -14,14 +14,15 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-app.use(express.json());
-
 // Konfigurasi CORS
 app.use(cors({
     origin: 'http://localhost:5173',
-    methods: 'GET,POST,PUT,DELETE',
-    credentials: true
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use(express.json({ limit: '20mb' }));
 
 // Rute API
 app.use('/api/auth', authRoutes);

@@ -1,21 +1,24 @@
 import express from 'express';
 import db from '../db.js';
 import multer from 'multer';
+import bcrypt from 'bcryptjs';
 
 const router = express.Router();
 
+// Konfigurasi multer untuk menyimpan file foto profil
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 //ADMIN
+//Menambah data pegawai
 router.post('/pegawai', (req, res) => {
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kawin, anggota_keluarga, jumlah_tanggungan } = req.body;
-    const status_kepegawaian = 'Aktif';
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kawin } = req.body;
+    const status_kepegawaian = 'Aktif'; // Default status kepegawaian "Aktif"
     const sql = `
-        INSERT INTO data_pegawai (nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, password_plain, role, status_bpjs, status_kepegawaian, status_kawin, anggota_keluarga, jumlah_tanggungan)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO data_pegawai (nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, status_kawin)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, password, role, status_bpjs, status_kepegawaian, status_kawin, anggota_keluarga, jumlah_tanggungan];
+    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, status_kawin];
     db.query(sql, values, (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -26,6 +29,7 @@ router.post('/pegawai', (req, res) => {
     });
 });
 
+//Menampilkan seluruh data pegawai
 router.get('/pegawai', (req, res) => {
     console.log("GET /api/data_pegawai/pegawai");
     const query = 'SELECT * FROM data_pegawai';
@@ -39,6 +43,7 @@ router.get('/pegawai', (req, res) => {
     });
 });
 
+//Menampilkan detail setiap pegawai
 router.get('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
     const sql = `SELECT * FROM data_pegawai WHERE id_pegawai = ?`;
@@ -50,7 +55,7 @@ router.get('/pegawai/:id_pegawai', (req, res) => {
             if (result.length > 0) {
                 const pegawai = result[0];
                 if (pegawai.foto_profil) {
-                    let imageType = 'jpeg'; // Default
+                    let imageType = 'jpeg';
                     const buffer = Buffer.from(pegawai.foto_profil, 'base64');
                     if (buffer.slice(0, 4).toString('hex') === '89504e47') {
                         imageType = 'png';
@@ -68,6 +73,7 @@ router.get('/pegawai/:id_pegawai', (req, res) => {
     });
 });
 
+//Menghapus data pegawai 
 router.delete('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
     const sql = 'DELETE FROM data_pegawai WHERE id_pegawai = ?';
@@ -81,9 +87,10 @@ router.delete('/pegawai/:id_pegawai', (req, res) => {
     });
 });
 
+//Mengedit data pegawai
 router.put('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, anggota_keluarga, jumlah_tanggungan } = req.body;
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, jumlah_tanggungan } = req.body;
     const sql = `
         UPDATE data_pegawai
         SET
@@ -98,11 +105,10 @@ router.put('/pegawai/:id_pegawai', (req, res) => {
             role =  ?,
             status_bpjs = ?,
             status_kepegawaian = ?,
-            anggota_keluarga = ?,
             jumlah_tanggungan = ?
         WHERE id_pegawai = ?
     `;
-    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, anggota_keluarga, jumlah_tanggungan, id_pegawai];
+    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, jumlah_tanggungan, id_pegawai];
     db.query(sql, values, (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -121,7 +127,7 @@ router.get('/pegawai/active/count', (req, res) => {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-        console.log('Hasil jumlah pegawai aktif:', results); // Log debug
+        console.log('Hasil jumlah pegawai aktif:', results);
         return res.json(results[0]);
     });
 });
@@ -134,23 +140,29 @@ router.get('/pegawai/total/count', (req, res) => {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-        console.log('Hasil jumlah total pegawai:', results); // Log debug
+        console.log('Hasil jumlah total pegawai:', results);
         return res.json(results[0]);
     });
 });
 
-// Menghitung Pegawai Cuti
+// Menghitung jumlah pegawai cuti berdasarkan status cuti yang diterima dan filter tanggal
 router.get('/pegawai/cuti/count', (req, res) => {
-    const query = 'SELECT COUNT(*) AS cuti_count FROM data_pegawai WHERE status_kepegawaian = "Cuti"';
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error('Error executing query:', err);
-            return res.status(500).json({ message: 'Internal Server Error' });
-        }
-        console.log('Hasil jumlah pegawai cuti:', results); // Log debug
-        return res.json(results[0]);
+    const { date } = req.query;
+    const query = `
+      SELECT COUNT(*) AS cuti_count 
+      FROM data_pegawai dp
+      JOIN data_cuti dc ON dp.id_pegawai = dc.id_pegawai
+      WHERE dc.status_cuti = 'Diterima' AND ? BETWEEN dc.tanggal_mulai AND dc.tanggal_selesai
+    `;
+    db.query(query, [date], (err, results) => {
+      if (err) {
+        console.error('Error executing query:', err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+      }
+      console.log('Hasil jumlah pegawai cuti:', results);
+      return res.json(results[0]);
     });
-});
+  });
 
 // Menghitung Role atau Kategori Pegawai
 router.get('/pegawai/role/count', (req, res) => {
@@ -169,9 +181,10 @@ router.get('/pegawai/role/count', (req, res) => {
 });
 
 //USER
+//Menampilkan data pegawai sesuai id pegawai yang sedang login
 router.get('/pegawai/profil/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    const sql = 'SELECT * FROM data_pegawai WHERE id_pegawai = ?';
+    const sql = `SELECT * FROM data_pegawai WHERE id_pegawai = ?`;
     db.query(sql, [id_pegawai], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -198,58 +211,132 @@ router.get('/pegawai/profil/:id_pegawai', (req, res) => {
     });
 });
 
-router.put('/pegawai/profil/:id_pegawai', upload.single('foto_profil'), (req, res) => {
+// Mengupload foto profil
+router.post('/pegawai/upload-foto/:id_pegawai', upload.single('foto_profil'), (req, res) => {
     const { id_pegawai } = req.params;
-    const { 
-        nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, 
-        email, password, role, status_bpjs, status_kepegawaian, anggota_keluarga, jumlah_tanggungan 
-    } = req.body;
-    let foto_profil = null;
-    if (req.file) {
-        foto_profil = req.file.buffer.toString('base64');
+    const file = req.file;
+
+    if (!file) {
+        return res.status(400).json({ message: 'No file uploaded' });
     }
-    
-    const getFotoProfilSql = `SELECT foto_profil FROM data_pegawai WHERE id_pegawai = ?`;
-    db.query(getFotoProfilSql, [id_pegawai], (err, result) => {
+
+    const fileBuffer = file.buffer;
+
+    const query = 'UPDATE data_pegawai SET foto_profil = ? WHERE id_pegawai = ?';
+    db.query(query, [fileBuffer, id_pegawai], (err, result) => {
+        if (err) {
+            console.error('Error uploading file to the database:', err);
+            return res.status(500).json({ message: 'Error uploading file' });
+        }
+        res.status(200).json({ message: 'Photo Profile uploaded successfully' });
+    });
+});
+
+// Mengupload Kartu Keluarga
+router.post('/pegawai/upload-kk/:id_pegawai', upload.single('kartu_keluarga'), (req, res) => {
+    const { id_pegawai } = req.params;
+    const file = req.file;
+
+    if (!file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const fileBuffer = file.buffer;
+
+    const query = 'UPDATE data_pegawai SET kartu_keluarga = ? WHERE id_pegawai = ?';
+    db.query(query, [fileBuffer, id_pegawai], (err, result) => {
+        if (err) {
+            console.error('Error uploading file to the database:', err);
+            return res.status(500).json({ message: 'Error uploading file' });
+        }
+        res.status(200).json({ message: 'KK uploaded successfully' });
+    });
+});
+
+// Menampilkan Kartu Keluarga Pegawai
+router.get('/pegawai/view-kk/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+
+    const sql = 'SELECT kartu_keluarga FROM data_pegawai WHERE id_pegawai = ?';
+    db.query(sql, [id_pegawai], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
-            res.status(500).json({ error: 'Internal server error' });
-        } else {
-            if (result.length > 0) {
-                const existingFotoProfil = result[0].foto_profil;
-                const finalFotoProfil = foto_profil || existingFotoProfil;
-
-                const sql = `
-                    UPDATE data_pegawai
-                    SET
-                        nama_pegawai = ?, nip = ?, tempat_lahir = ?, tanggal_lahir = ?, jenis_kelamin = ?, 
-                        alamat = ?, no_telp = ?, email = ?, password = ?, role = ?, status_bpjs = ?, 
-                        status_kepegawaian = ?, anggota_keluarga = ?, jumlah_tanggungan = ?, foto_profil = ?
-                    WHERE id_pegawai = ?
-                `;
-                const values = [
-                    nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, 
-                    email, password, role, status_bpjs, status_kepegawaian, anggota_keluarga, 
-                    jumlah_tanggungan, finalFotoProfil, id_pegawai
-                ];
-                db.query(sql, values, (err, result) => {
-                    if (err) {
-                        console.error('Error executing query:', err);
-                        res.status(500).json({ error: 'Internal server error' });
-                    } else {
-                        res.json({ 
-                            message: 'Pegawai updated successfully',
-                            foto_profil: {
-                                data: finalFotoProfil,
-                                type: req.file ? req.file.mimetype.split('/')[1] : 'jpeg' 
-                            }
-                        });
-                    }
-                });
-            } else {
-                res.status(404).json({ error: 'Profil Pegawai not found' });
-            }
+            return res.status(500).json({ error: 'Internal server error' });
         }
+
+        if (result.length > 0) {
+            const kartuKeluarga = result[0].kartu_keluarga;
+            if (kartuKeluarga) {
+                const buffer = Buffer.from(kartuKeluarga, 'base64');
+
+                // Default type is jpeg
+                let contentType = 'image/jpeg';
+                const fileSignature = buffer.slice(0, 4).toString('hex');
+
+                if (fileSignature === '89504e47') {
+                    contentType = 'image/png';
+                } else if (fileSignature === '25504446') {
+                    contentType = 'application/pdf';
+                }
+
+                res.setHeader('Content-Type', contentType);
+                res.send(buffer);
+            } else {
+                res.status(404).json({ error: 'Kartu Keluarga not found' });
+            }
+        } else {
+            res.status(404).json({ error: 'Pegawai not found' });
+        }
+    });
+});
+
+//Mengedit profil pegawai
+router.put('/pegawai/profil/:id_pegawai', async (req, res) => {
+    const { id_pegawai } = req.params;
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, jumlah_tanggungan } = req.body;
+
+    // Mengambil password lama dari database
+    const sqlSelect = `SELECT password FROM data_pegawai WHERE id_pegawai = ?`;
+    db.query(sqlSelect, [id_pegawai], async (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        let hashedPassword = result[0].password;
+        if (password && password !== '') {
+            const salt = await bcrypt.genSalt(10);
+            hashedPassword = await bcrypt.hash(password, salt);
+        }
+
+        const sqlUpdate = `
+            UPDATE data_pegawai
+            SET
+                nama_pegawai = ?,
+                nip = ?,
+                tempat_lahir = ?,
+                tanggal_lahir = ?,
+                jenis_kelamin = ?,
+                alamat = ?,
+                no_telp = ?,
+                email = ?,
+                password = ?,
+                role = ?,
+                status_bpjs = ?,
+                status_kepegawaian = ?,
+                jumlah_tanggungan = ?
+            WHERE id_pegawai = ?
+        `;
+        const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, hashedPassword, role, status_bpjs, status_kepegawaian, jumlah_tanggungan, id_pegawai];
+
+        db.query(sqlUpdate, values, (err, result) => {
+            if (err) {
+                console.error('Error executing query:', err);
+                return res.status(500).json({ error: 'Internal server error' });
+            } else {
+                return res.json({ message: 'Pegawai updated successfully' });
+            }
+        });
     });
 });
 

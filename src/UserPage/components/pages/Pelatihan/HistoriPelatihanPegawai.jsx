@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch, HiChevronRight } from 'react-icons/hi';
+import { HiOutlineSearch, HiChevronRight, HiChevronLeft } from 'react-icons/hi';
 import { getStatus } from "../../utils/status";
 import axios from 'axios';
 import { formatDate } from '../../utils/formatDate';
@@ -9,6 +9,8 @@ function HistoriPelatihanPegawai() {
   const [historiPelatihanPegawai, setHistoriPelatihan] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchHistoriPelatihan();
@@ -49,6 +51,32 @@ function HistoriPelatihanPegawai() {
     data.nama_penyelenggara.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Hitung total halaman berdasarkan data yang sudah difilter
+  const totalPages = Math.ceil(filteredPelatihan.length / itemsPerPage);
+
+  // Potong data berdasarkan halaman saat ini
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentPageData = filteredPelatihan.slice(startIndex, startIndex + itemsPerPage);
+
+  // Fungsi untuk navigasi halaman
+  const goToPreviousPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const BoxWrapper = ({ children, isActive, onClick }) => (
+    <button
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+
   return (
     <div>
       <p className="text-xl font-bold px-5">Histori Pelatihan</p>
@@ -80,9 +108,16 @@ function HistoriPelatihanPegawai() {
             </thead>
 
             <tbody>
-              {filteredPelatihan.map((pelatihan, index) => (
+              {currentPageData.length === 0 && (
+                <tr>
+                  <td colSpan="10" className="text-center py-4">
+                    Tidak ada jadwal pelatihan untuk ditampilkan.
+                  </td>
+                </tr>
+              )}
+              {currentPageData.map((pelatihan, index) => (
                 <tr key={index}>
-                  <td className="p-1 pt-2">{index + 1}</td>
+                  <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td className="p-1 pt-2">{pelatihan.nama_penyelenggara}</td>
                   <td className="p-1 pt-2">{pelatihan.nama_kegiatan}</td>
                   <td>{pelatihan.tanggalMulai}</td>
@@ -99,6 +134,22 @@ function HistoriPelatihanPegawai() {
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div className='py-2 justify-end flex flex-row items-center'>
+        <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
+        <div className='flex gap-4'>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <BoxWrapper
+              key={index}
+              isActive={currentPage === index + 1}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </BoxWrapper>
+          ))}
+        </div>
+        <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
       </div>
     </div>
   )

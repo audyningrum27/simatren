@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import moment from 'moment-timezone';
-import { MdImage } from "react-icons/md";
-import { TbDownload } from "react-icons/tb";
-import { MdZoomOutMap } from "react-icons/md";
 import { getStatus } from '../../utils/status';
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { PiEmptyBold } from "react-icons/pi";
 
 const DetailPelatihanPegawai = () => {
   const { id_pelatihan } = useParams();
@@ -33,31 +32,10 @@ const DetailPelatihanPegawai = () => {
     return <div>Loading...</div>;
   }
 
-  const handleDownloadSertifikat = async (id_pelatihan, nama_pegawai) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/data_pelatihan/sertifikat/${id_pelatihan}`);
-      if (!response.ok) {
-        throw new Error('Failed to download sertifikat');
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', `Sertifikat_${nama_pegawai}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-    } catch (error) {
-      console.error('Error downloading sertifikat:', error);
-      alert('Failed to download sertifikat');
-    }
-  };
-
-  const handleZoomOutMapClick = () => {
-    const imageUrl = `data:image/${pelatihan.bukti_pelaksanaan.type};base64,${pelatihan.bukti_pelaksanaan.data}`;
-    const newWindow = window.open('', '_blank');
-    newWindow.document.write(`<html><body style="display:flex; justify-content:center; align-items:center; height:70vh;"><img src="${imageUrl}" class="max-w-[80%] max-h-[80%]" /></body></html>`);
-    newWindow.document.close();
+  //Menampilkan Bukti Pelaksanaan
+  const viewBuktiPelaksanaan = () => {
+    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-bukti/${id_pelatihan}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -138,47 +116,23 @@ const DetailPelatihanPegawai = () => {
                   <tr>
                     <td>Bukti Pelaksanaan</td>
                     <td className="p-2">:</td>
-                    <td className="flex items-center">
-                      <div className="flex space-x-4">
-                        {pelatihan.bukti_pelaksanaan ? (
-                          <div className="relative">
-                            <img
-                              src={`data:image/${pelatihan.bukti_pelaksanaan.type};base64,${pelatihan.bukti_pelaksanaan.data}`}
-                              alt="Bukti Pelaksanaan"
-                              className="w-24 h-16 border border-gray-400"
-                            />
-                            <MdZoomOutMap
-                              fontSize={14}
-                              className="absolute top-0 right-0 m-1 bg-white p-0 cursor-pointer"
-                              onClick={handleZoomOutMapClick}
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-16 h-16 border border-gray-400 text-gray-400 flex justify-center items-center">
-                            <MdImage fontSize={72} />
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Sertifikat Pelatihan</td>
-                    <td className="p-2">:</td>
                     <td className='font-semibold text-xs'>
-                      {pelatihan.sertifikat ? (
+                      {pelatihan.bukti_pelaksanaan ? (
                         <button
                           className='flex justify-start items-center bg-green-500 px-3 py-1 rounded-sm'
-                          onClick={() => handleDownloadSertifikat(pelatihan.id_pelatihan, pelatihan.nama_pegawai)}
+                          onClick={viewBuktiPelaksanaan}
                         >
-                          Download Sertifikat
-                          <TbDownload fontSize={16} className='ml-1' />
+                          <MdOutlineRemoveRedEye fontSize={16} className='mr-1' />
+                          Lihat
                         </button>
                       ) : (
                         <div>
                           <button
                             className='flex justify-start items-center bg-gray-300 px-2 py-1 text-gray-900'
+                            disabled
                           >
-                            Belum ada sertifikat
+                            <PiEmptyBold fontSize={18} className='mr-1' />
+                            Belum ada data
                           </button>
                         </div>
                       )}

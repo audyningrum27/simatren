@@ -1,17 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getPegawaiStatus } from "../../utils/status";
 import moment from 'moment-timezone';
-import { MdImage } from "react-icons/md";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { TbUpload } from "react-icons/tb";
-import { MdZoomOutMap } from "react-icons/md";
+import { PiEmptyBold } from "react-icons/pi";
 
 const DetailHistoryPelatihan = () => {
   const { id_pelatihan } = useParams();
   const [pelatihan, setDataPelatihan] = useState(null);
-  const [uploadingId, setUploadingId] = useState(null);
-  const fileInputRef = useRef(null);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
 
@@ -38,69 +34,10 @@ const DetailHistoryPelatihan = () => {
     return <div>Loading...</div>;
   }
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file && uploadingId) {
-      await handleUpload(uploadingId, file);
-    }
-  };
-
-  const handleUpload = async (id_pelatihan, file) => {
-    if (!file) {
-      setPopupMessage("Pilih file terlebih dahulu!");
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 2000);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("sertifikat", file);
-
-    try {
-      const response = await fetch(`http://localhost:5000/api/data_pelatihan/upload/${id_pelatihan}`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        setPopupMessage("Sertifikat berhasil diupload.");
-        setShowPopup(true);
-        setTimeout(() => setShowPopup(false), 2000);
-        setUploadingId(null);
-        fetchDetailPelatihan();
-      } else {
-        setPopupMessage("Sertifikat gagal diupload. Coba Lagi!");
-        setShowPopup(true);
-        setTimeout(() => setShowPopup(false), 2000);
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      setPopupMessage("Error uploading file.");
-      setShowPopup(true);
-      setTimeout(() => setShowPopup(false), 2000);
-    }
-  };
-
-  const handleViewSertifikat = async (id_pelatihan) => {
-    try {
-      const response = await fetch(`http://localhost:5000/api/data_pelatihan/sertifikat/${id_pelatihan}`);
-      if (!response.ok) {
-        throw new Error('Failed to view sertifikat');
-      }
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(new Blob([blob], { type: 'application/pdf' }));
-      window.open(url, '_blank').focus();
-    } catch (error) {
-      console.error('Error viewing sertifikat:', error);
-      alert('Failed to view sertifikat');
-    }
-  };
-
-  const handleZoomOutMapClick = () => {
-    const imageUrl = `data:image/${pelatihan.bukti_pelaksanaan.type};base64,${pelatihan.bukti_pelaksanaan.data}`;
-    const newWindow = window.open('', '_blank');
-    newWindow.document.write(`<html><body style="display:flex; justify-content:center; align-items:center; height:70vh;"><img src="${imageUrl}" class="max-w-[80%] max-h-[80%]" /></body></html>`);
-    newWindow.document.close();
+  //Menampilkan Bukti Pelaksanaan
+  const viewBuktiPelaksanaan = () => {
+    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-bukti/${id_pelatihan}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -148,11 +85,6 @@ const DetailHistoryPelatihan = () => {
                         className="w-full border-none bg-transparent focus:outline-none"
                       />
                     </td>
-                  </tr>
-                  <tr>
-                    <td>Nama Penyelenggara</td>
-                    <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">{pelatihan.nama_penyelenggara}</td>
                   </tr>
                   <tr>
                     <td>Nama Kegiatan</td>
@@ -210,59 +142,24 @@ const DetailHistoryPelatihan = () => {
                   <tr>
                     <td>Bukti Pelaksanaan</td>
                     <td className="p-2">:</td>
-                    <td className="flex items-center">
-                      <div className="flex space-x-4">
-                        {pelatihan.bukti_pelaksanaan ? (
-                          <div className="relative">
-                            <img
-                              src={`data:image/${pelatihan.bukti_pelaksanaan.type};base64,${pelatihan.bukti_pelaksanaan.data}`}
-                              alt="Bukti Pelaksanaan"
-                              className="w-24 h-16 border border-gray-400"
-                            />
-                            <MdZoomOutMap
-                              fontSize={14}
-                              className="absolute top-0 right-0 m-1 bg-white p-0 cursor-pointer"
-                              onClick={handleZoomOutMapClick}
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-16 h-16 border border-gray-400 text-gray-400 flex justify-center items-center">
-                            <MdImage fontSize={72} />
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Sertifikat Pelatihan</td>
-                    <td className="p-2">:</td>
                     <td className='font-semibold text-xs'>
-                      {pelatihan.sertifikat ? (
+                      {pelatihan.bukti_pelaksanaan ? (
                         <button
                           className='flex justify-start items-center bg-green-500 px-3 py-1 rounded-sm'
-                          onClick={() => handleViewSertifikat(pelatihan.id_pelatihan)}
+                          onClick={viewBuktiPelaksanaan}
                         >
-                          Lihat Sertifikat
-                          <MdOutlineRemoveRedEye fontSize={16} className='ml-1' />
+                          <MdOutlineRemoveRedEye fontSize={16} className='mr-1'/>
+                          Lihat
                         </button>
                       ) : (
                         <div>
                           <button
-                            className='flex justify-start items-center bg-red-500 px-3 py-1 rounded-sm'
-                            onClick={() => {
-                              setUploadingId(pelatihan.id_pelatihan);
-                              fileInputRef.current.click();
-                            }}>
-                            Upload Sertifikat
-                            <TbUpload fontSize={18} className='ml-1' />
+                            className='flex justify-start items-center bg-gray-300 text-gray-700 px-3 py-1 rounded-sm'
+                            disabled
+                          >
+                            <PiEmptyBold fontSize={18} className='mr-1'/>
+                            Belum ada data
                           </button>
-                          <input
-                            type="file"
-                            accept="application/pdf"
-                            ref={fileInputRef}
-                            style={{ display: 'none' }}
-                            onChange={handleFileChange}
-                          />
                         </div>
                       )}
                     </td>

@@ -1,17 +1,18 @@
 import express from 'express';
 import db from '../db.js';
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
 
 const router = express.Router();
 
+// Menampilkan Pelatihan di Grafik
 router.get('/pelatihan-per-bulan', (req, res) => {
     const query = `
     SELECT 
-      MONTH(tanggal_mulai) AS bulan, 
-      COUNT(*) AS jumlah_pelatihan
-    FROM jadwal_pelatihan
+        MONTH(tanggal_mulai) AS bulan, 
+        COUNT(CASE WHEN status = 'Selesai' THEN 1 END) AS selesai,
+        COUNT(CASE WHEN status = 'Proses' THEN 1 END) AS proses,
+        COUNT(CASE WHEN status = 'Belum Dimulai' THEN 1 END) AS belum_dimulai
+    FROM data_pelatihan
     GROUP BY MONTH(tanggal_mulai)
   `;
     db.query(query, (err, results) => {
@@ -42,8 +43,7 @@ router.get('/pelatihan', (req, res) => {
         pel.tanggal_selesai,
         pel.deskripsi_kegiatan,
         pel.status,
-        pel.bukti_pelaksanaan,
-        pel.sertifikat
+        pel.bukti_pelaksanaan
     FROM 
         data_pelatihan pel
     JOIN 
@@ -74,8 +74,7 @@ router.get('/pelatihan/:id_pelatihan', (req, res) => {
         pel.tanggal_selesai,
         pel.deskripsi_kegiatan,
         pel.status,
-        pel.bukti_pelaksanaan,
-        pel.sertifikat
+        pel.bukti_pelaksanaan
     FROM 
         data_pelatihan pel
     JOIN 
@@ -110,42 +109,40 @@ router.get('/pelatihan/:id_pelatihan', (req, res) => {
     });
 });
 
-// Mengupload sertifikat
-router.post('/upload/:id_pelatihan', upload.single('sertifikat'), (req, res) => {
+// Menampilkan Bukti Pelaksanaan
+router.get('/pelatihan/view-bukti/:id_pelatihan', (req, res) => {
     const { id_pelatihan } = req.params;
-    const file = req.file;
 
-    if (!file) {
-        return res.status(400).json({ message: 'No file uploaded' });
-    }
-
-    const fileBuffer = file.buffer;
-
-    const query = 'UPDATE data_pelatihan SET sertifikat = ? WHERE id_pelatihan = ?';
-    db.query(query, [fileBuffer, id_pelatihan], (err, result) => {
+    const sql = 'SELECT bukti_pelaksanaan FROM data_pelatihan WHERE id_pelatihan = ?';
+    db.query(sql, [id_pelatihan], (err, result) => {
         if (err) {
-            console.error('Error uploading file to the database:', err);
-            return res.status(500).json({ message: 'Error uploading file' });
-        }
-        res.status(200).json({ message: 'File uploaded successfully' });
-    });
-});
-
-// Menampilkan Sertifikat
-router.get('/sertifikat/:id_pelatihan', (req, res) => {
-    const { id_pelatihan } = req.params;
-    const query = `SELECT sertifikat FROM data_pelatihan WHERE id_pelatihan = ?`;
-    db.query(query, [id_pelatihan], (err, result) => {
-        if (err) {
-            console.error('Error fetching sertifikat:', err);
+            console.error('Error executing query:', err);
             return res.status(500).json({ error: 'Internal server error' });
         }
-        if (result.length === 0 || !result[0].sertifikat) {
-            return res.status(404).json({ error: 'Sertifikat not found' });
+
+        if (result.length > 0) {
+            const buktiPelaksanaan = result[0].bukti_pelaksanaan;
+            if (buktiPelaksanaan) {
+                const buffer = Buffer.from(buktiPelaksanaan, 'base64');
+
+                // Default type is jpeg
+                let contentType = 'image/jpeg';
+                const fileSignature = buffer.slice(0, 4).toString('hex');
+
+                if (fileSignature === '89504e47') {
+                    contentType = 'image/png';
+                } else if (fileSignature === '25504446') {
+                    contentType = 'application/pdf';
+                }
+                
+                res.setHeader('Content-Type', contentType);
+                res.send(buffer);
+            } else {
+                res.status(404).json({ error: 'Bukti Pelaksanaan not found' });
+            }
+        } else {
+            res.status(404).json({ error: 'Pelatihan not found' });
         }
-        const fileBuffer = result[0].sertifikat;
-        res.setHeader('Content-Type', 'application/pdf');
-        res.send(fileBuffer);
     });
 });
 
@@ -155,13 +152,26 @@ router.post('/pelatihan', (req, res) => {
     const status = 'Belum Dimulai';
     const query = `INSERT INTO data_pelatihan (id_pegawai, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-    db.query(query, [id_pegawai, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status], (err, result) => {
-        if (err) {
-            console.error('Error inserting data:', err);
-            return res.status(500).json({ error: 'Internal server error' });
-        }
-        res.status(201).json({ message: 'Jadwal Pelatihan created successfully', id_pelatihan: result.insertId });
+    let promises = id_pegawai.map(id => {
+        return new Promise((resolve, reject) => {
+            db.query(query, [id, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status], (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
+        });
     });
+
+    Promise.all(promises)
+        .then(results => {
+            res.status(201).json({ message: 'Jadwal Pelatihan created successfully', results });
+        })
+        .catch(err => {
+            console.error('Error inserting data:', err);
+            res.status(500).json({ error: 'Internal server error' });
+        });
 });
 
 //Mengedit Jadwal Pelatihan
@@ -230,7 +240,6 @@ router.put('/pelatihan/status/:id_pelatihan', (req, res) => {
     });
 });
 
-
 //USER
 //Menampilkan jadwal pelatihan berdasarkan id pegawai
 router.get('/jadwalpelatihan/:id_pegawai', (req, res) => {
@@ -248,8 +257,7 @@ router.get('/jadwalpelatihan/:id_pegawai', (req, res) => {
         pel.tanggal_selesai,
         pel.deskripsi_kegiatan,
         pel.status,
-        pel.bukti_pelaksanaan,
-        pel.sertifikat
+        pel.bukti_pelaksanaan
     FROM 
         data_pelatihan pel
     JOIN 

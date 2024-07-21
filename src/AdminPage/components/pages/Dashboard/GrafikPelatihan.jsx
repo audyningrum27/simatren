@@ -20,38 +20,40 @@ function GrafikPelatihan({ selectedDate }) {
 
   const fetchDataPelatihan = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan');
+      const response = await axios.get('http://localhost:5000/api/data_pelatihan/pelatihan-per-bulan');
       const data = response.data;
-
+  
+      console.log('Data pelatihan:', data);
+  
       const currentDate = selectedDate || new Date();
       const currentMonth = currentDate.getMonth();
       const currentYear = currentDate.getFullYear();
-
-      // Determine if we are in the first half or second half of the year
+  
       const isFirstHalf = currentMonth < 6;
       const startMonth = isFirstHalf ? 0 : 6; // January or July
       const endMonth = isFirstHalf ? 5 : 11;  // June or December
-
-      // Initialize monthly data for the selected half of the year
+  
       const monthlyData = Array.from({ length: 6 }, (_, index) => {
         const month = new Date(currentYear, startMonth + index);
         return {
           name: month.toLocaleString('id-ID', { month: 'short' }),
-          Pelatihan: 0,
+          Selesai: 0,
+          Proses: 0,
+          Belum_Dimulai: 0,
         };
       });
-
+  
       data.forEach(item => {
-        const date = new Date(item.tanggal_mulai);
-        const itemMonth = date.getMonth();
-        const itemYear = date.getFullYear();
-
-        // Check if the date is within the current year and the correct half-year period
-        if (itemYear === currentYear && itemMonth >= startMonth && itemMonth <= endMonth) {
-          monthlyData[itemMonth - startMonth].Pelatihan += 1;
+        const { bulan, selesai, proses, belum_dimulai } = item;
+  
+        if (bulan >= startMonth + 1 && bulan <= endMonth + 1) {
+          monthlyData[bulan - startMonth - 1].Selesai += selesai;
+          monthlyData[bulan - startMonth - 1].Proses += proses;
+          monthlyData[bulan - startMonth - 1].Belum_Dimulai += belum_dimulai;
         }
       });
-
+  
+      console.log('Mapped Monthly Data:', monthlyData);
       setDataPelatihan(monthlyData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -79,7 +81,9 @@ function GrafikPelatihan({ selectedDate }) {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="Pelatihan" fill='rgb(21 128 61)' />
+            <Bar dataKey="Selesai" fill='rgb(34 197 94)' />
+            <Bar dataKey="Proses" fill='rgb(21, 168, 61)' />
+            <Bar dataKey="Belum_Dimulai" fill='rgb(21 128 61)' />
           </BarChart>
         </ResponsiveContainer>
       </div>

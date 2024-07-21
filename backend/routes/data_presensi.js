@@ -6,7 +6,21 @@ const router = express.Router();
 // Data Pegawai di Admin
 router.get('/presensi', (req, res) => {
     console.log("GET /api/data_presensi/presensi");
-    const query = 'SELECT * FROM data_presensi';
+    const query = `
+    SELECT 
+        p.nip,
+        p.nama_pegawai,
+        pr.id_presensi,
+        pr.id_pegawai,
+        pr.tanggal_presensi,
+        pr.jam_masuk,
+        pr.jam_keluar,
+        pr.total_jam_kerja
+    FROM 
+        data_presensi pr
+    JOIN 
+        data_pegawai p ON pr.id_pegawai = p.id_pegawai
+    `;
     db.query(query, (err, results) => {
         if (err) {
             console.error(err);
@@ -66,7 +80,7 @@ router.get('/presensi/count', (req, res) => {
     });
 });
 
-// // Endpoint untuk mendapatkan jumlah presensi per tanggal
+// Endpoint untuk mendapatkan jumlah presensi per tanggal
 router.get('/presensi/daily', (req, res) => {
     const query = `
         SELECT 
@@ -86,25 +100,28 @@ router.get('/presensi/daily', (req, res) => {
     });
 });
 
-// Histori Presensi
-// router.get('/presensi/all', (req, res) => {
-//     const query = 'SELECT * FROM data_presensi'; // Query untuk mengambil semua data presensi
-    
-//     db.query(query, (err, results) => {
-//         if (err) {
-//             console.error(err);
-//             return res.status(500).json({ message: 'Internal Server Error' });
-//         }
-
-//         return res.json(results);
-//     });
-// });
-
-router.get('/presensi/user/:id', (req, res) => {
-    const userId = req.params.id;
-    const query = 'SELECT * FROM data_presensi WHERE id_pegawai = ?'; // Query untuk mengambil data presensi berdasarkan ID user
-    
-    db.query(query, [userId], (err, results) => {
+//Menampilkan Data Presensi Berdasarkan id Pegawai
+router.get('/presensi/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+    console.log("GET /api/data_presensi/presensi/:id_pegawai");
+    const query = `
+    SELECT 
+        p.nip,
+        p.nama_pegawai,
+        pr.id_presensi,
+        pr.id_pegawai,
+        pr.tanggal_presensi,
+        pr.jam_masuk,
+        pr.jam_keluar,
+        pr.total_jam_kerja
+    FROM 
+        data_presensi pr
+    JOIN 
+        data_pegawai p ON pr.id_pegawai = p.id_pegawai
+    WHERE 
+        pr.id_pegawai = ?
+    `;
+    db.query(query, [id_pegawai], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Internal Server Error' });
@@ -113,8 +130,6 @@ router.get('/presensi/user/:id', (req, res) => {
         return res.json(results);
     });
 });
-
-
 
 // presensi
 router.post('/save-presensi', (req, res) => {
@@ -160,6 +175,5 @@ router.post('/save-presensi', (req, res) => {
         res.status(400).json({ message: 'Invalid presensi type' });
     }
 });
-
 
 export default router;

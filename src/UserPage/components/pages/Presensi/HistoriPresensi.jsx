@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
-
-// Asumsikan ID user yang login disimpan di localStorage
-const userId = localStorage.getItem('userId') || 19; // Pastikan userId benar
+import { formatDate } from '../../utils/formatDate';
+import axios from 'axios';
 
 const HistoriPresensi = () => {
   const [dataPresensi, setDataPresensi] = useState([]);
@@ -11,29 +10,39 @@ const HistoriPresensi = () => {
   const itemsPerPage = 10; // Jumlah item per halaman
 
   useEffect(() => {
-    if (userId) {
-      fetch(`http://localhost:5000/api/data_presensi/presensi/user/${userId}`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log('Data presensi yang diterima:', data); // Debug: Lihat data presensi di console
-          setDataPresensi(data);
-        })
-        .catch((error) => console.error('Error fetching presensi data:', error));
+    fetchDataPresensi();
+  }, []);
+
+  const fetchDataPresensi = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const id_pegawai = localStorage.getItem('id_pegawai');
+      if (!id_pegawai) {
+        console.error('id_pegawai is undefined');
+        return;
+      }
+      const response = await axios.get(`http://localhost:5000/api/data_presensi/presensi/${id_pegawai}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const data = response.data.map(item => ({
+        ...item,
+        tanggalPresensi: formatDate(item.tanggal_presensi)
+      }));
+      setDataPresensi(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
     }
-  }, [userId]); 
+  };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page on search
   };
 
-  const filteredPresensi = dataPresensi.filter((presensi) =>
-    presensi.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredPresensi = dataPresensi.filter((data) =>
+    data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredPresensi.length / itemsPerPage);
@@ -79,7 +88,6 @@ const HistoriPresensi = () => {
               <thead className="sticky top-0 bg-white">
                 <tr className="border-b-[1.5px]">
                   <td className='font-bold py-4'>No.</td>
-                  <td className='font-bold py-4'>Nama Pegawai</td>
                   <td className='font-bold py-4'>Tanggal</td>
                   <td className='font-bold py-4'>Jam Masuk</td>
                   <td className='font-bold py-4'>Jam Keluar</td>
@@ -95,14 +103,13 @@ const HistoriPresensi = () => {
                     </td>
                   </tr>
                 )}
-                {currentPageData.map((presensi, index) => (
-                  <tr key={presensi.id_presensi}>
+                {currentPageData.map((data, index) => (
+                  <tr key={index}>
                     <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                    <td>{presensi.nama_pegawai}</td>
-                    <td>{new Date(presensi.tanggal_presensi).toLocaleDateString()}</td>
-                    <td>{presensi.jam_masuk}</td>
-                    <td>{presensi.jam_keluar}</td>
-                    <td>{presensi.total_jam_kerja} Jam</td>
+                    <td>{data.tanggalPresensi}</td>
+                    <td>{data.jam_masuk}</td>
+                    <td>{data.jam_keluar}</td>
+                    <td>{data.total_jam_kerja} Jam</td>
                   </tr>
                 ))}
               </tbody>

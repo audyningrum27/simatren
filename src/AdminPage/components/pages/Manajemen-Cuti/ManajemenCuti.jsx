@@ -20,7 +20,7 @@ function ManajemenCuti() {
 
   const fetchDataCuti = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_cuti/cuti');
+      const response = await fetch('http://localhost:5000/api/data_cuti/cuti/all');
       const result = await response.json();
 
       if (result && Array.isArray(result)) {
@@ -46,8 +46,9 @@ function ManajemenCuti() {
   const filteredCuti = dataCuti.filter((data) =>
     (data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
     data.nip.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    data.status_cuti !== 'Diterima' && data.status_cuti !== 'Ditolak'
+    data.status_cuti === 'Proses'
   );
+  
 
   const handleConfirm = (id_cuti, status_cuti) => {
     setSelectedId(id_cuti);

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { HiMiniPlus } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment-timezone';
 import { getPegawaiStatus } from "../../utils/status";
 
 function JadwalPelatihan() {
@@ -15,36 +14,13 @@ function JadwalPelatihan() {
     fetchDataPelatihan();
   }, []);
 
-  const getStatus = (tanggalMulai, tanggalSelesai) => {
-    const today = moment().tz('Asia/Jakarta');
-    const start = moment(tanggalMulai, 'DD/MM/YYYY').tz('Asia/Jakarta');
-    const end = moment(tanggalSelesai, 'DD/MM/YYYY').tz('Asia/Jakarta');
-
-    if (today.isBefore(start)) {
-      return 'Belum Dimulai';
-    } else if (today.isAfter(end)) {
-      return 'Selesai';
-    } else {
-      return 'Proses';
-    }
-  };
-
   const fetchDataPelatihan = async () => {
-    try 
-      {const response = await fetch('http://localhost:5000/api/jadwal_pelatihan/jadwalpelatihan');
+    try {
+      const response = await fetch('http://localhost:5000/api/data_pelatihan/pelatihan');
       const data = await response.json();
-      const formattedData = data.map(item => {
-        const formattedTanggalMulai = moment.utc(item.tanggal_mulai).tz('Asia/Jakarta').format('DD/MM/YYYY');
-        const formattedTanggalSelesai = moment.utc(item.tanggal_selesai).tz('Asia/Jakarta').format('DD/MM/YYYY');
-        const status = getStatus(formattedTanggalMulai, formattedTanggalSelesai);
-        return {
-          ...item,
-          tanggal_mulai: formattedTanggalMulai,
-          tanggal_selesai: formattedTanggalSelesai,
-          status: status
-        };
-      });
-      setDataPelatihan(formattedData);
+      // Filter data dengan status "Belum Dimulai" dan "Proses"
+      const filteredData = data.filter(item => item.status === 'Belum Dimulai' || item.status === 'Proses');
+      setDataPelatihan(filteredData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -76,9 +52,8 @@ function JadwalPelatihan() {
 
   const BoxWrapper = ({ children, isActive, onClick }) => (
     <button
-      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-      }`}
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
       onClick={onClick}
     >
       {children}
@@ -101,7 +76,7 @@ function JadwalPelatihan() {
 
         <div className='flex justify-between mx-2 md:mx-10'>
           <HiMiniPlus fontSize={22} className="text-neutral-50 absolute top-1/2 -translate-y-1/2 ml-2" />
-          <button onClick={() => navigate('/AdminPage/atur_jadwal_pelatihan')} className="text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
+          <button onClick={() => navigate('/AdminPage/atur_jadwal_pelatihan')} className="text-xs text-white font-semibold bg-green-900 rounded-sm h-10 px-10 w-fit">
             Atur Jadwal Pelatihan
           </button>
         </div>
@@ -123,6 +98,13 @@ function JadwalPelatihan() {
             </thead>
 
             <tbody>
+              {currentPageData.length === 0 && (
+                <tr>
+                  <td colSpan="10" className="text-center py-4">
+                    Tidak ada jadwal pelatihan untuk ditampilkan.
+                  </td>
+                </tr>
+              )}
               {currentPageData.map((data, index) => (
                 <tr key={index}>
                   <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
@@ -130,7 +112,6 @@ function JadwalPelatihan() {
                   <td>{data.nama_pegawai}</td>
                   <td>{data.nama_penyelenggara}</td>
                   <td>{data.nama_kegiatan}</td>
-                  <td>{data.tanggal_mulai}</td>
                   <td>{getPegawaiStatus(data.status)}</td>
                   <td className='font-semibold'>
                     <button onClick={() => navigate(`/AdminPage/detail_jadwal_pelatihan/${data.id_pelatihan}`)} className='flex justify-start items-center'>

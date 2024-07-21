@@ -23,6 +23,15 @@ const TambahJadwalPelatihan = () => {
       });
   }, []);
 
+  const handleSelectChange = (e) => {
+    const { value } = e.target;
+    if (value === 'ALL') {
+      setIdPegawai(pegawaiList.map(pegawai => pegawai.id_pegawai));
+    } else {
+      setIdPegawai([value]);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const dataPelatihan = { id_pegawai: idPegawai, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan };
@@ -31,7 +40,7 @@ const TambahJadwalPelatihan = () => {
       .then(response => {
         console.log(response.data);
         // Reset form setelah submit
-        setIdPegawai('');
+        setIdPegawai([]);
         setPenyelenggara('');
         setKegiatan('');
         setTanggalMulai('');
@@ -71,12 +80,14 @@ const TambahJadwalPelatihan = () => {
               <select
                 name="id_pegawai"
                 id="id_pegawai"
-                value={idPegawai}
-                onChange={(e) => setIdPegawai(e.target.value)}
-                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md ${idPegawai ? 'text-black' : 'text-gray-400'}`}
+                value={idPegawai.length === 1 ? idPegawai[0] : idPegawai.length ? 'ALL' : ''}
+                onChange={handleSelectChange}
+                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md ${idPegawai.length ? 'text-black' : 'text-gray-400'}`}
                 required
+                defaultValue=""
               >
-                <option value="">Pilih Pegawai</option>
+                <option value="" disabled selected className='text-gray-400'>Masukkan nama pegawai</option>
+                <option value="ALL" className='text-black'>Pilih Semua Pegawai</option>
                 {pegawaiList.map((pegawai) => (
                   <option className='text-black' key={pegawai.id_pegawai} value={pegawai.id_pegawai}>
                     {pegawai.nama_pegawai} - {pegawai.nip}
