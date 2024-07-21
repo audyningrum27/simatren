@@ -176,4 +176,29 @@ router.post('/save-presensi', (req, res) => {
     }
 });
 
+router.get('/presensi/monthly/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+    console.log('Fetching data for id_pegawai:', id_pegawai); // Log id_pegawai
+
+    const query = `
+        SELECT 
+            MONTH(tanggal_presensi) as month,
+            SUM(IF(jam_masuk IS NOT NULL, 1, 0)) as Hadir,
+            SUM(IF(jam_keluar IS NOT NULL AND jam_masuk IS NULL, 1, 0)) as Cuti
+        FROM data_presensi 
+        WHERE id_pegawai = ?
+        GROUP BY MONTH(tanggal_presensi)
+        ORDER BY MONTH(tanggal_presensi)
+    `;
+    
+    db.query(query, [id_pegawai], (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Query results:', results); // Log query results
+        res.json(results);
+    });
+});
+
 export default router;

@@ -48,7 +48,7 @@ function App() {
 
           {/* Admin Page */}
           <Route path="/AdminPage" element={
-            <PrivateRoute>
+            <PrivateRoute allowedUserTypes={['admin@gmail.com']}>
               <Layout />
             </PrivateRoute>
           }>
@@ -68,7 +68,7 @@ function App() {
             <Route path="/AdminPage/detail_jadwal_pelatihan/:id_pelatihan" element={<DetailJadwalPelatihan />} />
             <Route path="/AdminPage/atur_jadwal_pelatihan" element={<TambahJadwalPelatihan />} />
             <Route path="/AdminPage/manajemen_kinerja" element={<ManajemenKinerja />} />
-            <Route path="/AdminPage/grafik_kinerja" element={<GrafikManajemenKinerja />} />
+            <Route path="/AdminPage/grafik_kinerja/:id_pegawai" element={<GrafikManajemenKinerja />} />
             <Route path="/AdminPage/manajemen_cuti" element={<ManajemenCuti />} />
           </Route>
 

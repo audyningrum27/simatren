@@ -24,6 +24,28 @@ router.get('/pelatihan-per-bulan', (req, res) => {
     });
 });
 
+// Mendapatkan jumlah pelatihan per bulan berdasarkan status dan id_pegawai
+router.get('/pelatihan-per-bulan/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+    const query = `
+    SELECT 
+      MONTH(tanggal_mulai) AS bulan, 
+      status,
+      COUNT(*) AS jumlah_pelatihan
+    FROM data_pelatihan
+    WHERE id_pegawai = ?
+    GROUP BY MONTH(tanggal_mulai), status
+    ORDER BY MONTH(tanggal_mulai)
+  `;
+    db.query(query, [id_pegawai], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        res.json(results);
+    });
+});
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
