@@ -33,7 +33,7 @@ router.get('/presensi', (req, res) => {
 
 // Dashboard
 router.get('/presensi/count', (req, res) => {
-    const date = req.query.date;
+    const date = req.query.date; // Mengambil parameter tanggal dari query string
     let queryPresensi;
     if (date) {
         queryPresensi = 'SELECT COUNT(*) AS presensi_count FROM data_presensi WHERE DATE(tanggal_presensi) = ?';
@@ -95,7 +95,7 @@ router.get('/presensi/daily', (req, res) => {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-        console.log('Data presensi harian:', results);
+        console.log('Data presensi harian:', results); // Log data presensi
         res.json(results);
     });
 });
@@ -132,10 +132,14 @@ router.get('/presensi/:id_pegawai', (req, res) => {
 });
 
 // presensi
-router.post('/save-presensi', (req, res) => {
-    const { result, type, timestamp } = req.body;
+router.post('/save-presensi/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+    const { type, timestamp } = req.body;
 
-    const idPegawai = parseInt(result);
+    if (!id_pegawai) {
+        return res.status(400).json({ message: 'id_pegawai is required' });
+    }
+
     const datetime = new Date(timestamp);
     const tanggalPresensi = datetime.toISOString().split('T')[0];
     const waktuPresensi = datetime.toTimeString().split(' ')[0];
@@ -143,7 +147,7 @@ router.post('/save-presensi', (req, res) => {
     let query = '';
     if (type === 'masuk') {
         query = 'INSERT INTO data_presensi (id_pegawai, tanggal_presensi, jam_masuk) VALUES (?, ?, ?)';
-        db.query(query, [idPegawai, tanggalPresensi, waktuPresensi], (err, results) => {
+        db.query(query, [id_pegawai, tanggalPresensi, waktuPresensi], (err, results) => {
             if (err) {
                 console.error('Error inserting presensi masuk:', err);
                 return res.status(500).json({ message: 'Internal Server Error' });
@@ -151,25 +155,17 @@ router.post('/save-presensi', (req, res) => {
             res.json({ message: 'Presensi masuk berhasil disimpan' });
         });
     } else if (type === 'keluar') {
-        query = 'UPDATE data_presensi SET jam_keluar = ? WHERE id_pegawai = ? AND tanggal_presensi = ?';
-        db.query(query, [waktuPresensi, idPegawai, tanggalPresensi], (err, results) => {
+        query = 'UPDATE data_presensi SET jam_keluar = ? WHERE id_pegawai = ? AND tanggal_presensi = ? AND jam_keluar IS NULL';
+        db.query(query, [waktuPresensi, id_pegawai, tanggalPresensi], (err, results) => {
             if (err) {
                 console.error('Error updating presensi keluar:', err);
                 return res.status(500).json({ message: 'Internal Server Error' });
             }
-            // Calculate total jam kerja
-            const queryTotalJamKerja = `
-                UPDATE data_presensi
-                SET total_jam_kerja = TIMEDIFF(jam_keluar, jam_masuk)
-                WHERE id_pegawai = ? AND tanggal_presensi = ?
-            `;
-            db.query(queryTotalJamKerja, [idPegawai, tanggalPresensi], (err, results) => {
-                if (err) {
-                    console.error('Error calculating total jam kerja:', err);
-                    return res.status(500).json({ message: 'Internal Server Error' });
-                }
-                res.json({ message: 'Presensi keluar berhasil disimpan dan total jam kerja diperbarui' });
-            });
+            if (results.affectedRows === 0) {
+                return res.status(400).json({ message: 'No matching entry found for update' });
+            }
+
+            res.json({ message: 'Presensi keluar berhasil disimpan' });
         });
     } else {
         res.status(400).json({ message: 'Invalid presensi type' });
@@ -178,7 +174,7 @@ router.post('/save-presensi', (req, res) => {
 
 router.get('/presensi/monthly/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    console.log('Fetching data for id_pegawai:', id_pegawai);
+    console.log('Fetching data for id_pegawai:', id_pegawai); // Log id_pegawai
 
     const query = `
         SELECT 
@@ -190,13 +186,13 @@ router.get('/presensi/monthly/:id_pegawai', (req, res) => {
         GROUP BY MONTH(tanggal_presensi)
         ORDER BY MONTH(tanggal_presensi)
     `;
-    
+
     db.query(query, [id_pegawai], (err, results) => {
         if (err) {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-        console.log('Query results:', results);
+        console.log('Query results:', results); // Log query results
         res.json(results);
     });
 });

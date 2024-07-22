@@ -1,22 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import jsQR from 'jsqr';
+import { useNavigate } from 'react-router-dom';
 
 const ScanQR = () => {
   const webcamRef = useRef(null);
+  const navigate = useNavigate();
   const [isScanningMasuk, setIsScanningMasuk] = useState(false);
   const [isScanningKeluar, setIsScanningKeluar] = useState(false);
-  const [scanResultMasuk, setScanResultMasuk] = useState(null);
-  const [scanResultKeluar, setScanResultKeluar] = useState(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [navigateToHistori, setNavigateToHistori] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+    if (navigateToHistori) {
+      const timer = setTimeout(() => {
+        navigate('/UserPage/historipresensi');
+      }, 2000);
 
-    return () => clearInterval(interval);
-  }, []);
+      return () => clearTimeout(timer);
+    }
+  }, [navigateToHistori, navigate]);
 
   useEffect(() => {
     if (isScanningMasuk || isScanningKeluar) {
@@ -35,10 +39,8 @@ const ScanQR = () => {
             const code = jsQR(imageData.data, img.width, img.height);
             if (code) {
               if (isScanningMasuk) {
-                setScanResultMasuk(code.data);
                 handleScanMasuk(code.data);
               } else if (isScanningKeluar) {
-                setScanResultKeluar(code.data);
                 handleScanKeluar(code.data);
               }
               setIsScanningMasuk(false);
@@ -53,16 +55,14 @@ const ScanQR = () => {
   }, [isScanningMasuk, isScanningKeluar]);
 
   const handleScanMasuk = (data) => {
-    if (data) {
-      setScanResultMasuk(data.text);
-      console.log(data);
-      fetch('http://localhost:5000/api/save-presensi', {
+    const idPegawai = localStorage.getItem('id_pegawai');
+    if (data && idPegawai) {
+      fetch(`http://localhost:5000/api/data_presensi/save-presensi/${idPegawai}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          result: data.text,
           type: 'masuk',
           timestamp: new Date().toISOString(),
         }),
@@ -73,22 +73,24 @@ const ScanQR = () => {
           }
           return response.json();
         })
-        .then((data) => console.log('Success:', data))
+        .then(() => {
+          setPopupMessage('Presensi Masuk Berhasil');
+          setShowPopup(true);
+          setNavigateToHistori(true);
+        })
         .catch((error) => console.error('Error:', error));
     }
   };
 
   const handleScanKeluar = (data) => {
-    if (data) {
-      setScanResultKeluar(data.text);
-      console.log(data);
-      fetch('http://localhost:5000/api/save-presensi', {
+    const idPegawai = localStorage.getItem('id_pegawai');
+    if (data && idPegawai) {
+      fetch(`http://localhost:5000/api/data_presensi/save-presensi/${idPegawai}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          result: data.text,
           type: 'keluar',
           timestamp: new Date().toISOString(),
         }),
@@ -99,7 +101,11 @@ const ScanQR = () => {
           }
           return response.json();
         })
-        .then((data) => console.log('Success:', data))
+        .then(() => {
+          setPopupMessage('Presensi Keluar Berhasil');
+          setShowPopup(true);
+          setNavigateToHistori(true);
+        })
         .catch((error) => console.error('Error:', error));
     }
   };
@@ -128,7 +134,7 @@ const ScanQR = () => {
         <p className="text-xl font-bold mb-4 md:mb-0">Presensi</p>
         <div className="md:absolute top-0 right-0 mt-2 md:mt-0 md:mr-5">
           <p className="text-lg text-black">
-            {currentTime.toLocaleTimeString()}
+            {new Date().toLocaleTimeString()}
           </p>
         </div>
       </div>
@@ -161,7 +167,6 @@ const ScanQR = () => {
                     </button>
                   </>
                 )}
-                {scanResultMasuk && <p className="text-green-600">Scan Result Masuk: {scanResultMasuk}</p>}
               </div>
 
               <div className="flex-1">
@@ -188,12 +193,19 @@ const ScanQR = () => {
                     </button>
                   </>
                 )}
-                {scanResultKeluar && <p className="text-green-600">Scan Result Keluar: {scanResultKeluar}</p>}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
+            <p>{popupMessage}</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

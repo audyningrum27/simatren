@@ -108,8 +108,10 @@ const HistoriPresensi = () => {
                     <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                     <td>{data.tanggalPresensi}</td>
                     <td>{data.jam_masuk}</td>
-                    <td>{data.jam_keluar}</td>
-                    <td>{data.total_jam_kerja} Jam</td>
+                    <td className={data.jam_keluar ? '' : 'text-red-700'}>
+                      {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
+                    </td>
+                    <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja} Jam` : '-'}</td>
                   </tr>
                 ))}
               </tbody>
