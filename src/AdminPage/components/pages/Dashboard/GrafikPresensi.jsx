@@ -25,7 +25,7 @@ const GrafikPresensi = ({ selectedDate }) => {
           throw new Error('Failed to fetch data presensi');
         }
         const presensiData = await presensiResponse.json();
-        console.log('Presensi Data:', presensiData); // Log data kehadiran yang diterima
+        console.log('Presensi Data:', presensiData);
   
         // Fetch data cuti
         const cutiResponse = await fetch(`http://localhost:5000/api/data_cuti/cuti/approved?date=${formattedDate}`);
@@ -33,15 +33,14 @@ const GrafikPresensi = ({ selectedDate }) => {
           throw new Error('Failed to fetch data cuti');
         }
         const cutiData = await cutiResponse.json();
-        console.log('Cuti Data:', cutiData); // Log data cuti yang diterima
+        console.log('Cuti Data:', cutiData);
   
         const today = new Date(selectedDate);
-        const startDate = new Date(today.setDate(today.getDate() - today.getDay() + 1)); // Start of the week (Monday)
-        const endDate = new Date(today.setDate(startDate.getDate() + 4)); // End of the week (Friday)
+        const startDate = new Date(today.setDate(today.getDate() - today.getDay() + 1));
+        const endDate = new Date(today.setDate(startDate.getDate() + 4))
   
         const dateRange = createWeeklyDateRange(startDate, endDate);
   
-        // Buat objek dengan tanggal sebagai kunci untuk memudahkan penggabungan
         const presensiDataMap = presensiData.reduce((acc, item) => {
           const localDate = moment(item.date).tz('Asia/Jakarta').format('YYYY-MM-DD');
           acc[localDate] = item.Hadir;
@@ -60,8 +59,8 @@ const GrafikPresensi = ({ selectedDate }) => {
           return acc;
         }, {});
   
-        console.log('Presensi Data Map:', presensiDataMap); // Log presensi data map
-        console.log('Cuti Data Map:', cutiDataMap); // Log cuti data map
+        console.log('Presensi Data Map:', presensiDataMap); 
+        console.log('Cuti Data Map:', cutiDataMap); 
   
         const formattedData = dateRange.map(date => {
           const dateString = moment(date).tz('Asia/Jakarta').format('YYYY-MM-DD');
@@ -72,7 +71,7 @@ const GrafikPresensi = ({ selectedDate }) => {
           };
         });
   
-        console.log('Formatted Data:', formattedData); // Log formatted data
+        console.log('Formatted Data:', formattedData); 
   
         setData(formattedData);
       } catch (error) {
@@ -83,12 +82,11 @@ const GrafikPresensi = ({ selectedDate }) => {
     fetchData();
   }, [selectedDate]);
   
-
   const createWeeklyDateRange = (startDate, endDate) => {
     const dates = [];
     let currentDate = new Date(startDate);
     while (currentDate <= endDate) {
-      if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) { // Skip Sunday (0) and Saturday (6)
+      if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
         dates.push(new Date(currentDate));
       }
       currentDate.setDate(currentDate.getDate() + 1);

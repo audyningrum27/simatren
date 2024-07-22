@@ -12,14 +12,14 @@ const upload = multer({ storage: storage });
 
 // Fungsi untuk mengonversi tanggal serial Excel ke objek Date JavaScript
 const excelDateToJSDate = (serial) => {
-    const excelStartDate = new Date(Date.UTC(1899, 11, 30)); // Tanggal mulai Excel
-    const utcDays = serial; // Excel menghitung dari 1900-12-30, jadi kita kurangi 2 hari
-    const utcDate = new Date(excelStartDate.getTime() + utcDays * 86400 * 1000); // Mengonversi hari ke milidetik
+    const excelStartDate = new Date(Date.UTC(1899, 11, 30));
+    const utcDays = serial;
+    const utcDate = new Date(excelStartDate.getTime() + utcDays * 86400 * 1000);
     return utcDate;
 };
 
-//ADMIN
-//Menampilkan seluruh data gaji
+// ADMIN
+// Menampilkan seluruh data gaji
 router.get('/gaji', (req, res) => {
     console.log("GET /api/data_gaji/gaji");
     const query = `
@@ -48,7 +48,7 @@ router.get('/gaji', (req, res) => {
     });
 });
 
-//Menambah data gaji
+// Menambah data gaji
 router.post('/gaji', (req, res) => {
     const { id_pegawai, bulan_gaji, gaji_dasar, tunjangan, potongan } = req.body;
 
@@ -78,42 +78,7 @@ router.post('/gaji', (req, res) => {
     }
 });
 
-
-//USER
-//Menampilkan data gaji berdasarkan id pegawai
-router.get('/gaji/:id_pegawai', (req, res) => {
-    const { id_pegawai } = req.params;
-    console.log("GET /api/data_gaji/gaji/:id_pegawai");
-    const query = `
-    SELECT 
-        p.nip,
-        p.nama_pegawai,
-        g.id_gaji,
-        g.id_pegawai,
-        g.bulan_gaji,
-        g.gaji_dasar,
-        g.tunjangan,
-        g.potongan,
-        g.total,
-        g.status_gaji
-    FROM 
-        data_gaji g
-    JOIN 
-        data_pegawai p ON g.id_pegawai = p.id_pegawai
-    WHERE 
-        g.id_pegawai = ?
-    `;
-    db.query(query, [id_pegawai], (err, results) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({ message: 'Internal Server Error' });
-        }
-
-        return res.json(results);
-    });
-});
-
-// ADMIN - POST to import data from Excel
+// POST to import data from Excel
 router.post('/import-gaji', upload.single('file'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
@@ -164,6 +129,41 @@ router.post('/import-gaji', upload.single('file'), (req, res) => {
     Promise.all(queries)
         .then(() => res.status(201).json({ message: 'Data Gaji Berhasil Diimport!' }))
         .catch(err => res.status(500).json({ message: 'Internal Server Error' }));
+});
+
+
+// USER
+// Menampilkan data gaji berdasarkan id pegawai
+router.get('/gaji/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+    console.log("GET /api/data_gaji/gaji/:id_pegawai");
+    const query = `
+    SELECT 
+        p.nip,
+        p.nama_pegawai,
+        g.id_gaji,
+        g.id_pegawai,
+        g.bulan_gaji,
+        g.gaji_dasar,
+        g.tunjangan,
+        g.potongan,
+        g.total,
+        g.status_gaji
+    FROM 
+        data_gaji g
+    JOIN 
+        data_pegawai p ON g.id_pegawai = p.id_pegawai
+    WHERE 
+        g.id_pegawai = ?
+    `;
+    db.query(query, [id_pegawai], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        return res.json(results);
+    });
 });
 
 export default router;

@@ -5,9 +5,7 @@ import bcrypt from 'bcryptjs';
 
 const TambahDataPegawai = () => {
   const navigate = useNavigate()
-
   const [showPopup, setShowPopup] = useState(false);
-
   const [formData, setFormData] = useState({
     nama_pegawai: '',
     nip: '',
@@ -33,7 +31,6 @@ const TambahDataPegawai = () => {
 
   const handleSave = async () => {
     try {
-      // Hash password
       const salt = bcrypt.genSaltSync(10);
       const hashedPassword = bcrypt.hashSync(formData.password, salt);
 
@@ -67,7 +64,6 @@ const TambahDataPegawai = () => {
       <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-between'>
         <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
 
-          {/* Form Tambah Data Pegawai */}
           <div className="relative w-full gap-3 grid grid-cols-1 md:grid-cols-2">
             <div>
               <div className='flex flex-row'>

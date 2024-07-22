@@ -37,11 +37,9 @@ function HistoryPelatihan() {
     data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Membagi data ke halaman-halaman
   const totalPages = Math.ceil(filteredPelatihan.length / itemsPerPage);
   const currentPageData = filteredPelatihan.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  // Fungsi untuk navigasi halaman
   const goToPreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
@@ -119,7 +117,6 @@ function HistoryPelatihan() {
         </div>
       </div>
 
-      {/* Navigasi Halaman */}
       <div className='py-2 justify-end flex flex-row items-center'>
         <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
         <div className='flex gap-4'>

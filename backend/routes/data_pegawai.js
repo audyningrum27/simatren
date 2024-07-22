@@ -9,11 +9,11 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-//ADMIN
-//Menambah data pegawai
+// ADMIN
+// Menambah data pegawai
 router.post('/pegawai', (req, res) => {
     const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kawin } = req.body;
-    const status_kepegawaian = 'Aktif'; // Default status kepegawaian "Aktif"
+    const status_kepegawaian = 'Aktif';
     const sql = `
         INSERT INTO data_pegawai (nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, status_kawin)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -29,7 +29,7 @@ router.post('/pegawai', (req, res) => {
     });
 });
 
-//Menampilkan seluruh data pegawai
+// Menampilkan seluruh data pegawai
 router.get('/pegawai', (req, res) => {
     console.log("GET /api/data_pegawai/pegawai");
     const query = 'SELECT * FROM data_pegawai';
@@ -43,7 +43,7 @@ router.get('/pegawai', (req, res) => {
     });
 });
 
-//Menampilkan detail setiap pegawai
+// Menampilkan detail setiap pegawai
 router.get('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
     const sql = `SELECT * FROM data_pegawai WHERE id_pegawai = ?`;
@@ -73,7 +73,7 @@ router.get('/pegawai/:id_pegawai', (req, res) => {
     });
 });
 
-//Menghapus data pegawai 
+// Menghapus data pegawai 
 router.delete('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
     const sql = 'DELETE FROM data_pegawai WHERE id_pegawai = ?';
@@ -87,7 +87,7 @@ router.delete('/pegawai/:id_pegawai', (req, res) => {
     });
 });
 
-//Mengedit data pegawai
+// Mengedit data pegawai
 router.put('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
     const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, jumlah_tanggungan } = req.body;
@@ -180,8 +180,8 @@ router.get('/pegawai/role/count', (req, res) => {
     });
 });
 
-//USER
-//Menampilkan data pegawai sesuai id pegawai yang sedang login
+// USER
+// Menampilkan data pegawai sesuai id pegawai yang sedang login
 router.get('/pegawai/profil/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
     const sql = `SELECT * FROM data_pegawai WHERE id_pegawai = ?`;
@@ -193,7 +193,7 @@ router.get('/pegawai/profil/:id_pegawai', (req, res) => {
             if (result.length > 0) {
                 const profil = result[0];
                 if (profil.foto_profil) {
-                    let imageType = 'jpeg'; // Default
+                    let imageType = 'jpeg';
                     const buffer = Buffer.from(profil.foto_profil, 'base64');
                     if (buffer.slice(0, 4).toString('hex') === '89504e47') {
                         imageType = 'png';
@@ -269,7 +269,6 @@ router.get('/pegawai/view-kk/:id_pegawai', (req, res) => {
             if (kartuKeluarga) {
                 const buffer = Buffer.from(kartuKeluarga, 'base64');
 
-                // Default type is jpeg
                 let contentType = 'image/jpeg';
                 const fileSignature = buffer.slice(0, 4).toString('hex');
 
@@ -290,7 +289,7 @@ router.get('/pegawai/view-kk/:id_pegawai', (req, res) => {
     });
 });
 
-//Mengedit profil pegawai
+// Mengedit profil pegawai
 router.put('/pegawai/profil/:id_pegawai', async (req, res) => {
     const { id_pegawai } = req.params;
     const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, jumlah_tanggungan } = req.body;

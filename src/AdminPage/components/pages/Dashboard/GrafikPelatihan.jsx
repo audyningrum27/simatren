@@ -30,8 +30,8 @@ function GrafikPelatihan({ selectedDate }) {
       const currentYear = currentDate.getFullYear();
   
       const isFirstHalf = currentMonth < 6;
-      const startMonth = isFirstHalf ? 0 : 6; // January or July
-      const endMonth = isFirstHalf ? 5 : 11;  // June or December
+      const startMonth = isFirstHalf ? 0 : 6;
+      const endMonth = isFirstHalf ? 5 : 11;
   
       const monthlyData = Array.from({ length: 6 }, (_, index) => {
         const month = new Date(currentYear, startMonth + index);

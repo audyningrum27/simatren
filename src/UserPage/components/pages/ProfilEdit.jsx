@@ -18,7 +18,6 @@ const ProfilEdit = () => {
     const [showPopupFoto, setShowPopupFoto] = useState(false);
     const [showPopupKartuKeluarga, setShowPopupKartuKeluarga] = useState(false);
 
-    //Menampilkan Data Profil
     const fetchProfil = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -38,7 +37,6 @@ const ProfilEdit = () => {
             }
             setProfil(data);
             setOriginalPassword(data.password);
-            // setOriginalPassword(response.data.originalPassword);
         } catch (error) {
             console.error('Error fetching profile:', error);
         }
@@ -48,7 +46,6 @@ const ProfilEdit = () => {
         fetchProfil();
     }, []);
 
-    //Mengupload Foto Profil
     const uploadFotoProfil = async () => {
         const id_pegawai = localStorage.getItem('id_pegawai');
         const formData = new FormData();
@@ -61,7 +58,7 @@ const ProfilEdit = () => {
             });
             console.log('Foto profil berhasil diunggah:', response.data);
             setShowPopupFoto(true);
-            fetchProfil(); // Refresh profil setelah mengunggah foto
+            fetchProfil();
         } catch (error) {
             console.error('Error uploading profile photo:', error);
         }
@@ -91,7 +88,6 @@ const ProfilEdit = () => {
         }
     }, [showPopupFoto]);
 
-    //Mengupload Kartu Keluarga
     const uploadKartuKeluarga = async () => {
         const id_pegawai = localStorage.getItem('id_pegawai');
         const formData = new FormData();
@@ -104,7 +100,7 @@ const ProfilEdit = () => {
             });
             console.log('Kartu keluarga berhasil diunggah:', response.data);
             setShowPopupKartuKeluarga(true);
-            fetchProfil(); // Refresh profil setelah mengunggah foto
+            fetchProfil();
         } catch (error) {
             console.error('Error uploading profile photo:', error);
         }
@@ -134,7 +130,6 @@ const ProfilEdit = () => {
         }
     }, [showPopupKartuKeluarga]);
 
-    //Menampilkan Kartu Keluarga
     const viewKartuKeluarga = () => {
         const id_pegawai = localStorage.getItem('id_pegawai');
         const token = localStorage.getItem('token');
@@ -142,8 +137,6 @@ const ProfilEdit = () => {
         window.open(url, '_blank');
     };
 
-
-    //Mengedit Data Profil
     const updateProfil = async () => {
         const token = localStorage.getItem('token');
         const id_pegawai = localStorage.getItem('id_pegawai');
@@ -218,7 +211,6 @@ const ProfilEdit = () => {
             <div className="box-border rounded-sm border border-gray-300 flex-1 shadow-lg overflow-auto">
                 <div className="flex flex-row py-3 px-5 pt-2 border-t border-white">
                     <div className="flex flex-row py-3 px-5 pt-2 border-t border-white">
-                        {/* Upload Foto Profil */}
                         <div className="relative flex flex-col justify-center items-center border border-gray-400 rounded-full w-24 h-24">
                             {profil.foto_profil ? (
                                 <img
@@ -293,7 +285,6 @@ const ProfilEdit = () => {
                                             onChange={handleChange}
                                             className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
                                         />
-                                        {/* Icon mata untuk melihat/sembunyikan password */}
                                         <div className="absolute right-2 top-2 cursor-pointer" onClick={toggleShowPassword}>
                                             {showPassword ? <FaEyeSlash /> : <FaEye />}
                                         </div>

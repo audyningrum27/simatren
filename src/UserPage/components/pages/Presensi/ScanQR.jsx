@@ -56,7 +56,7 @@ const ScanQR = () => {
     if (data) {
       setScanResultMasuk(data.text);
       console.log(data);
-      fetch('http://localhost:5000/api/save-presensi', {  // Pastikan URL sesuai
+      fetch('http://localhost:5000/api/save-presensi', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const ScanQR = () => {
     if (data) {
       setScanResultKeluar(data.text);
       console.log(data);
-      fetch('http://localhost:5000/api/save-presensi', {  // Pastikan URL sesuai
+      fetch('http://localhost:5000/api/save-presensi', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -12,7 +12,7 @@ function ManajemenCuti() {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Sesuaikan dengan jumlah item per halaman yang Anda inginkan
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchDataCuti();
@@ -73,7 +73,6 @@ function ManajemenCuti() {
       });
 
       if (response.ok) {
-        // Hapus data cuti dari state setelah diperbarui
         setDataCuti((prevData) => prevData.filter((cuti) => cuti.id_cuti !== selectedId));
         setShowSuccessPopup(true);
         setTimeout(() => {
@@ -118,7 +117,6 @@ function ManajemenCuti() {
       <p className="text-xl font-bold px-5">Data Pengajuan Cuti</p>
       <div>
         <div className="relative py-4 w-fit md:w-full justify-between flex flex-row">
-          {/* Form pencarian */}
           <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
           <input
             type="text"
@@ -127,7 +125,6 @@ function ManajemenCuti() {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          {/* Tombol Histori Cuti */}
           <div className='flex justify-between mx-2 md:mx-10'>
             <button onClick={() => navigate('/AdminPage/histori_cuti_pegawai')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-10 w-fit">
               Histori Cuti

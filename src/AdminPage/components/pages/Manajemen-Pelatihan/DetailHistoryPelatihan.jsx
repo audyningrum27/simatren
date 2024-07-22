@@ -34,7 +34,6 @@ const DetailHistoryPelatihan = () => {
     return <div>Loading...</div>;
   }
 
-  //Menampilkan Bukti Pelaksanaan
   const viewBuktiPelaksanaan = () => {
     const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-bukti/${id_pelatihan}`;
     window.open(url, '_blank');

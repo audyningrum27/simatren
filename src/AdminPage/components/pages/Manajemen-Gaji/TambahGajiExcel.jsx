@@ -44,7 +44,6 @@ const TambahGajiExcel = () => {
 
             <div className='md:w-[80%] w-[70%] mx-auto h-full flex flex-col py-5 justify-between'>
                 <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
-                    {/* Form Tambah Data Gaji */}
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
                             <table className="w-full">

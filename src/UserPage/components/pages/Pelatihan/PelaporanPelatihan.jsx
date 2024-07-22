@@ -76,7 +76,6 @@ const PelaporanPelatihan = () => {
     } catch (error) {
       console.error('Error uploading bukti pelaksanaan:', error);
     }
-    // Reset form setelah submit
     setSelectedPelatihan('');
     setNamaPenyelenggara('');
     setTanggalMulai('');
@@ -121,7 +120,6 @@ const PelaporanPelatihan = () => {
       <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-between'>
         <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-4 md:p-10">
 
-          {/* Form Pengajuan Cuti */}
           <form className="space-y-6">
             <div>
               <table className="w-full">

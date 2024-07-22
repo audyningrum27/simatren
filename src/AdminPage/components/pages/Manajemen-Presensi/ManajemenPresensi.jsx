@@ -10,7 +10,7 @@ function ManajemenPresensi() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Jumlah item per halaman
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchDataPresensi();
@@ -40,11 +40,9 @@ function ManajemenPresensi() {
     return dateMatches && searchMatches;
   });
 
-  // Membagi data ke halaman-halaman
   const totalPages = Math.ceil(filteredPresensi.length / itemsPerPage);
   const currentPageData = filteredPresensi.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  // Fungsi untuk navigasi halaman
   const goToPreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };

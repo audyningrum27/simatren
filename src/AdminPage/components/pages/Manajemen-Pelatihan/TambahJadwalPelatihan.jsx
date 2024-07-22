@@ -39,14 +39,12 @@ const TambahJadwalPelatihan = () => {
     axios.post('http://localhost:5000/api/data_pelatihan/pelatihan', dataPelatihan)
       .then(response => {
         console.log(response.data);
-        // Reset form setelah submit
         setIdPegawai([]);
         setPenyelenggara('');
         setKegiatan('');
         setTanggalMulai('');
         setTanggalSelesai('');
         setDeskripsi('');
-        // Menampilkan pop up
         setShowPopup(true);
       })
       .catch(error => {
@@ -174,7 +172,6 @@ const TambahJadwalPelatihan = () => {
         </div>
       </div>
 
-      {/* Tombol Konfirmasi */}
       <div className="flex flex-row gap-6 justify-end md:w-[100%] w-[90%] mx-auto">
         <button
           type="button"

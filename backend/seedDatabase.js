@@ -24,21 +24,4 @@ const createAdmin = async () => {
     });
 };
 
-// const createUser = async () => {
-//     const email = 'laela@gmail.com';
-//     const plainPassword = 'laela123';
-//     const hashedPassword = await hashPassword(plainPassword);
-
-//     const query = 'INSERT INTO users (email, password) VALUES (?, ?)';
-
-//     db.query(query, [email, hashedPassword], (err, results) => {
-//         if (err) {
-//             console.error('Error inserting user:', err);
-//         } else {
-//             console.log('User created successfully');
-//         }
-//     });
-// };
-
 createAdmin();
-// createUser();

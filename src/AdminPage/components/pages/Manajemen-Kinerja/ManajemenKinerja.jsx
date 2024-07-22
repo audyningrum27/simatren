@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 function ManajemenKinerja() {
   const [dataPegawai, setDataPegawai] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Jumlah item per halaman
+  const itemsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,11 +34,9 @@ function ManajemenKinerja() {
     data.nip.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Membagi data ke halaman-halaman
   const totalPages = Math.ceil(filteredPegawai.length / itemsPerPage);
   const currentPageData = filteredPegawai.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  // Fungsi untuk navigasi halaman
   const goToPreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
@@ -61,7 +59,6 @@ function ManajemenKinerja() {
     <div>
       <p className="text-xl font-bold px-5">Manajemen Kinerja</p>
       <div>
-        {/* Form Pencarian */}
         <div className="relative py-4 w-full justify-between flex flex-row">
           <HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
           <input
@@ -73,7 +70,6 @@ function ManajemenKinerja() {
           />
         </div>
 
-        {/* Tabel data pegawai */}
         <div className="px-4 text-sm rounded-sm border-[1.5px] border-gray-200 items-center overflow-x-auto">
           <div className="h-96 md:w-full w-[34rem] max-[500px]:w-[24rem] overflow-auto">
             <table className='text-gray-700 min-w-[900px]'>
@@ -116,8 +112,7 @@ function ManajemenKinerja() {
             </table>
           </div>
         </div>
-
-        {/* Navigasi Halaman */}
+        
         <div className='py-2 justify-end flex flex-row items-center'>
           <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
           <div className='flex gap-4'>

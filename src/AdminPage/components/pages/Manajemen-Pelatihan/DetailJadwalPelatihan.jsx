@@ -233,7 +233,6 @@ const DetailJadwalPelatihan = () => {
             </div>
           </div>
 
-          {/* Tombol Konfirmasi */}
           <div className="flex flex-row gap-6 justify-end px-5 md:w-[100%] w-[90%] mx-auto mb-5">
             <button
               type="button"

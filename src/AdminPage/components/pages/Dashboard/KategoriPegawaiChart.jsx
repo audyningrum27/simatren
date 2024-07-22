@@ -7,12 +7,6 @@ import {
   Legend 
 } from 'recharts'
 
-// const data = [
-// 	{ name: 'Guru', value: 540 },
-// 	{ name: 'TPA', value: 620 },
-// 	{ name: 'Non TPA', value: 210 }
-// ]
-
 const RADIAN = Math.PI / 180
 const COLORS = ['rgb(20 83 45)', 'rgb(21 128 61)', 'rgb(34 197 94)']
 
@@ -39,11 +33,8 @@ export default function KategoriPegawaiChart() {
           throw new Error('Failed to fetch data');
         }
         const result = await response.json();
-
-        // Calculate total count
         const totalCount = result.reduce((sum, item) => sum + item.count, 0);
 
-        // Prepare data with percentages
         const chartData = result.map(item => ({
           name: item.role,
           value: item.count,

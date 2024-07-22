@@ -7,7 +7,7 @@ import { getPegawaiStatus } from "../../utils/status";
 function JadwalPelatihan() {
   const [dataPelatihan, setDataPelatihan] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Jumlah item per halaman
+  const itemsPerPage = 10;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -18,7 +18,6 @@ function JadwalPelatihan() {
     try {
       const response = await fetch('http://localhost:5000/api/data_pelatihan/pelatihan');
       const data = await response.json();
-      // Filter data dengan status "Belum Dimulai" dan "Proses"
       const filteredData = data.filter(item => item.status === 'Belum Dimulai' || item.status === 'Proses');
       setDataPelatihan(filteredData);
     } catch (error) {
@@ -37,11 +36,9 @@ function JadwalPelatihan() {
     data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Membagi data ke halaman-halaman
   const totalPages = Math.ceil(filteredPelatihan.length / itemsPerPage);
   const currentPageData = filteredPelatihan.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  // Fungsi untuk navigasi halaman
   const goToPreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
@@ -126,7 +123,6 @@ function JadwalPelatihan() {
         </div>
       </div>
 
-      {/* Navigasi Halaman */}
       <div className='py-2 justify-end flex flex-row items-center'>
         <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
         <div className='flex gap-4'>

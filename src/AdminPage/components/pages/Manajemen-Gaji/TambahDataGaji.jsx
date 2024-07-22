@@ -38,13 +38,11 @@ const TambahDataGaji = () => {
     axios.post('http://localhost:5000/api/data_gaji/gaji', dataGaji)
       .then(response => {
         console.log(response.data);
-        // Reset form setelah submit
         setIdPegawai('');
         setGajiDasar('');
         setTunjangan('');
         setPotongan('');
         setTanggalGaji('');
-        // Menampilkan pop up
         setShowPopup(true);
       })
       .catch(error => {
@@ -70,7 +68,6 @@ const TambahDataGaji = () => {
       <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-betwee'>
         <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
 
-          {/* Form Tambah Data Gaji */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <table className="w-full">

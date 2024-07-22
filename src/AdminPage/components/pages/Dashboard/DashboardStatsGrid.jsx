@@ -45,7 +45,7 @@ const DashboardStatsGrid = ({ selectedDate }) => {
 
     const fetchPresensiData = async () => {
       try {
-        const formattedDate = selectedDate.toISOString().split('T')[0]; // Format tanggal
+        const formattedDate = selectedDate.toISOString().split('T')[0];
         const responsePresensi = await fetch(`http://localhost:5000/api/data_presensi/presensi/count?date=${formattedDate}`);
         
         if (!responsePresensi.ok) {

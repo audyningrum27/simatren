@@ -12,67 +12,67 @@ import {
 const data = [
   {
       name: "Jan",
-      Penurunan: 3,
-      Kenaikanv: 7
+      Hadir: 25,
+      Cuti: 2
   },
   {
       name: "Feb",
-      Penurunan: 12,
-      Kenaikan: 6
+      Hadir: 23,
+      Cuti: 1
   },
   {
       name: "Mar",
-      Penurunan: 7,
-      Kenaikan: 15
+      Hadir: 27,
+      Cuti: 0
   },
   {
       name: "Apr",
-      Penurunan: 7,
-      Kenaikan: 2
+      Hadir: 15,
+      Cuti: 11
   },
   {
       name: "Mei",
-      Penurunan: 8,
-      Kenaikan: 9
+      Hadir: 20,
+      Cuti: 2
   },
   {
       name: "Jun",
-      Penurunan: 19,
-      Kenaikan: 2
+      Hadir: 20,
+      Cuti: 6
   },
   {
       name: "Jul",
-      Penurunan: 11,
-      Kenaikan: 6
+      Hadir: 27,
+      Cuti: 0
   },
   {
       name: "Ags",
-      Penurunan: 6,
-      Kenaikan: 7
+      Hadir: 19,
+      Cuti: 8
   },
   {
       name: "Sep",
-      Penurunan: 18,
-      Kenaikan: 2
+      Hadir: 20,
+      Cuti: 6
   },
   {
       name: "Okt",
-      Penurunan: 17,
-      Kenaikan: 2
+      Hadir: 17,
+      Cuti: 10
   },
   {
       name: "Nov",
-      Penurunan: 8,
-      Kenaikan: 15
+      Hadir: 26,
+      Cuti: 0
   },
   {
       name: "Des",
-      Penurunan: 1,
-      Kenaikan: 8
-  },
+      Hadir: 20,
+      Cuti: 7
+  }
 ]
 
-function Kinerja_gform() {
+function Grafik_Gform() {
   return (
       <div className="w-[32rem] md:w-full max-[500px]:w-[24rem] h-[22rem] bg-white p-4 shadow-md shadow-gray-400 rounded-sm border border-gray-200 flex flex-col justify-center">
           <strong className="text-gray-700 font-medium">Kinerja Pegawai</strong>
@@ -94,8 +94,8 @@ function Kinerja_gform() {
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Bar dataKey="Kenaikan" fill='rgb(21 128 61)' />
-                      <Bar dataKey="Penurunan" fill='rgb(34 197 94)' />
+                      <Bar dataKey="Hadir" fill='rgb(21 128 61)' />
+                      <Bar dataKey="Cuti" fill='rgb(34 197 94)' />
                   </BarChart>
               </ResponsiveContainer>
           </div>
@@ -103,4 +103,4 @@ function Kinerja_gform() {
   )
 }
 
-export default Kinerja_gform;
+export default Grafik_Gform;

@@ -7,7 +7,7 @@ function HistoriCutiPegawai() {
   const [dataCuti, setDataCuti] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Sesuaikan dengan jumlah item per halaman yang Anda inginkan
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchDataCuti();
@@ -35,7 +35,7 @@ function HistoriCutiPegawai() {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Kembali ke halaman pertama saat melakukan pencarian
+    setCurrentPage(1);
   };
 
   const filteredCuti = dataCuti.filter((data) =>
@@ -43,14 +43,10 @@ function HistoriCutiPegawai() {
     data.nip.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Hitung total halaman berdasarkan data yang sudah difilter
   const totalPages = Math.ceil(filteredCuti.length / itemsPerPage);
-
-  // Potong data berdasarkan halaman saat ini
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentCutiData = filteredCuti.slice(startIndex, startIndex + itemsPerPage);
 
-  // Fungsi untuk navigasi halaman
   const goToPreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };

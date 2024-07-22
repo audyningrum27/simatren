@@ -8,7 +8,7 @@ function HistoriCuti() {
   const [dataCuti, setDataCuti] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Jumlah item per halaman
+  const itemsPerPage = 10;
 
   useEffect(() => {
     fetchDataCuti();
@@ -40,7 +40,7 @@ function HistoriCuti() {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page on search
+    setCurrentPage(1);
   };
 
   const filteredCuti = dataCuti.filter((data) =>

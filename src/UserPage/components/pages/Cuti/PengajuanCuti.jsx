@@ -23,11 +23,9 @@ const PengajuanCuti = () => {
 
       if (response.status === 201) {
         console.log('Pengajuan Cuti Berhasil');
-        // Reset form setelah submit
         setTanggalMulai('');
         setTanggalSelesai('');
         setAlasanCuti('');
-        // Menampilkan pop up
         setShowPopup(true);
       }
     } catch (error) {
@@ -65,7 +63,6 @@ const PengajuanCuti = () => {
       <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-betwee'>
         <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
 
-          {/* Form Pengajuan Cuti */}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <table className="w-full">
@@ -85,7 +82,6 @@ const PengajuanCuti = () => {
                     />
                   </td>
                 </tr>
-
                 <tr>
                   <td className="p-2 text-sm">Tanggal Selesai Cuti<span className="text-red-600">*</span></td>
                   <td className="p-2">:</td>
@@ -102,7 +98,6 @@ const PengajuanCuti = () => {
                     />
                   </td>
                 </tr>
-
                 <tr>
                   <td className="p-2 text-sm">Alasan Cuti<span className="text-red-600">*</span></td>
                   <td className="p-2">:</td>

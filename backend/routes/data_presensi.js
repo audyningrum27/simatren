@@ -33,7 +33,7 @@ router.get('/presensi', (req, res) => {
 
 // Dashboard
 router.get('/presensi/count', (req, res) => {
-    const date = req.query.date; // Mengambil parameter tanggal dari query string
+    const date = req.query.date;
     let queryPresensi;
     if (date) {
         queryPresensi = 'SELECT COUNT(*) AS presensi_count FROM data_presensi WHERE DATE(tanggal_presensi) = ?';
@@ -95,7 +95,7 @@ router.get('/presensi/daily', (req, res) => {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-        console.log('Data presensi harian:', results); // Log data presensi
+        console.log('Data presensi harian:', results);
         res.json(results);
     });
 });
@@ -135,7 +135,7 @@ router.get('/presensi/:id_pegawai', (req, res) => {
 router.post('/save-presensi', (req, res) => {
     const { result, type, timestamp } = req.body;
 
-    const idPegawai = parseInt(result); // Assuming the QR code text is the id_pegawai
+    const idPegawai = parseInt(result);
     const datetime = new Date(timestamp);
     const tanggalPresensi = datetime.toISOString().split('T')[0];
     const waktuPresensi = datetime.toTimeString().split(' ')[0];
@@ -178,7 +178,7 @@ router.post('/save-presensi', (req, res) => {
 
 router.get('/presensi/monthly/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    console.log('Fetching data for id_pegawai:', id_pegawai); // Log id_pegawai
+    console.log('Fetching data for id_pegawai:', id_pegawai);
 
     const query = `
         SELECT 
@@ -196,7 +196,7 @@ router.get('/presensi/monthly/:id_pegawai', (req, res) => {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-        console.log('Query results:', results); // Log query results
+        console.log('Query results:', results);
         res.json(results);
     });
 });

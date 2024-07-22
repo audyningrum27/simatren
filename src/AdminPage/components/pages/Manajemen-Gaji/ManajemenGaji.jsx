@@ -136,7 +136,6 @@ function ManajemenGaji() {
         </div>
       </div>
 
-      {/* Navigasi Halaman */}
       <div className='py-2 justify-end flex flex-row items-center'>
         <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
         <div className='flex gap-4'>

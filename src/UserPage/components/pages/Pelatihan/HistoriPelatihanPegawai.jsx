@@ -51,14 +51,10 @@ function HistoriPelatihanPegawai() {
     data.nama_penyelenggara.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Hitung total halaman berdasarkan data yang sudah difilter
   const totalPages = Math.ceil(filteredPelatihan.length / itemsPerPage);
-
-  // Potong data berdasarkan halaman saat ini
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentPageData = filteredPelatihan.slice(startIndex, startIndex + itemsPerPage);
 
-  // Fungsi untuk navigasi halaman
   const goToPreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };

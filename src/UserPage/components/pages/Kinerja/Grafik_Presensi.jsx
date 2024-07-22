@@ -75,7 +75,7 @@ const data = [
 function Grafik_Presensi() {
     return (
         <div className="w-[32rem] md:w-full max-[500px]:w-[24rem] h-[22rem] bg-white p-4 shadow-md shadow-gray-400 rounded-sm border border-gray-200 flex flex-col justify-center">
-            <strong className="text-gray-700 font-medium">Presensi</strong>
+            <strong className="text-gray-700 font-medium">Grafik Presensi</strong>
             <div className="w-full mt-3 flex-1 text-sm">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart

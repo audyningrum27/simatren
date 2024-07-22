@@ -111,7 +111,6 @@ export default function DetailPegawai() {
 
     if (!pegawai) return <p>Loading...</p>;
 
-    //Menampilkan Kartu Keluarga
     const viewKartuKeluarga = () => {
         const url = `http://localhost:5000/api/data_pegawai/pegawai/view-kk/${id_pegawai}`;
         window.open(url, '_blank');
@@ -339,7 +338,6 @@ export default function DetailPegawai() {
                         </div>
                     </div>
 
-                    {/* Tombol Konfirmasi */}
                     <div className="flex flex-row gap-6 justify-end px-5 md:w-[100%] w-[90%] mx-auto mb-5">
                         <button
                             type="button"
