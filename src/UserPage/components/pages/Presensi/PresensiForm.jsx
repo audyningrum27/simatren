@@ -1,33 +1,39 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const PresensiForm = ({ id_presensi }) => {
+const PresensiForm = () => {
+  const { id_presensi } = useParams();
+  const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    question1: '',
-    question2: '',
-    question3: '',
-    question4: '',
-    question5: '',
+    hafalan: '',
+    amalan_baik: '',
+    kegiatan_rutin: '',
+    penyelesaian_masalah: '',
+    inisiatif_proyek: ''
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: value
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`http://localhost:5000/api/data_presensi/presensi/form/${id_presensi}`, {
-        gform_kinerja: formData,
-      });
-      console.log('Form submitted:', response.data);
-      // Optionally, navigate or show success message here
+      const response = await axios.put(`http://localhost:5000/api/data_presensi/update-presensi/${id_presensi}`, formData);
+      console.log(response.data.message);
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+        navigate('/UserPage/historipresensi');
+      }, 2000);
     } catch (error) {
-      console.error('Error submitting form:', error);
+      console.error('Error updating presensi:', error);
     }
   };
 
@@ -36,72 +42,77 @@ const PresensiForm = ({ id_presensi }) => {
       <p className="text-xl font-bold mb-4">Pelaporan Keaktifan Pegawai</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="question1" className="block font-semibold mb-1">
+          <label htmlFor="hafalan" className="block font-semibold mb-1">
             <p>Apa surah atau ayat Al-Qur'an yang baru Anda hafal atau ulangi dalam hari ini?</p>
           </label>
           <input
             type="text"
-            id="question1"
-            name="question1"
-            value={formData.question1}
+            id="hafalan"
+            name="hafalan"
+            value={formData.hafalan}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
-          />
-        </div>
-        
-        <div>
-          <label htmlFor="question2" className="block font-semibold mb-1">
-           <p>Sebutkan satu amalan kebaikan yang Anda lakukan dalam hari ini dan bagaimana dampaknya terhadap lingkungan pesantren?</p>
-          </label>
-          <input
-            type="text"
-            id="question2"
-            name="question2"
-            value={formData.question2}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
 
         <div>
-          <label htmlFor="question3" className="block font-semibold mb-1">
+          <label htmlFor="amalan_baik" className="block font-semibold mb-1">
+            <p>Sebutkan satu amalan kebaikan yang Anda lakukan dalam hari ini dan bagaimana dampaknya terhadap lingkungan pesantren?</p>
+          </label>
+          <input
+            type="text"
+            id="amalan_baik"
+            name="amalan_baik"
+            value={formData.amalan_baik}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label htmlFor="kegiatan_rutin" className="block font-semibold mb-1">
             <p>Apa kegiatan rutin yang Anda lakukan untuk mendukung pengajaran dan pembelajaran di pesantren?</p>
           </label>
           <input
             type="text"
-            id="question3"
-            name="question3"
-            value={formData.question3}
+            id="kegiatan_rutin"
+            name="kegiatan_rutin"
+            value={formData.kegiatan_rutin}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
 
         <div>
-          <label htmlFor="question4" className="block font-semibold mb-1">
+          <label htmlFor="penyelesaian_masalah" className="block font-semibold mb-1">
             <p>Bagaimana cara Anda menyelesaikan tantangan atau masalah yang dihadapi dalam tugas sehari-hari di pesantren?</p>
           </label>
           <input
             type="text"
-            id="question4"
-            name="question4"
-            value={formData.question4}
+            id="penyelesaian_masalah"
+            name="penyelesaian_masalah"
+            value={formData.penyelesaian_masalah}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
 
         <div>
-          <label htmlFor="question5" className="block font-semibold mb-1">
+          <label htmlFor="inisiatif_proyek" className="block font-semibold mb-1">
             <p>Sebutkan satu inisiatif atau proyek yang telah Anda laksanakan atau usulkan untuk meningkatkan kehidupan komunitas pesantren</p>
           </label>
           <input
             type="text"
-            id="question5"
-            name="question5"
-            value={formData.question5}
+            id="inisiatif_proyek"
+            name="inisiatif_proyek"
+            value={formData.inisiatif_proyek}
             onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
 
@@ -112,6 +123,14 @@ const PresensiForm = ({ id_presensi }) => {
           Kirim
         </button>
       </form>
+
+      {showPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white font-semibold text-green-900 px-12 py-5 rounded-md shadow-lg">
+            <p>Pelaporan Keaktifan Berhasil Dikirim</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

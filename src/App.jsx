@@ -11,6 +11,7 @@ import ManajemenGaji from './AdminPage/components/pages/Manajemen-Gaji/Manajemen
 import TambahDataGaji from './AdminPage/components/pages/Manajemen-Gaji/TambahDataGaji';
 import TambahGajiExcel from './AdminPage/components/pages/Manajemen-Gaji/TambahGajiExcel';
 import ManajemenPresensi from './AdminPage/components/pages/Manajemen-Presensi/ManajemenPresensi';
+import LaporanKinerja from './AdminPage/components/pages/Manajemen-Presensi/LaporanKinerja';
 import ManajemenCuti from './AdminPage/components/pages/Manajemen-Cuti/ManajemenCuti';
 import HistoriCutiPegawai from './AdminPage/components/pages/Manajemen-Cuti/HistoriCutiPegawai';
 import HistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/HistoryPelatihan';
@@ -61,6 +62,7 @@ function App() {
             <Route path="/AdminPage/tambah_data_gaji" element={<TambahDataGaji />} />
             <Route path="/AdminPage/tambah_data_gaji_excel" element={<TambahGajiExcel />} />
             <Route path="/AdminPage/manajemen_presensi" element={<ManajemenPresensi />} />
+            <Route path="/AdminPage/laporan_kinerja/:id_presensi" element={<LaporanKinerja />} />
             <Route path="/AdminPage/manajemen_cuti" element={<ManajemenCuti />} />
             <Route path="/AdminPage/histori_cuti_pegawai" element={<HistoriCutiPegawai />} />
             <Route path="/AdminPage/histori_pelatihan" element={<HistoryPelatihan />} />

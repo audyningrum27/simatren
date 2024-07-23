@@ -3,7 +3,7 @@ import db from '../db.js';
 
 const router = express.Router();
 
-// Data Pegawai di Admin
+// Menampilkan Data Presensi di Admin
 router.get('/presensi', (req, res) => {
     console.log("GET /api/data_presensi/presensi");
     const query = `
@@ -15,6 +15,7 @@ router.get('/presensi', (req, res) => {
         pr.tanggal_presensi,
         pr.jam_masuk,
         pr.jam_keluar,
+        pr.hafalan,
         CONCAT(
         FLOOR(TIMESTAMPDIFF(MINUTE, pr.jam_masuk, pr.jam_keluar) / 60), ' jam ',
         MOD(TIMESTAMPDIFF(MINUTE, pr.jam_masuk, pr.jam_keluar), 60), ' menit'
@@ -34,7 +35,37 @@ router.get('/presensi', (req, res) => {
     });
 });
 
-// Dashboard
+//Menampilkan Laporan Kinerja 
+router.get('/presensi/laporan_kinerja/:id_presensi', (req, res) => {
+    const { id_presensi } = req.params;
+    console.log("GET /api/data_presensi/presensi/laporan_kinerja/:id_presensi");
+    const query = `
+    SELECT 
+        hafalan, 
+        amalan_baik, 
+        kegiatan_rutin, 
+        penyelesaian_masalah, 
+        inisiatif_proyek 
+    FROM 
+        data_presensi 
+    WHERE 
+        id_presensi = ? 
+    `;
+    db.query(query, [id_presensi], (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        if (results.length === 0) {
+            console.log('No data found for id_presensi:', id_presensi);
+            return res.status(404).json({ message: 'No data found' });
+        }
+        return res.json(results[0]);
+    });
+});
+
+// Menghitung Grafik Presensi Pada Dashboard
 router.get('/presensi/count', (req, res) => {
     const date = req.query.date;
     let queryPresensi;
@@ -51,7 +82,7 @@ router.get('/presensi/count', (req, res) => {
             console.error('Error executing presensi query:', errPresensi);
             return res.status(500).json({ error: 'Internal server error' });
         }
-        
+
         const presensiCount = resultsPresensi[0].presensi_count;
 
         // Mendapatkan jumlah pegawai aktif
@@ -60,7 +91,7 @@ router.get('/presensi/count', (req, res) => {
                 console.error('Error executing pegawai query:', errPegawai);
                 return res.status(500).json({ error: 'Internal server error' });
             }
-            
+
             const activeCount = resultsPegawai[0].active_count;
 
             const presensiPercentage = (presensiCount / activeCount) * 100;
@@ -71,7 +102,7 @@ router.get('/presensi/count', (req, res) => {
             } else {
                 formattedPercentage = presensiPercentage.toFixed(2);
             }
-            
+
             const responseData = {
                 presensi_count: presensiCount,
                 total_active_pegawai: activeCount,
@@ -116,6 +147,7 @@ router.get('/presensi/:id_pegawai', (req, res) => {
         pr.tanggal_presensi,
         pr.jam_masuk,
         pr.jam_keluar,
+        pr.hafalan,
         CONCAT(
         FLOOR(TIMESTAMPDIFF(MINUTE, pr.jam_masuk, pr.jam_keluar) / 60), ' jam ',
         MOD(TIMESTAMPDIFF(MINUTE, pr.jam_masuk, pr.jam_keluar), 60), ' menit'
@@ -137,7 +169,7 @@ router.get('/presensi/:id_pegawai', (req, res) => {
     });
 });
 
-// presensi
+// Menambahkan data presensi saat pegawai scan QR
 router.post('/save-presensi/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
     const { type, timestamp } = req.body;
@@ -178,9 +210,40 @@ router.post('/save-presensi/:id_pegawai', (req, res) => {
     }
 });
 
+//Melengkapi Form Presensi
+router.put('/update-presensi/:id_presensi', (req, res) => {
+    const { id_presensi } = req.params;
+    const { hafalan, amalan_baik, kegiatan_rutin, penyelesaian_masalah, inisiatif_proyek } = req.body;
+
+    const query = `
+        UPDATE data_presensi 
+        SET 
+            hafalan = ?, 
+            amalan_baik = ?, 
+            kegiatan_rutin = ?, 
+            penyelesaian_masalah = ?, 
+            inisiatif_proyek = ? 
+        WHERE id_presensi = ?
+    `;
+
+    db.query(query, [hafalan, amalan_baik, kegiatan_rutin, penyelesaian_masalah, inisiatif_proyek, id_presensi], (err, results) => {
+        if (err) {
+            console.error('Error updating presensi:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(400).json({ message: 'No matching entry found for update' });
+        }
+
+        res.json({ message: 'Presensi updated successfully' });
+    });
+});
+
+
 router.get('/presensi/monthly/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    console.log('Fetching data for id_pegawai:', id_pegawai); 
+    console.log('Fetching data for id_pegawai:', id_pegawai);
 
     const query = `
         SELECT 

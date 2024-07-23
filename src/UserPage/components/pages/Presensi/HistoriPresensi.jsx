@@ -8,7 +8,7 @@ const HistoriPresensi = () => {
   const [dataPresensi, setDataPresensi] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(true); // New state for loading
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
   const navigate = useNavigate();
 
@@ -34,16 +34,16 @@ const HistoriPresensi = () => {
         tanggalPresensi: formatDate(item.tanggal_presensi)
       }));
       setDataPresensi(data);
-      setLoading(false); // Set loading to false when data is fetched
+      setLoading(false); 
     } catch (error) {
       console.error('Error fetching data:', error);
-      setLoading(false); // Ensure loading is stopped on error
+      setLoading(false); 
     }
   };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); // Reset to first page on search
+    setCurrentPage(1); 
   };
 
   const filteredPresensi = dataPresensi.filter((data) =>
@@ -63,18 +63,13 @@ const HistoriPresensi = () => {
 
   const BoxWrapper = ({ children, isActive, onClick }) => (
     <button
-      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-      }`}
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
       onClick={onClick}
     >
       {children}
     </button>
   );
-
-  const handleLengkapiPresensi = (id_presensi) => {
-    navigate(`/UserPage/lengkapi_presensi/${id_presensi}`);
-  };
 
   if (loading) return <p>Loading...</p>;
 
@@ -126,12 +121,16 @@ const HistoriPresensi = () => {
                     <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
                     <td className='font-semibold'>
                       {data.jam_masuk && data.tanggalPresensi === formatDate(new Date()) ? (
-                        <button 
-                          onClick={() => handleLengkapiPresensi(data.id_presensi)} 
-                          className='flex justify-start items-center'>
-                          Lengkapi Presensi
-                          <HiChevronRight fontSize={18} className='ml-1' />
-                        </button>
+                        data.hafalan ? (
+                          <span className='text-green-700'>Sudah Lengkap</span>
+                        ) : (
+                          <button
+                            onClick={() => navigate(`/UserPage/lengkapi_presensi/${data.id_presensi}`)}
+                            className='flex justify-start items-center'>
+                            Lengkapi Presensi
+                            <HiChevronRight fontSize={18} className='ml-1' />
+                          </button>
+                        )
                       ) : (
                         <span>-</span>
                       )}

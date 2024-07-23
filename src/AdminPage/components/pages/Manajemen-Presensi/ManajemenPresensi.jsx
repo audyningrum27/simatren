@@ -4,11 +4,14 @@ import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { MdOutlineCalendarMonth } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
+import { formatDate } from '../../utils/formatDate';
 
 function ManajemenPresensi() {
   const [dataPresensi, setDataPresensi] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
@@ -53,9 +56,8 @@ function ManajemenPresensi() {
 
   const BoxWrapper = ({ children, isActive, onClick }) => (
     <button
-      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-      }`}
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
       onClick={onClick}
     >
       {children}
@@ -101,6 +103,7 @@ function ManajemenPresensi() {
                   <td className='font-bold py-4'>Jam Masuk</td>
                   <td className='font-bold py-4'>Jam Keluar</td>
                   <td className='font-bold py-4'>Total Jam Kerja</td>
+                  <td className='font-bold py-4'>Laporan Kinerja</td>
                 </tr>
               </thead>
 
@@ -112,10 +115,26 @@ function ManajemenPresensi() {
                     <td>{data.nama_pegawai}</td>
                     <td>{data.tanggal_presensi}</td>
                     <td>{data.jam_masuk}</td>
-                    <td>{data.jam_keluar}</td>
-                    <div className='flex-row'>
-                      <td>{data.total_jam_kerja}</td>
-                    </div>
+                    <td className={data.jam_keluar ? '' : 'text-red-700'}>
+                      {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
+                    </td>
+                    <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
+                    <td className='font-semibold'>
+                      {data.jam_masuk && data.tanggal_presensi === formatDate(new Date()) ? (
+                        data.hafalan ? (
+                          <button
+                            onClick={() => navigate(`/AdminPage/laporan_kinerja/${data.id_presensi}`)}
+                            className='flex justify-start items-center'>
+                            Lihat
+                            <HiChevronRight fontSize={18} className='ml-1' />
+                          </button>
+                        ) : (
+                          <span>Belum Mengisi</span>
+                        )
+                      ) : (
+                        <span>-</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -124,17 +143,17 @@ function ManajemenPresensi() {
         </div>
         <div className='py-2 justify-end flex flex-row items-center'>
           <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
-            <div className='flex gap-4'>
-              {Array.from({ length: totalPages }, (_, index) => (
-                <BoxWrapper
-                  key={index}
-                  isActive={currentPage === index + 1}
-                  onClick={() => setCurrentPage(index + 1)}
-                >
-                  {index + 1}
-                </BoxWrapper>
-              ))}
-            </div>
+          <div className='flex gap-4'>
+            {Array.from({ length: totalPages }, (_, index) => (
+              <BoxWrapper
+                key={index}
+                isActive={currentPage === index + 1}
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </BoxWrapper>
+            ))}
+          </div>
           <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
         </div>
       </div>
