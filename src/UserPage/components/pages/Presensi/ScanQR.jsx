@@ -125,8 +125,8 @@ const ScanQR = () => {
     return now >= startTime && now <= endTime;
   };
 
-  const isMasukButtonAvailable = checkTimeForButton('07:00', '24:00');
-  const isKeluarButtonAvailable = checkTimeForButton('07:00', '24:00');
+  const isMasukButtonAvailable = checkTimeForButton('00:00', '24:00');
+  const isKeluarButtonAvailable = checkTimeForButton('00:00', '23:00');
 
   return (
     <div className="px-5">

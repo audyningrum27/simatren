@@ -115,7 +115,6 @@ function ManajemenPresensi() {
                     <td>{data.jam_keluar}</td>
                     <div className='flex-row'>
                       <td>{data.total_jam_kerja}</td>
-                      <td>Jam</td>
                     </div>
                   </tr>
                 ))}

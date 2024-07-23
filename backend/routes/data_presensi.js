@@ -15,7 +15,10 @@ router.get('/presensi', (req, res) => {
         pr.tanggal_presensi,
         pr.jam_masuk,
         pr.jam_keluar,
-        pr.total_jam_kerja
+        CONCAT(
+        FLOOR(TIMESTAMPDIFF(MINUTE, pr.jam_masuk, pr.jam_keluar) / 60), ' jam ',
+        MOD(TIMESTAMPDIFF(MINUTE, pr.jam_masuk, pr.jam_keluar), 60), ' menit'
+        ) AS total_jam_kerja
     FROM 
         data_presensi pr
     JOIN 
@@ -33,7 +36,7 @@ router.get('/presensi', (req, res) => {
 
 // Dashboard
 router.get('/presensi/count', (req, res) => {
-    const date = req.query.date; // Mengambil parameter tanggal dari query string
+    const date = req.query.date;
     let queryPresensi;
     if (date) {
         queryPresensi = 'SELECT COUNT(*) AS presensi_count FROM data_presensi WHERE DATE(tanggal_presensi) = ?';
@@ -95,7 +98,7 @@ router.get('/presensi/daily', (req, res) => {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-        console.log('Data presensi harian:', results); // Log data presensi
+        console.log('Data presensi harian:', results);
         res.json(results);
     });
 });
@@ -113,7 +116,10 @@ router.get('/presensi/:id_pegawai', (req, res) => {
         pr.tanggal_presensi,
         pr.jam_masuk,
         pr.jam_keluar,
-        pr.total_jam_kerja
+        CONCAT(
+        FLOOR(TIMESTAMPDIFF(MINUTE, pr.jam_masuk, pr.jam_keluar) / 60), ' jam ',
+        MOD(TIMESTAMPDIFF(MINUTE, pr.jam_masuk, pr.jam_keluar), 60), ' menit'
+        ) AS total_jam_kerja
     FROM 
         data_presensi pr
     JOIN 
@@ -174,7 +180,7 @@ router.post('/save-presensi/:id_pegawai', (req, res) => {
 
 router.get('/presensi/monthly/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    console.log('Fetching data for id_pegawai:', id_pegawai); // Log id_pegawai
+    console.log('Fetching data for id_pegawai:', id_pegawai); 
 
     const query = `
         SELECT 
@@ -192,7 +198,7 @@ router.get('/presensi/monthly/:id_pegawai', (req, res) => {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-        console.log('Query results:', results); // Log query results
+        console.log('Query results:', results);
         res.json(results);
     });
 });

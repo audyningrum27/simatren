@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import { formatDate } from '../../utils/formatDate';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const HistoriPresensi = () => {
   const [dataPresensi, setDataPresensi] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Jumlah item per halaman
+  const [loading, setLoading] = useState(true); // New state for loading
+  const itemsPerPage = 10;
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchDataPresensi();
@@ -31,8 +34,10 @@ const HistoriPresensi = () => {
         tanggalPresensi: formatDate(item.tanggal_presensi)
       }));
       setDataPresensi(data);
+      setLoading(false); // Set loading to false when data is fetched
     } catch (error) {
       console.error('Error fetching data:', error);
+      setLoading(false); // Ensure loading is stopped on error
     }
   };
 
@@ -67,6 +72,12 @@ const HistoriPresensi = () => {
     </button>
   );
 
+  const handleLengkapiPresensi = (id_presensi) => {
+    navigate(`/UserPage/lengkapi_presensi/${id_presensi}`);
+  };
+
+  if (loading) return <p>Loading...</p>;
+
   return (
     <div>
       <p className="text-xl font-bold px-5">Data Presensi</p>
@@ -92,6 +103,7 @@ const HistoriPresensi = () => {
                   <td className='font-bold py-4'>Jam Masuk</td>
                   <td className='font-bold py-4'>Jam Keluar</td>
                   <td className='font-bold py-4'>Total Jam Kerja</td>
+                  <td className='font-bold py-4'>Laporan Kinerja</td>
                 </tr>
               </thead>
 
@@ -111,7 +123,19 @@ const HistoriPresensi = () => {
                     <td className={data.jam_keluar ? '' : 'text-red-700'}>
                       {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
                     </td>
-                    <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja} Jam` : '-'}</td>
+                    <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
+                    <td className='font-semibold'>
+                      {data.jam_masuk && data.tanggalPresensi === formatDate(new Date()) ? (
+                        <button 
+                          onClick={() => handleLengkapiPresensi(data.id_presensi)} 
+                          className='flex justify-start items-center'>
+                          Lengkapi Presensi
+                          <HiChevronRight fontSize={18} className='ml-1' />
+                        </button>
+                      ) : (
+                        <span>-</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
