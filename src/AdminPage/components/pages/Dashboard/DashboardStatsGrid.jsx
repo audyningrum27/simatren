@@ -12,9 +12,11 @@ const DashboardStatsGrid = ({ selectedDate }) => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const responseActive = await fetch('http://localhost:5000/api/data_pegawai/pegawai/active/count');
-        const responseTotal = await fetch('http://localhost:5000/api/data_pegawai/pegawai/total/count');
         const formattedDate = selectedDate.toISOString().split('T')[0];
+        
+        // Mengambil jumlah pegawai aktif berdasarkan tanggal yang dipilih
+        const responseActive = await fetch(`http://localhost:5000/api/data_pegawai/pegawai/active/count?date=${formattedDate}`);
+        const responseTotal = await fetch('http://localhost:5000/api/data_pegawai/pegawai/total/count');
         const responseCuti = await fetch(`http://localhost:5000/api/data_pegawai/pegawai/cuti/count?date=${formattedDate}`);
         
         if (!responseActive.ok || !responseTotal.ok || !responseCuti.ok) {

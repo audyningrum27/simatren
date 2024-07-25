@@ -148,6 +148,13 @@ function ManajemenCuti() {
               </thead>
 
               <tbody>
+                {currentCutiData.length === 0 && (
+                  <tr>
+                    <td colSpan="10" className="text-center py-4">
+                      Tidak ada Pengajuan Cuti untuk ditampilkan.
+                    </td>
+                  </tr>
+                )}
                 {currentCutiData
                   .filter((data) => data.status_cuti !== 'Diterima' && data.status_cuti !== 'Ditolak')
                   .map((data, index) => (

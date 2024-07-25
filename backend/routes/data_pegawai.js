@@ -119,10 +119,20 @@ router.put('/pegawai/:id_pegawai', (req, res) => {
     });
 });
 
-// Menghitung Pegawai Aktif
+// Menghitung Pegawai Aktif berdasarkan tanggal yang dipilih
 router.get('/pegawai/active/count', (req, res) => {
-    const query = 'SELECT COUNT(*) AS active_count FROM data_pegawai WHERE status_kepegawaian = "Aktif"';
-    db.query(query, (err, results) => {
+    const { date } = req.query;
+    const query = `
+      SELECT 
+        (SELECT COUNT(*) FROM data_pegawai) - 
+        (SELECT COUNT(DISTINCT dp.id_pegawai) 
+         FROM data_pegawai dp
+         JOIN data_cuti dc ON dp.id_pegawai = dc.id_pegawai
+         WHERE dc.status_cuti = 'Diterima' 
+         AND ? BETWEEN dc.tanggal_mulai AND dc.tanggal_selesai) AS active_count
+      FROM data_pegawai
+    `;
+    db.query(query, [date], (err, results) => {
         if (err) {
             console.error('Error executing query:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
@@ -131,6 +141,7 @@ router.get('/pegawai/active/count', (req, res) => {
         return res.json(results[0]);
     });
 });
+
 
 // Menghitung Total Pegawai
 router.get('/pegawai/total/count', (req, res) => {
@@ -149,10 +160,11 @@ router.get('/pegawai/total/count', (req, res) => {
 router.get('/pegawai/cuti/count', (req, res) => {
     const { date } = req.query;
     const query = `
-      SELECT COUNT(*) AS cuti_count 
+      SELECT COUNT(DISTINCT dp.id_pegawai) AS cuti_count 
       FROM data_pegawai dp
       JOIN data_cuti dc ON dp.id_pegawai = dc.id_pegawai
-      WHERE dc.status_cuti = 'Diterima' AND ? BETWEEN dc.tanggal_mulai AND dc.tanggal_selesai
+      WHERE dc.status_cuti = 'Diterima' 
+      AND ? BETWEEN dc.tanggal_mulai AND dc.tanggal_selesai
     `;
     db.query(query, [date], (err, results) => {
       if (err) {
@@ -162,7 +174,7 @@ router.get('/pegawai/cuti/count', (req, res) => {
       console.log('Hasil jumlah pegawai cuti:', results);
       return res.json(results[0]);
     });
-  });
+});
 
 // Menghitung Role atau Kategori Pegawai
 router.get('/pegawai/role/count', (req, res) => {
