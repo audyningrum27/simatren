@@ -31,7 +31,7 @@ router.get('/cuti/all', (req, res) => {
     });
 });
 
-// Menampilkan data cuti dalam bentuk grafik
+// Menampilkan data cuti dalam bentuk grafik di dashboard
 router.get('/cuti/approved', (req, res) => {
     console.log("GET /api/data_cuti/cuti/approved");
     const query = `
@@ -57,6 +57,41 @@ router.get('/cuti/approved', (req, res) => {
             return res.status(500).json({ message: 'Internal Server Error' });
         }
 
+        return res.json(results);
+    });
+});
+
+//Menampilkan data cuti dalam bentuk grafik perbulan di grafik kinerja
+router.get('/cuti/approved/:id_pegawai', (req, res) => {
+    console.log("GET /api/data_cuti/cuti/approved/:id_pegawai");
+    const { id_pegawai } = req.params;
+    if (!id_pegawai) {
+        return res.status(400).json({ message: 'id_pegawai is required' });
+    }
+
+    const query = `
+    SELECT 
+        MONTH(tanggal_mulai) AS bulan,
+        YEAR(tanggal_mulai) AS tahun,
+        CAST(SUM(DATEDIFF(tanggal_selesai, tanggal_mulai) + 1) AS UNSIGNED) AS jumlah_cuti
+    FROM 
+        data_cuti
+    WHERE
+        status_cuti = 'Diterima'
+        AND id_pegawai = ?
+    GROUP BY 
+        MONTH(tanggal_mulai), YEAR(tanggal_mulai)
+    ORDER BY 
+        tahun, bulan;
+    `;
+
+    db.query(query, [id_pegawai], (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        console.log('Jumlah entri cuti diterima per bulan untuk pegawai:', results);
         return res.json(results);
     });
 });

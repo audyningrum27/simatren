@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Webcam from 'react-webcam';
 import jsQR from 'jsqr';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment-timezone';
 
 const ScanQR = () => {
   const webcamRef = useRef(null);
@@ -11,6 +12,7 @@ const ScanQR = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [navigateToHistori, setNavigateToHistori] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
   useEffect(() => {
     if (navigateToHistori) {
@@ -21,6 +23,14 @@ const ScanQR = () => {
       return () => clearTimeout(timer);
     }
   }, [navigateToHistori, navigate]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (isScanningMasuk || isScanningKeluar) {
@@ -57,6 +67,8 @@ const ScanQR = () => {
   const handleScanMasuk = (data) => {
     const idPegawai = localStorage.getItem('id_pegawai');
     if (data && idPegawai) {
+      const jakartaTime = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
+
       fetch(`http://localhost:5000/api/data_presensi/save-presensi/${idPegawai}`, {
         method: 'POST',
         headers: {
@@ -64,7 +76,7 @@ const ScanQR = () => {
         },
         body: JSON.stringify({
           type: 'masuk',
-          timestamp: new Date().toISOString(),
+          timestamp: jakartaTime,
         }),
       })
         .then((response) => {
@@ -85,6 +97,8 @@ const ScanQR = () => {
   const handleScanKeluar = (data) => {
     const idPegawai = localStorage.getItem('id_pegawai');
     if (data && idPegawai) {
+      const jakartaTime = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
+
       fetch(`http://localhost:5000/api/data_presensi/save-presensi/${idPegawai}`, {
         method: 'POST',
         headers: {
@@ -92,7 +106,7 @@ const ScanQR = () => {
         },
         body: JSON.stringify({
           type: 'keluar',
-          timestamp: new Date().toISOString(),
+          timestamp: jakartaTime,
         }),
       })
         .then((response) => {
@@ -125,8 +139,8 @@ const ScanQR = () => {
     return now >= startTime && now <= endTime;
   };
 
-  const isMasukButtonAvailable = checkTimeForButton('00:00', '24:00');
-  const isKeluarButtonAvailable = checkTimeForButton('00:00', '23:00');
+  const isMasukButtonAvailable = checkTimeForButton('07:00', '10:00');
+  const isKeluarButtonAvailable = checkTimeForButton('15:30', '18:30');
 
   return (
     <div className="px-5">
@@ -134,7 +148,7 @@ const ScanQR = () => {
         <p className="text-xl font-bold mb-4 md:mb-0">Presensi</p>
         <div className="md:absolute top-0 right-0 mt-2 md:mt-0 md:mr-5">
           <p className="text-lg text-black">
-            {new Date().toLocaleTimeString()}
+            {currentTime}
           </p>
         </div>
       </div>
@@ -147,7 +161,10 @@ const ScanQR = () => {
                 <button
                   onClick={() => setIsScanningMasuk(true)}
                   disabled={!isMasukButtonAvailable}
-                  className="w-full text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  className={`w-full font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isMasukButtonAvailable
+                      ? 'bg-gray-300 text-black cursor-pointer hover:bg-green-900 hover:text-white'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
                 >
                   Scan Masuk
                 </button>
@@ -173,7 +190,10 @@ const ScanQR = () => {
                 <button
                   onClick={() => setIsScanningKeluar(true)}
                   disabled={!isKeluarButtonAvailable}
-                  className="w-full text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  className={`w-full font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isKeluarButtonAvailable
+                      ? 'bg-gray-300 text-black cursor-pointer hover:bg-green-900 hover:text-white'
+                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    }`}
                 >
                   Scan Keluar
                 </button>

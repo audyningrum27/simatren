@@ -134,6 +134,33 @@ router.get('/presensi/daily', (req, res) => {
     });
 });
 
+//Menampilkan grafik presensi perbulan berdasarkan id pegawai
+router.get('/presensi/daily/:id_pegawai', (req, res) => {
+    console.log("GET /api/data_presensi/presensi/daily/:id_pegawai");
+    const { id_pegawai } = req.params;
+    if (!id_pegawai) {
+        return res.status(400).json({ message: 'id_pegawai is required' });
+    }
+
+    const query = `
+        SELECT 
+            DATE(tanggal_presensi) as date, 
+            COUNT(*) as Hadir
+        FROM data_presensi 
+        WHERE id_pegawai = ?
+        GROUP BY DATE(tanggal_presensi)
+        ORDER BY DATE(tanggal_presensi)`;
+
+    db.query(query, [id_pegawai], (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Data presensi harian untuk pegawai:', results);
+        res.json(results);
+    });
+});
+
 //Menampilkan Data Presensi Berdasarkan id Pegawai
 router.get('/presensi/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
@@ -239,7 +266,6 @@ router.put('/update-presensi/:id_presensi', (req, res) => {
         res.json({ message: 'Presensi updated successfully' });
     });
 });
-
 
 router.get('/presensi/monthly/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
