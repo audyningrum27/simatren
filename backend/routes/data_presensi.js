@@ -237,6 +237,27 @@ router.post('/save-presensi/:id_pegawai', (req, res) => {
     }
 });
 
+//Membuat scan masuk dan scan keluar hanya satu kali pada tanggal yang sama 
+router.get('/presensi/status/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+    const today = new Date().toISOString().split('T')[0];
+
+    const query = 'SELECT jam_masuk, jam_keluar FROM data_presensi WHERE id_pegawai = ? AND tanggal_presensi = ?';
+    db.query(query, [id_pegawai, today], (err, results) => {
+        if (err) {
+            console.error('Error checking presensi status:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        const status = {
+            masuk: results.length > 0 && results[0].jam_masuk !== null,
+            keluar: results.length > 0 && results[0].jam_keluar !== null,
+        };
+
+        res.json(status);
+    });
+});
+
 //Melengkapi Form Presensi
 router.put('/update-presensi/:id_presensi', (req, res) => {
     const { id_presensi } = req.params;

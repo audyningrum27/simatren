@@ -13,6 +13,8 @@ const ScanQR = () => {
   const [popupMessage, setPopupMessage] = useState('');
   const [navigateToHistori, setNavigateToHistori] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+  const [masukDisabled, setMasukDisabled] = useState(false);
+  const [keluarDisabled, setKeluarDisabled] = useState(false);
 
   useEffect(() => {
     if (navigateToHistori) {
@@ -30,6 +32,19 @@ const ScanQR = () => {
     }, 1000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const idPegawai = localStorage.getItem('id_pegawai');
+    if (idPegawai) {
+      fetch(`http://localhost:5000/api/data_presensi/presensi/status/${idPegawai}`)
+        .then(response => response.json())
+        .then(data => {
+          setMasukDisabled(data.masuk);
+          setKeluarDisabled(data.keluar);
+        })
+        .catch(error => console.error('Error fetching presensi status:', error));
+    }
   }, []);
 
   useEffect(() => {
@@ -139,8 +154,8 @@ const ScanQR = () => {
     return now >= startTime && now <= endTime;
   };
 
-  const isMasukButtonAvailable = checkTimeForButton('07:00', '10:00');
-  const isKeluarButtonAvailable = checkTimeForButton('15:30', '18:30');
+  const isMasukButtonAvailable = checkTimeForButton('00:00', '24:00') && !masukDisabled;
+  const isKeluarButtonAvailable = checkTimeForButton('00:00', '24:00') && !keluarDisabled;
 
   return (
     <div className="px-5">
@@ -162,8 +177,8 @@ const ScanQR = () => {
                   onClick={() => setIsScanningMasuk(true)}
                   disabled={!isMasukButtonAvailable}
                   className={`w-full font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isMasukButtonAvailable
-                      ? 'bg-gray-300 text-black cursor-pointer hover:bg-green-900 hover:text-white'
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    ? 'bg-gray-300 text-black cursor-pointer hover:bg-green-900 hover:text-white'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     }`}
                 >
                   Scan Masuk
@@ -191,8 +206,8 @@ const ScanQR = () => {
                   onClick={() => setIsScanningKeluar(true)}
                   disabled={!isKeluarButtonAvailable}
                   className={`w-full font-medium rounded-lg text-sm px-5 py-2.5 text-center ${isKeluarButtonAvailable
-                      ? 'bg-gray-300 text-black cursor-pointer hover:bg-green-900 hover:text-white'
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    ? 'bg-gray-300 text-black cursor-pointer hover:bg-green-900 hover:text-white'
+                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                     }`}
                 >
                   Scan Keluar
