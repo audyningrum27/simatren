@@ -10,6 +10,8 @@ const PengajuanCuti = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   const idPegawai = localStorage.getItem('id_pegawai');
+  
+  const today = new Date().toISOString().split('T')[0]; // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,6 +80,7 @@ const PengajuanCuti = () => {
                       onChange={(e) => setTanggalMulai(e.target.value)}
                       className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${tanggalMulai ? 'text-black' : 'text-gray-400'}`}
                       placeholder="Masukkan Tanggal Mulai Cuti"
+                      min={today}
                       required
                     />
                   </td>
@@ -94,6 +97,7 @@ const PengajuanCuti = () => {
                       onChange={(e) => setTanggalSelesai(e.target.value)}
                       className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${tanggalSelesai ? 'text-black' : 'text-gray-400'}`}
                       placeholder="Masukkan Tanggal Selesai Cuti"
+                      min={tanggalMulai ? tanggalMulai : today}
                       required
                     />
                   </td>

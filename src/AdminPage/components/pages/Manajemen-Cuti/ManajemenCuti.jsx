@@ -24,11 +24,14 @@ function ManajemenCuti() {
       const result = await response.json();
 
       if (result && Array.isArray(result)) {
-        const data = result.map(item => ({
-          ...item,
-          tanggalMulai: formatDate(item.tanggal_mulai),
-          tanggalSelesai: formatDate(item.tanggal_selesai),
-        }));
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+        const data = result
+          .filter(item => item.status_cuti === 'Proses' && item.tanggal_selesai >= today) // Filter out expired leave requests
+          .map(item => ({
+            ...item,
+            tanggalMulai: formatDate(item.tanggal_mulai),
+            tanggalSelesai: formatDate(item.tanggal_selesai),
+          }));
         setDataCuti(data);
       } else {
         console.error('Unexpected response data format:', result);
@@ -44,12 +47,10 @@ function ManajemenCuti() {
   };
 
   const filteredCuti = dataCuti.filter((data) =>
-    (data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nip.toLowerCase().includes(searchTerm.toLowerCase())) &&
-    data.status_cuti === 'Proses'
+    data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    data.nip.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-
   const handleConfirm = (id_cuti, status_cuti) => {
     setSelectedId(id_cuti);
     setSelectedStatus(status_cuti);
@@ -203,34 +204,19 @@ function ManajemenCuti() {
           <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
         </div>
       </div>
-
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-md text-sm">
-            <p>Apakah Anda yakin ingin {selectedStatus === 'Diterima' ? 'menerima' : 'menolak'} cuti ini?</p>
-            <div className="flex justify-end mt-4">
-              <button
-                onClick={handleClosePopup}
-                className="bg-gray-200 text-gray-800 py-2 px-4 rounded-md mr-2"
-              >
-                Tidak
-              </button>
-              <button
-                onClick={handleYes}
-                className="bg-green-900 text-white py-2 px-4 rounded-md"
-              >
-                Ya
-              </button>
-            </div>
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 bg-white border border-gray-300 rounded-lg shadow-lg">
+          <p className="text-center text-lg font-semibold mb-4">Konfirmasi</p>
+          <p className="text-center mb-4">Apakah Anda yakin ingin {selectedStatus === 'Diterima' ? 'menerima' : 'menolak'} pengajuan cuti ini?</p>
+          <div className="flex justify-center gap-4">
+            <button onClick={handleYes} className="px-4 py-2 bg-green-600 text-white rounded-md">Yes</button>
+            <button onClick={handleClosePopup} className="px-4 py-2 bg-gray-300 rounded-md">No</button>
           </div>
         </div>
       )}
-
       {showSuccessPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
-            <p>Status cuti berhasil diperbarui!</p>
-          </div>
+        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-6 bg-green-200 border border-green-300 rounded-lg shadow-lg">
+          <p className="text-center text-lg font-semibold">Status cuti berhasil diperbarui!</p>
         </div>
       )}
     </div>

@@ -19,12 +19,18 @@ function HistoriCutiPegawai() {
       const result = await response.json();
 
       if (result && Array.isArray(result)) {
-        const data = result.map(item => ({
-          ...item,
-          tanggalMulai: formatDate(item.tanggal_mulai),
-          tanggalSelesai: formatDate(item.tanggal_selesai),
-        }));
-        setDataCuti(data);
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+        const filteredData = result
+          .filter(item => 
+            (item.status_cuti !== 'Proses' || item.tanggal_selesai >= today)
+          )
+          .map(item => ({
+            ...item,
+            tanggalMulai: formatDate(item.tanggal_mulai),
+            tanggalSelesai: formatDate(item.tanggal_selesai),
+          }));
+
+        setDataCuti(filteredData);
       } else {
         console.error('Unexpected response data format:', result);
       }
@@ -99,6 +105,13 @@ function HistoriCutiPegawai() {
             </thead>
 
             <tbody>
+              {currentCutiData.length === 0 && (
+                <tr>
+                  <td colSpan="7" className="text-center py-4">
+                    Tidak ada Data Cuti untuk ditampilkan.
+                  </td>
+                </tr>
+              )}
               {currentCutiData.map((data, index) => (
                 <tr key={index}>
                   <td className="p-1 pt-2">{startIndex + index + 1}</td>
@@ -116,20 +129,20 @@ function HistoriCutiPegawai() {
       </div>
 
       <div className='py-2 justify-end flex flex-row items-center'>
-          <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
-          <div className='flex gap-4'>
-            {Array.from({ length: totalPages }, (_, index) => (
-              <BoxWrapper
-                key={index}
-                isActive={currentPage === index + 1}
-                onClick={() => setCurrentPage(index + 1)}
-              >
-                {index + 1}
-              </BoxWrapper>
-            ))}
-          </div>
-          <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
+        <button onClick={goToPreviousPage} disabled={currentPage === 1}><HiChevronLeft fontSize={18} className='mr-2' /></button>
+        <div className='flex gap-4'>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <BoxWrapper
+              key={index}
+              isActive={currentPage === index + 1}
+              onClick={() => setCurrentPage(index + 1)}
+            >
+              {index + 1}
+            </BoxWrapper>
+          ))}
         </div>
+        <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
+      </div>
     </div>
   );
 }

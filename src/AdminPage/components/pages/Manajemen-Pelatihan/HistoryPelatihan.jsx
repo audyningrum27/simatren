@@ -33,8 +33,10 @@ function HistoryPelatihan() {
   };
 
   const filteredPelatihan = historiPelatihan.filter((data) =>
+    data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase()) ||
     data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase())
+    data.nama_penyelenggara.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    data.nip.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredPelatihan.length / itemsPerPage);

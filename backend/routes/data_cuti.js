@@ -31,6 +31,22 @@ router.get('/cuti/all', (req, res) => {
     });
 });
 
+// Menambahkan endpoint untuk menghapus cuti yang sudah lewat
+router.delete('/cuti/expired', (req, res) => {
+    const query = `
+        DELETE FROM data_cuti
+        WHERE status_cuti = 'Proses' AND tanggal_selesai < CURDATE()
+    `;
+    db.query(query, (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+
+        return res.json({ message: `${result.affectedRows} cuti telah dihapus` });
+    });
+});
+
 // Menampilkan data cuti dalam bentuk grafik di dashboard
 router.get('/cuti/approved', (req, res) => {
     console.log("GET /api/data_cuti/cuti/approved");

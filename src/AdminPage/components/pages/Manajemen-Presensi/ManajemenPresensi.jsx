@@ -108,7 +108,7 @@ function ManajemenPresensi() {
               </thead>
 
               <tbody>
-                {currentCutiData.length === 0 && (
+                {currentPageData.length === 0 && (
                     <tr>
                       <td colSpan="10" className="text-center py-4">
                         Tidak ada Presensi untuk ditampilkan.
@@ -116,34 +116,34 @@ function ManajemenPresensi() {
                     </tr>
                   )}
                 {currentPageData.map((data, index) => (
-                  <tr key={index}>
-                    <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                    <td>{data.nip}</td>
-                    <td>{data.nama_pegawai}</td>
-                    <td>{data.tanggal_presensi}</td>
-                    <td>{data.jam_masuk}</td>
-                    <td className={data.jam_keluar ? '' : 'text-red-700'}>
-                      {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
-                    </td>
-                    <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
-                    <td className='font-semibold'>
-                      {data.jam_masuk && data.tanggal_presensi === formatDate(new Date()) ? (
-                        data.hafalan ? (
-                          <button
-                            onClick={() => navigate(`/AdminPage/laporan_kinerja/${data.id_presensi}`)}
-                            className='flex justify-start items-center'>
-                            Lihat
-                            <HiChevronRight fontSize={18} className='ml-1' />
-                          </button>
-                        ) : (
-                          <span>Belum Mengisi</span>
-                        )
-                      ) : (
-                        <span>-</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+            <tr key={index}>
+              <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+              <td>{data.nip}</td>
+              <td>{data.nama_pegawai}</td>
+              <td>{data.tanggal_presensi}</td>
+              <td>{data.jam_masuk}</td>
+              <td className={data.jam_keluar ? '' : 'text-red-700'}>
+                {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
+              </td>
+              <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
+              <td className='font-semibold'>
+                {data.jam_masuk ? (
+                  data.hafalan ? (
+                    <button
+                      onClick={() => navigate(`/AdminPage/laporan_kinerja/${data.id_presensi}`)}
+                      className='flex justify-start items-center'>
+                      Sudah Mengisi
+                      <HiChevronRight fontSize={18} className='ml-1' />
+                    </button>
+                  ) : (
+                    <span>Belum Mengisi</span>
+                  )
+                ) : (
+                  <span>-</span>
+                )}
+              </td>
+            </tr>
+          ))}
               </tbody>
             </table>
           </div>
