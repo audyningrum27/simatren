@@ -22,37 +22,38 @@ function GrafikPelatihan({ selectedDate }) {
     try {
       const response = await axios.get('http://localhost:5000/api/data_pelatihan/pelatihan-per-bulan');
       const data = response.data;
-  
+
       console.log('Data pelatihan:', data);
-  
+
       const currentDate = selectedDate || new Date();
       const currentMonth = currentDate.getMonth();
       const currentYear = currentDate.getFullYear();
-  
+
       const isFirstHalf = currentMonth < 6;
       const startMonth = isFirstHalf ? 0 : 6;
       const endMonth = isFirstHalf ? 5 : 11;
-  
+
       const monthlyData = Array.from({ length: 6 }, (_, index) => {
         const month = new Date(currentYear, startMonth + index);
         return {
           name: month.toLocaleString('id-ID', { month: 'short' }),
           Selesai: 0,
           Proses: 0,
-          Belum_Dimulai: 0,
+          'Belum Dimulai': 0,
         };
       });
-  
+
       data.forEach(item => {
         const { bulan, selesai, proses, belum_dimulai } = item;
-  
+
         if (bulan >= startMonth + 1 && bulan <= endMonth + 1) {
-          monthlyData[bulan - startMonth - 1].Selesai += selesai;
-          monthlyData[bulan - startMonth - 1].Proses += proses;
-          monthlyData[bulan - startMonth - 1].Belum_Dimulai += belum_dimulai;
+          const adjustedIndex = bulan - startMonth - 1;
+          monthlyData[adjustedIndex].Selesai += selesai;
+          monthlyData[adjustedIndex].Proses += proses;
+          monthlyData[adjustedIndex]['Belum Dimulai'] += belum_dimulai; 
         }
       });
-  
+
       console.log('Mapped Monthly Data:', monthlyData);
       setDataPelatihan(monthlyData);
     } catch (error) {
@@ -66,8 +67,6 @@ function GrafikPelatihan({ selectedDate }) {
       <div className="w-full mt-3 flex-1 text-sm">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            width={500}
-            height={300}
             data={dataPelatihan}
             margin={{
               top: 20,
@@ -83,7 +82,7 @@ function GrafikPelatihan({ selectedDate }) {
             <Legend />
             <Bar dataKey="Selesai" fill='rgb(34 197 94)' />
             <Bar dataKey="Proses" fill='rgb(21 168 61)' />
-            <Bar dataKey="Belum_Dimulai" fill='rgb(21 128 61)' />
+            <Bar dataKey="Belum Dimulai" fill='rgb(21 128 61)' />
           </BarChart>
         </ResponsiveContainer>
       </div>

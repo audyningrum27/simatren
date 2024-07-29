@@ -15,6 +15,7 @@ function Penggajian() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectMode, setSelectMode] = useState(false);
   const itemsPerPage = 10;
+  const isDataAvailable = dataGaji.length > 0;
 
   useEffect(() => {
     fetchDataGaji();
@@ -206,19 +207,20 @@ function Penggajian() {
         </div>
 
         <div className="flex flex-row gap-2 font-semibold text-xs">
-          <button
-            onClick={selectMode ? () => downloadPDF(selectedRows) : toggleSelectMode}
-            className='px-4 py-2 bg-green-900 text-white rounded'
-            disabled={selectMode && selectedRows.length === 0}
-          >
-            {selectMode ? 'Download Selected' : 'Pilih Download'}
-          </button>
-          <button
-            onClick={downloadAllPDF}
-            className='px-4 py-2 bg-green-900 text-white rounded'
-          >
-            Download All
-          </button>
+        <button
+          onClick={selectMode ? () => downloadPDF(selectedRows) : toggleSelectMode}
+          className={`px-4 py-2 rounded text-white ${selectMode && selectedRows.length === 0 || !isDataAvailable ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-900 hover:bg-green-700'}`}
+          disabled={selectMode && selectedRows.length === 0 || !isDataAvailable}
+        >
+          {selectMode ? 'Download Selected' : 'Pilih Download'}
+        </button>
+        <button
+          onClick={downloadAllPDF}
+          className={`px-4 py-2 rounded text-white ${!isDataAvailable ? 'bg-gray-400 cursor-not-allowed' : 'bg-green-900 hover:bg-green-700'}`}
+          disabled={!isDataAvailable}
+        >
+          Download All
+        </button>
         </div>
       </div>
 

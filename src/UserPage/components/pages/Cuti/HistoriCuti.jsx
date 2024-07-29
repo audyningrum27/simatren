@@ -14,6 +14,12 @@ function HistoriCuti() {
     fetchDataCuti();
   }, []);
 
+  const isPastDate = (dateString) => {
+    const today = new Date();
+    const date = new Date(dateString);
+    return date < today;
+  };
+
   const fetchDataCuti = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -27,12 +33,16 @@ function HistoriCuti() {
           Authorization: `Bearer ${token}`
         }
       });
-      const data = response.data.map(item => ({
-        ...item,
-        tanggalMulai: formatDate(item.tanggal_mulai),
-        tanggalSelesai: formatDate(item.tanggal_selesai)
-      }));
-      setDataCuti(data);
+
+      const filteredData = response.data
+        .filter(item => !(item.status_cuti.toLowerCase() === 'proses' && isPastDate(item.tanggal_selesai)))
+        .map(item => ({
+          ...item,
+          tanggalMulai: formatDate(item.tanggal_mulai),
+          tanggalSelesai: formatDate(item.tanggal_selesai)
+        }));
+
+      setDataCuti(filteredData);
     } catch (error) {
       console.error('Error fetching data:', error);
     }

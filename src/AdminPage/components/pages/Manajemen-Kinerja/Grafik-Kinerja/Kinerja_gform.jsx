@@ -1,106 +1,93 @@
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import moment from 'moment';
 import {
-  BarChart,
-  ResponsiveContainer,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  Bar
+    BarChart,
+    ResponsiveContainer,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    Tooltip,
+    Legend,
+    Bar
 } from "recharts";
 
-const data = [
-  {
-      name: "Jan",
-      Penurunan: 3,
-      Kenaikanv: 7
-  },
-  {
-      name: "Feb",
-      Penurunan: 12,
-      Kenaikan: 6
-  },
-  {
-      name: "Mar",
-      Penurunan: 7,
-      Kenaikan: 15
-  },
-  {
-      name: "Apr",
-      Penurunan: 7,
-      Kenaikan: 2
-  },
-  {
-      name: "Mei",
-      Penurunan: 8,
-      Kenaikan: 9
-  },
-  {
-      name: "Jun",
-      Penurunan: 19,
-      Kenaikan: 2
-  },
-  {
-      name: "Jul",
-      Penurunan: 11,
-      Kenaikan: 6
-  },
-  {
-      name: "Ags",
-      Penurunan: 6,
-      Kenaikan: 7
-  },
-  {
-      name: "Sep",
-      Penurunan: 18,
-      Kenaikan: 2
-  },
-  {
-      name: "Okt",
-      Penurunan: 17,
-      Kenaikan: 2
-  },
-  {
-      name: "Nov",
-      Penurunan: 8,
-      Kenaikan: 15
-  },
-  {
-      name: "Des",
-      Penurunan: 1,
-      Kenaikan: 8
-  },
-]
-
 function Kinerja_gform() {
-  return (
-      <div className="w-[32rem] md:w-full max-[500px]:w-[24rem] h-[22rem] bg-white p-4 shadow-md shadow-gray-400 rounded-sm border border-gray-200 flex flex-col justify-center">
-          <strong className="text-gray-700 font-medium">Kinerja Pegawai</strong>
-          <div className="w-full mt-3 flex-1 text-sm">
-              <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                      width={500}
-                      height={300}
-                      data={data}
-                      margin={{
-                          top: 20,
-                          right: 10,
-                          left: -10,
-                          bottom: 0
-                      }}
-                  >
-                      <CartesianGrid strokeDasharray="3 3 0 0" vertikal={false} />
-                      <XAxis dataKey="name" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="Kenaikan" fill='rgb(21 128 61)' />
-                      <Bar dataKey="Penurunan" fill='rgb(34 197 94)' />
-                  </BarChart>
-              </ResponsiveContainer>
-          </div>
-      </div>
-  )
+    const [data, setData] = useState([]);
+    const { id_pegawai } = useParams();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/api/data_presensi/formkinerja/${id_pegawai}`);
+                const kinerjaData = response.data;
+                const monthlyData = processMonthlyData(kinerjaData);
+                setData(monthlyData);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    const processMonthlyData = (kinerjaData) => {
+        const months = moment.monthsShort();
+        const monthlySummary = months.map((month, index) => {
+            const monthNumber = index + 1;
+            const year = moment().year();
+
+            const startDate = moment(`${year}-${monthNumber}-01`).startOf('month').format('YYYY-MM-DD');
+            const endDate = moment(`${year}-${monthNumber}-01`).endOf('month').format('YYYY-MM-DD');
+
+            const laporanKinerjaCount = kinerjaData.reduce((count, item) => {
+                const date = moment(item.date).format('YYYY-MM-DD');
+                if (date >= startDate && date <= endDate) {
+                    return count + item.HafalanCount;
+                }
+                return count;
+            }, 0);
+
+            return {
+                name: month,
+                LaporanKinerja: laporanKinerjaCount
+            };
+        });
+
+        return monthlySummary;
+    };
+
+    return (
+        <div className="w-[32rem] md:w-full max-[500px]:w-[24rem] h-[22rem] bg-white p-4 shadow-md shadow-gray-400 rounded-sm border border-gray-200 flex flex-col justify-center">
+            <strong className="text-gray-700 font-medium">Kinerja Pegawai</strong>
+            <div className="w-full mt-3 flex-1 text-sm">
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                        data={data}
+                        margin={{
+                            top: 20,
+                            right: 10,
+                            left: -10,
+                            bottom: 0
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar
+                            dataKey="LaporanKinerja"
+                            name="Laporan Kinerja"
+                            fill='rgb(21 128 61)'
+                            barSize={24}
+                        />
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    );
 }
 
 export default Kinerja_gform;

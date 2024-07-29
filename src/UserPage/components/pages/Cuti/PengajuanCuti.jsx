@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import moment from 'moment';
 
 const PengajuanCuti = () => {
   const navigate = useNavigate()
@@ -11,7 +12,7 @@ const PengajuanCuti = () => {
 
   const idPegawai = localStorage.getItem('id_pegawai');
   
-  const today = new Date().toISOString().split('T')[0]; // Mendapatkan tanggal hari ini dalam format YYYY-MM-DD
+  const today = moment().tz('Asia/Jakarta').format('YYYY-MM-DD');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,17 +73,17 @@ const PengajuanCuti = () => {
                   <td className="p-2 text-sm">Tanggal Mulai Cuti<span className="text-red-600">*</span></td>
                   <td className="p-2">:</td>
                   <td className="p-2">
-                    <input
-                      type="date"
-                      name="tanggal_mulai"
-                      id="tanggal_mulai"
-                      value={tanggalMulai}
-                      onChange={(e) => setTanggalMulai(e.target.value)}
-                      className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${tanggalMulai ? 'text-black' : 'text-gray-400'}`}
-                      placeholder="Masukkan Tanggal Mulai Cuti"
-                      min={today}
-                      required
-                    />
+                  <input
+  type="date"
+  name="tanggal_selesai"
+  id="tanggal_selesai"
+  value={tanggalSelesai}
+  onChange={(e) => setTanggalSelesai(e.target.value)}
+  className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${tanggalSelesai ? 'text-black' : 'text-gray-400'}`}
+  placeholder="Masukkan Tanggal Selesai Cuti"
+  min={tanggalMulai ? tanggalMulai : today}
+  required
+/>   
                   </td>
                 </tr>
                 <tr>

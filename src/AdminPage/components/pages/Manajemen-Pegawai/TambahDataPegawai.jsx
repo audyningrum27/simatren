@@ -184,9 +184,9 @@ const TambahDataPegawai = () => {
                 required
               >
                 <option value="" disabled hidden>Pilih Posisi</option>
-                <option value="guru" className='text-black'>Guru</option>
-                <option value="tpa" className='text-black'>TPA</option>
-                <option value="non_tpa" className='text-black'>Non TPA</option>
+                <option value="Guru" className='text-black'>Guru</option>
+                <option value="TPA" className='text-black'>TPA</option>
+                <option value="Non TPA" className='text-black'>Non TPA</option>
               </select>
             </div>
             <div>

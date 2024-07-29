@@ -103,41 +103,46 @@ const HistoriPresensi = () => {
               </thead>
 
               <tbody>
-                {currentPageData.length === 0 && (
-                  <tr>
-                    <td colSpan="6" className="text-center py-4">
-                      Tidak ada data presensi untuk ditampilkan.
-                    </td>
-                  </tr>
-                )}
-                {currentPageData.map((data, index) => (
-                  <tr key={index}>
-                    <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                    <td>{data.tanggalPresensi}</td>
-                    <td>{data.jam_masuk}</td>
-                    <td className={data.jam_keluar ? '' : 'text-red-700'}>
-                      {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
-                    </td>
-                    <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
-                    <td className='font-semibold'>
-                      {data.jam_masuk && data.tanggalPresensi === formatDate(new Date()) ? (
-                        data.hafalan ? (
-                          <span className='text-green-700'>Sudah Lengkap</span>
-                        ) : (
-                          <button
-                            onClick={() => navigate(`/UserPage/lengkapi_presensi/${data.id_presensi}`)}
-                            className='flex justify-start items-center'>
-                            Lengkapi Presensi
-                            <HiChevronRight fontSize={18} className='ml-1' />
-                          </button>
-                        )
-                      ) : (
-                        <span>-</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+  {currentPageData.length === 0 && (
+    <tr>
+      <td colSpan="6" className="text-center py-4">
+        Tidak ada data presensi untuk ditampilkan.
+      </td>
+    </tr>
+  )}
+  {currentPageData.map((data, index) => {
+    const today = formatDate(new Date()); // Get today's date in the correct format
+
+    return (
+      <tr key={index}>
+        <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+        <td>{data.tanggalPresensi}</td>
+        <td>{data.jam_masuk}</td>
+        <td className={data.jam_keluar ? '' : 'text-red-700'}>
+          {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
+        </td>
+        <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
+        <td className='font-semibold'>
+          {data.hafalan ? (
+            <span className='text-green-700'>Sudah Lengkap</span>
+          ) : (
+            data.jam_masuk && data.tanggalPresensi === today ? (
+              <button
+                onClick={() => navigate(`/UserPage/lengkapi_presensi/${data.id_presensi}`)}
+                className='flex justify-start items-center'>
+                Lengkapi Presensi
+                <HiChevronRight fontSize={18} className='ml-1' />
+              </button>
+            ) : (
+              <span>-</span>
+            )
+          )}
+        </td>
+      </tr>
+    );
+  })}
+</tbody>
+
             </table>
           </div>
         </div>

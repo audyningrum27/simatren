@@ -1,5 +1,6 @@
 import express from 'express';
 import db from '../db.js';
+import moment from 'moment-timezone';
 
 const router = express.Router();
 
@@ -161,6 +162,55 @@ router.get('/presensi/daily/:id_pegawai', (req, res) => {
     });
 });
 
+//Menampilkan grafik kinerja pada dashboard
+router.get('/formkinerja/all', (req, res) => {
+    console.log("GET /api/data_presensi/formkinerja/all");
+    const query = `
+        SELECT 
+            DATE(tanggal_presensi) as date, 
+            COUNT(hafalan) as HafalanCount
+        FROM data_presensi 
+        WHERE hafalan IS NOT NULL
+        GROUP BY DATE(tanggal_presensi)
+        ORDER BY DATE(tanggal_presensi)`;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Data hafalan harian untuk pegawai:', results);
+        res.json(results);
+    });
+});
+
+//Menampilkan grafik kinerja perbulan berdasarkan id pegawai
+router.get('/formkinerja/:id_pegawai', (req, res) => {
+    console.log("GET /api/data_presensi/formkinerja/:id_pegawai");
+    const { id_pegawai } = req.params;
+    if (!id_pegawai) {
+        return res.status(400).json({ message: 'id_pegawai is required' });
+    }
+
+    const query = `
+        SELECT 
+            DATE(tanggal_presensi) as date, 
+            COUNT(hafalan) as HafalanCount
+        FROM data_presensi 
+        WHERE id_pegawai = ? AND hafalan IS NOT NULL
+        GROUP BY DATE(tanggal_presensi)
+        ORDER BY DATE(tanggal_presensi)`;
+
+    db.query(query, [id_pegawai], (err, results) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Data hafalan harian untuk pegawai:', results);
+        res.json(results);
+    });
+});
+
 //Menampilkan Data Presensi Berdasarkan id Pegawai
 router.get('/presensi/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
@@ -205,9 +255,13 @@ router.post('/save-presensi/:id_pegawai', (req, res) => {
         return res.status(400).json({ message: 'id_pegawai is required' });
     }
 
-    const datetime = new Date(timestamp);
-    const tanggalPresensi = datetime.toISOString().split('T')[0];
-    const waktuPresensi = datetime.toTimeString().split(' ')[0];
+    // if (!validateToken(token)) {
+    //     return res.status(400).json({ message: 'Invalid or expired QR code' });
+    // }
+
+    const datetime = moment(timestamp).tz('Asia/Jakarta'); 
+    const tanggalPresensi = datetime.format('YYYY-MM-DD');
+    const waktuPresensi = datetime.format('HH:mm:ss');
 
     let query = '';
     if (type === 'masuk') {
@@ -240,7 +294,7 @@ router.post('/save-presensi/:id_pegawai', (req, res) => {
 //Membuat scan masuk dan scan keluar hanya satu kali pada tanggal yang sama 
 router.get('/presensi/status/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    const today = new Date().toISOString().split('T')[0];
+    const today = moment().tz('Asia/Jakarta').format('YYYY-MM-DD');
 
     const query = 'SELECT jam_masuk, jam_keluar FROM data_presensi WHERE id_pegawai = ? AND tanggal_presensi = ?';
     db.query(query, [id_pegawai, today], (err, results) => {
