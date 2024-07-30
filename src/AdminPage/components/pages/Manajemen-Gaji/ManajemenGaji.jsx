@@ -11,6 +11,8 @@ function ManajemenGaji() {
   const itemsPerPage = 10;
   const navigate = useNavigate();
 
+  const currentYear = new Date().getFullYear();
+
   useEffect(() => {
     fetchDataGaji();
   }, []);
@@ -35,15 +37,28 @@ function ManajemenGaji() {
   };
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [filterBulan, setFilterBulan] = useState('');
+  const [filterTahun, setFilterTahun] = useState(currentYear);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredGaji = dataGaji.filter((data) =>
-    data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nip.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleFilterBulanChange = (e) => {
+    setFilterBulan(e.target.value);
+  };
+
+  const handleFilterTahunChange = (e) => {
+    setFilterTahun(e.target.value);
+  };
+
+  const filteredGaji = dataGaji.filter((data) => {
+    const matchesSearchTerm = data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      data.nip.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilterBulan = filterBulan === '' || new Date(data.bulan_gaji).toLocaleString('id-ID', { month: 'long' }) === filterBulan;
+    const matchesFilterTahun = filterTahun === '' || new Date(data.bulan_gaji).getFullYear() === parseInt(filterTahun);
+    return matchesSearchTerm && matchesFilterBulan && matchesFilterTahun;
+  });
 
   const totalPages = Math.ceil(filteredGaji.length / itemsPerPage);
   const currentPageData = filteredGaji.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -66,9 +81,51 @@ function ManajemenGaji() {
     </button>
   );
 
+  const bulanOptions = [
+    { value: '', label: 'Semua' },
+    { value: 'Januari', label: 'Januari' },
+    { value: 'Februari', label: 'Februari' },
+    { value: 'Maret', label: 'Maret' },
+    { value: 'April', label: 'April' },
+    { value: 'Mei', label: 'Mei' },
+    { value: 'Juni', label: 'Juni' },
+    { value: 'Juli', label: 'Juli' },
+    { value: 'Agustus', label: 'Agustus' },
+    { value: 'September', label: 'September' },
+    { value: 'Oktober', label: 'Oktober' },
+    { value: 'November', label: 'November' },
+    { value: 'Desember', label: 'Desember' }
+  ];
+
   return (
     <div>
       <p className="text-xl font-bold px-5">Manajemen Gaji</p>
+      <div className='flex flex row w-1/5 mt-4'>
+        <div className="relative flex flex-1 mb-0 mr-4">
+          <select
+            className="text-sm focus:outline-none active:outline-none border border-gray-400 w-fit h-8 pl-2 pr-2 rounded-sm"
+            value={filterTahun}
+            onChange={handleFilterTahunChange}
+          >
+            {[...Array(10)].map((_, i) => {
+              const year = currentYear - i;
+              return <option key={year} value={year}>{year}</option>;
+            })}
+          </select>
+        </div>
+
+        <div className="relative flex flex-1 mb-0 mr-4">
+          <select
+            className="text-sm focus:outline-none active:outline-none border border-gray-400 w-fit h-8 pl-2 pr-2 rounded-sm"
+            value={filterBulan}
+            onChange={handleFilterBulanChange}
+          >
+            {bulanOptions.map(bulan => (
+              <option key={bulan.value} value={bulan.value}>{bulan.label}</option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <div className="relative py-4 w-full justify-between flex flex-col md:flex-row">
         <div className="relative flex flex-1 mb-4 md:mb-0 mr-4">
