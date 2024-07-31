@@ -74,16 +74,16 @@ const PengajuanCuti = () => {
                   <td className="p-2">:</td>
                   <td className="p-2">
                   <input
-  type="date"
-  name="tanggal_selesai"
-  id="tanggal_selesai"
-  value={tanggalSelesai}
-  onChange={(e) => setTanggalSelesai(e.target.value)}
-  className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${tanggalSelesai ? 'text-black' : 'text-gray-400'}`}
-  placeholder="Masukkan Tanggal Selesai Cuti"
-  min={tanggalMulai ? tanggalMulai : today}
-  required
-/>   
+                    type="date"
+                    name="tanggal_mulai"
+                    id="tanggal_mulai"
+                    value={tanggalMulai}
+                    onChange={(e) => setTanggalMulai(e.target.value)}
+                    className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${tanggalSelesai ? 'text-black' : 'text-gray-400'}`}
+                    placeholder="Masukkan Tanggal Mulai Cuti"
+                    min={tanggalMulai ? tanggalMulai : today}
+                    required
+                  />   
                   </td>
                 </tr>
                 <tr>
