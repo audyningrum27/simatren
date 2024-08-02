@@ -248,12 +248,12 @@ router.get('/cuti/daily', (req, res) => {
     });
 });
 
-// Menambah Notifikasi
-router.post('/notifikasi', (req, res) => {
+// Menambah Notifikasi Admin
+router.post('/notifikasi-admin', (req, res) => {
     const { id_pegawai, message } = req.body;
     const query = `
-        INSERT INTO notifikasi (id_pegawai, message, tanggal)
-        VALUES (?, ?, NOW())
+        INSERT INTO notifikasi (id_pegawai, message, tanggal, type)
+        VALUES (?, ?, NOW(), 'admin')
     `;
     db.query(query, [id_pegawai, message], (err, result) => {
         if (err) {
@@ -265,9 +265,10 @@ router.post('/notifikasi', (req, res) => {
 });
 
 // Mengambil Notifikasi untuk Admin
-router.get('/notifikasi', (req, res) => {
+router.get('/notifikasi-admin', (req, res) => {
     const query = `
         SELECT * FROM notifikasi
+        WHERE type = 'admin'
         ORDER BY tanggal DESC
     `;
     db.query(query, (err, results) => {
@@ -295,5 +296,39 @@ router.put('/notifikasi/:id_notifikasi', (req, res) => {
         return res.status(200).json({ message: 'Status notifikasi berhasil diperbarui' });
     });
 });
+
+// Menambah Notifikasi Pegawai
+router.post('/notifikasi-pegawai', (req, res) => {
+    const { id_pegawai, message } = req.body;
+    const query = `
+        INSERT INTO notifikasi (id_pegawai, message, tanggal, type)
+        VALUES (?, ?, NOW(), 'pegawai')
+    `;
+    db.query(query, [id_pegawai, message], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        return res.status(201).json({ message: 'Notifikasi berhasil ditambahkan' });
+    });
+});
+
+// Menampilkan Notifikasi Berdasarkan ID Pegawai
+router.get('/notifikasi/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+    const query = `
+      SELECT * FROM notifikasi
+      WHERE id_pegawai = ? AND type = 'pegawai'
+      ORDER BY tanggal DESC
+    `;
+    db.query(query, [id_pegawai], (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+      }
+  
+      return res.json(results);
+    });
+});  
 
 export default router;

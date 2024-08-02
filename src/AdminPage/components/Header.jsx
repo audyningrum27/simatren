@@ -24,13 +24,13 @@ const Header = ({ isOpen, setIsOpen }) => {
     }, []);
 
     const fetchNotifications = async () => {
-      try {
-          const response = await axios.get('http://localhost:5000/api/data_cuti/notifikasi');
-          setNotifications(response.data.filter(n => n.status !== 'read'));
-      } catch (error) {
-          console.error('Error fetching notifications:', error);
-      }
-  };  
+        try {
+            const response = await axios.get('http://localhost:5000/api/data_notifikasi/notifikasi-admin');
+            setNotifications(response.data.filter(n => n.status !== 'read'));
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    };
 
     useEffect(() => {
         if (!isDropdownOpen) {
@@ -46,22 +46,22 @@ const Header = ({ isOpen, setIsOpen }) => {
     };
 
     const handleNotificationClick = async (notification) => {
-      try {
-          // Update notification status to 'read' on the server
-          await axios.put(`http://localhost:5000/api/data_cuti/notifikasi/${notification.id_notifikasi}`);
-          
-          // Remove the notification from the list
-          setNotifications(prevNotifications =>
-              prevNotifications.filter(n => n.id_notifikasi !== notification.id_notifikasi)
-          );
-          
-          // Navigate to the admin page
-          navigate('/AdminPage/manajemen_cuti');
-          setIsDropdownOpen(false);
-      } catch (error) {
-          console.error('Error updating notification status:', error);
-      }
-  };  
+        try {
+            // Update notification status to 'read' on the server
+            await axios.put(`http://localhost:5000/api/data_notifikasi/notifikasi/${notification.id_notifikasi}`);
+
+            // Remove the notification from the list
+            setNotifications(prevNotifications =>
+                prevNotifications.filter(n => n.id_notifikasi !== notification.id_notifikasi)
+            );
+
+            // Navigate to the admin page
+            navigate('/AdminPage/manajemen_cuti');
+            setIsDropdownOpen(false);
+        } catch (error) {
+            console.error('Error updating notification status:', error);
+        }
+    };
 
     return (
         <div>

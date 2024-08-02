@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
-import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils/formatDate';
 
@@ -66,6 +65,7 @@ function ManajemenCuti() {
 
   const handleYes = async () => {
     try {
+      // Memperbarui status cuti
       const response = await fetch(`http://localhost:5000/api/data_cuti/cuti/${selectedId}`, {
         method: 'PUT',
         headers: {
@@ -75,6 +75,23 @@ function ManajemenCuti() {
       });
 
       if (response.ok) {
+        // Menambahkan notifikasi
+        const notificationResponse = await fetch('http://localhost:5000/api/data_notifikasi/notifikasi-pegawai/cuti', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id_pegawai: dataCuti.find(item => item.id_cuti === selectedId).id_pegawai,
+            message: `Cuti Anda dari ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_mulai)} sampai ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_selesai)} telah diterima.`,
+          }),
+        });
+
+        if (!notificationResponse.ok) {
+          console.error('Gagal menambahkan notifikasi');
+        }
+
+        // Mengupdate tampilan dan navigasi
         setDataCuti((prevData) => prevData.filter((cuti) => cuti.id_cuti !== selectedId));
         setShowSuccessPopup(true);
         setTimeout(() => {
@@ -177,10 +194,9 @@ function ManajemenCuti() {
                           disabled={!data.bukti_form_izin}
                         >
                           {data.bukti_form_izin ? (
-                            <>
-                              Lihat
-                              <HiChevronRight fontSize={18} className='ml-1' />
-                            </>
+                            <span className='text-blue-600 underline'>
+                              Lihat bukti
+                            </span>
                           ) : (
                             '-'
                           )}

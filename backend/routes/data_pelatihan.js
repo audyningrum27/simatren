@@ -342,5 +342,4 @@ router.post('/upload-bukti/:id_pelatihan', upload.single('bukti_pelaksanaan'), (
     });
 });
 
-
 export default router;

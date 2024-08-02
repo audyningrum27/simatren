@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { formatDate } from '../../utils/formatDate';
 
 const TambahJadwalPelatihan = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const TambahJadwalPelatihan = () => {
   const [tanggal_mulai, setTanggalMulai] = useState('');
   const [tanggal_selesai, setTanggalSelesai] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-  
+
   useEffect(() => {
     axios.get('http://localhost:5000/api/data_pegawai/pegawai')
       .then(response => {
@@ -32,24 +33,48 @@ const TambahJadwalPelatihan = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const dataPelatihan = { id_pegawai: idPegawai, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan };
+    const dataPelatihan = {
+      id_pegawai: idPegawai,
+      nama_penyelenggara,
+      nama_kegiatan,
+      tanggal_mulai,
+      tanggal_selesai,
+      deskripsi_kegiatan
+    };
 
-    axios.post('http://localhost:5000/api/data_pelatihan/pelatihan', dataPelatihan)
-      .then(response => {
-        console.log(response.data);
-        setIdPegawai([]);
-        setPenyelenggara('');
-        setKegiatan('');
-        setTanggalMulai('');
-        setTanggalSelesai('');
-        setDeskripsi('');
-        setShowPopup(true);
-      })
-      .catch(error => {
-        console.error('There was an error adding the data!', error);
+    try {
+      // Tambahkan jadwal pelatihan
+      await axios.post('http://localhost:5000/api/data_pelatihan/pelatihan', dataPelatihan);
+
+      //Format Tanggal
+      const formatTanggalMulai = formatDate(tanggal_mulai);
+      const formatTanggalSelesai = formatDate(tanggal_selesai);
+
+      // Kirim notifikasi ke setiap pegawai
+      const notifikasiPromises = idPegawai.map(id => {
+        const message = `Anda memiliki jadwal pelatihan baru dari ${formatTanggalMulai} sampai ${formatTanggalSelesai}`;
+        return axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-pegawai/pelatihan', {
+          id_pegawai: id,
+          message
+        });
       });
+
+      await Promise.all(notifikasiPromises);
+
+      // Reset form dan tampilkan popup
+      setIdPegawai([]);
+      setPenyelenggara('');
+      setKegiatan('');
+      setTanggalMulai('');
+      setTanggalSelesai('');
+      setDeskripsi('');
+      setShowPopup(true);
+
+    } catch (error) {
+      console.error('There was an error adding the data!', error);
+    }
   };
 
   useEffect(() => {
