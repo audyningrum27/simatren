@@ -43,7 +43,7 @@ const PresensiForm = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="hafalan" className="block font-semibold mb-1">
-            <p>Apa surah atau ayat Al-Qur'an yang baru Anda hafal atau ulangi dalam hari ini?</p>
+            <p>Apa surah atau ayat Al-Qur'an yang baru Anda hafal atau baca hari ini?</p>
           </label>
           <input
             type="text"
@@ -58,7 +58,7 @@ const PresensiForm = () => {
 
         <div>
           <label htmlFor="amalan_baik" className="block font-semibold mb-1">
-            <p>Sebutkan satu amalan kebaikan yang Anda lakukan dalam hari ini dan bagaimana dampaknya terhadap lingkungan pesantren?</p>
+            <p>Sebutkan satu amalan kebaikan yang Anda lakukan hari ini dan bagaimana dampaknya terhadap lingkungan pesantren?</p>
           </label>
           <input
             type="text"
@@ -88,7 +88,7 @@ const PresensiForm = () => {
 
         <div>
           <label htmlFor="penyelesaian_masalah" className="block font-semibold mb-1">
-            <p>Bagaimana cara Anda menyelesaikan tantangan atau masalah yang dihadapi dalam tugas sehari-hari di pesantren?</p>
+            <p>Bagaimana cara Anda menyelesaikan masalah yang dihadapi dalam tugas sehari-hari di pesantren?</p>
           </label>
           <input
             type="text"
@@ -103,7 +103,7 @@ const PresensiForm = () => {
 
         <div>
           <label htmlFor="inisiatif_proyek" className="block font-semibold mb-1">
-            <p>Sebutkan satu inisiatif atau proyek yang telah Anda laksanakan atau usulkan untuk meningkatkan kehidupan komunitas pesantren</p>
+            <p>Sebutkan satu inisiatif atau proyek yang Anda usulkan untuk meningkatkan kehidupan komunitas pesantren</p>
           </label>
           <input
             type="text"

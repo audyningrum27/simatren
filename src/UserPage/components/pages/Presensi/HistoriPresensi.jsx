@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 const HistoriPresensi = () => {
   const [dataPresensi, setDataPresensi] = useState([]);
+  const [role, setRole] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -34,16 +35,23 @@ const HistoriPresensi = () => {
         tanggalPresensi: formatDate(item.tanggal_presensi)
       }));
       setDataPresensi(data);
-      setLoading(false); 
+
+      const employeeResponse = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${id_pegawai}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setRole(employeeResponse.data.role);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   const filteredPresensi = dataPresensi.filter((data) =>
@@ -103,46 +111,50 @@ const HistoriPresensi = () => {
               </thead>
 
               <tbody>
-  {currentPageData.length === 0 && (
-    <tr>
-      <td colSpan="6" className="text-center py-4">
-        Tidak ada data presensi untuk ditampilkan.
-      </td>
-    </tr>
-  )}
-  {currentPageData.map((data, index) => {
-    const today = formatDate(new Date()); // Get today's date in the correct format
+                {currentPageData.length === 0 && (
+                  <tr>
+                    <td colSpan="6" className="text-center py-4">
+                      Tidak ada data presensi untuk ditampilkan.
+                    </td>
+                  </tr>
+                )}
+                {currentPageData.map((data, index) => {
+                  const today = formatDate(new Date()); // Get today's date in the correct format
 
-    return (
-      <tr key={index}>
-        <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-        <td>{data.tanggalPresensi}</td>
-        <td>{data.jam_masuk}</td>
-        <td className={data.jam_keluar ? '' : 'text-red-700'}>
-          {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
-        </td>
-        <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
-        <td className='font-semibold'>
-          {data.hafalan ? (
-            <span className='text-green-700'>Sudah Lengkap</span>
-          ) : (
-            data.jam_masuk && data.tanggalPresensi === today ? (
-              <button
-                onClick={() => navigate(`/UserPage/lengkapi_presensi/${data.id_presensi}`)}
-                className='flex justify-start items-center'>
-                Lengkapi Presensi
-                <HiChevronRight fontSize={18} className='ml-1' />
-              </button>
-            ) : (
-              <span>-</span>
-            )
-          )}
-        </td>
-      </tr>
-    );
-  })}
-</tbody>
+                  return (
+                    <tr key={index}>
+                      <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                      <td>{data.tanggalPresensi}</td>
+                      <td>{data.jam_masuk}</td>
+                      <td className={data.jam_keluar ? '' : 'text-red-700'}>
+                        {data.jam_keluar ? data.jam_keluar : '(Belum Scan)'}
+                      </td>
+                      <td>{data.total_jam_kerja !== null ? `${data.total_jam_kerja}` : '-'}</td>
+                      <td className='font-semibold'>
+                        {data.hafalan ? (
+                          <span className='text-green-700'>Sudah Lengkap</span>
+                        ) : (
+                          data.jam_masuk && data.tanggalPresensi === today ? (
+                            <button
+                              onClick={() => navigate(
+                                role === 'Guru' || role === 'TPA'
+                                  ? `/UserPage/ceklis_harian_guru/${data.id_presensi}`
+                                  : `/UserPage/ceklis_harian_staf_dapur/${data.id_presensi}`
+                              )}
+                              className='flex justify-start items-center'>
+                              Lengkapi Presensi
+                              <HiChevronRight fontSize={18} className='ml-1' />
+                            </button>
 
+                          ) : (
+                            <span>-</span>
+                          )
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
             </table>
           </div>
         </div>

@@ -11,6 +11,7 @@ router.get('/presensi', (req, res) => {
     SELECT 
         p.nip,
         p.nama_pegawai,
+        p.role,
         pr.id_presensi,
         pr.id_pegawai,
         pr.tanggal_presensi,
@@ -40,18 +41,24 @@ router.get('/presensi', (req, res) => {
 router.get('/presensi/laporan_kinerja/:id_presensi', (req, res) => {
     const { id_presensi } = req.params;
     console.log("GET /api/data_presensi/presensi/laporan_kinerja/:id_presensi");
+
+    // Query untuk mendapatkan data presensi dan role pegawai
     const query = `
-    SELECT 
-        hafalan, 
-        amalan_baik, 
-        kegiatan_rutin, 
-        penyelesaian_masalah, 
-        inisiatif_proyek 
-    FROM 
-        data_presensi 
-    WHERE 
-        id_presensi = ? 
+        SELECT 
+            dp.hafalan, 
+            dp.amalan_baik, 
+            dp.kegiatan_rutin, 
+            dp.penyelesaian_masalah, 
+            dp.inisiatif_proyek,
+            d.role
+        FROM 
+            data_presensi dp
+        JOIN 
+            data_pegawai d ON dp.id_pegawai = d.id_pegawai
+        WHERE 
+            dp.id_presensi = ? 
     `;
+    
     db.query(query, [id_presensi], (err, results) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -62,6 +69,8 @@ router.get('/presensi/laporan_kinerja/:id_presensi', (req, res) => {
             console.log('No data found for id_presensi:', id_presensi);
             return res.status(404).json({ message: 'No data found' });
         }
+        
+        // Kirim data presensi dan role pegawai ke frontend
         return res.json(results[0]);
     });
 });
@@ -219,6 +228,7 @@ router.get('/presensi/:id_pegawai', (req, res) => {
     SELECT 
         p.nip,
         p.nama_pegawai,
+        p.role,
         pr.id_presensi,
         pr.id_pegawai,
         pr.tanggal_presensi,
@@ -259,7 +269,7 @@ router.post('/save-presensi/:id_pegawai', (req, res) => {
     //     return res.status(400).json({ message: 'Invalid or expired QR code' });
     // }
 
-    const datetime = moment(timestamp).tz('Asia/Jakarta'); 
+    const datetime = moment(timestamp).tz('Asia/Jakarta');
     const tanggalPresensi = datetime.format('YYYY-MM-DD');
     const waktuPresensi = datetime.format('HH:mm:ss');
 
@@ -312,7 +322,7 @@ router.get('/presensi/status/:id_pegawai', (req, res) => {
     });
 });
 
-//Melengkapi Form Presensi
+//Melengkapi Form Presensi Pertanyaan
 router.put('/update-presensi/:id_presensi', (req, res) => {
     const { id_presensi } = req.params;
     const { hafalan, amalan_baik, kegiatan_rutin, penyelesaian_masalah, inisiatif_proyek } = req.body;
