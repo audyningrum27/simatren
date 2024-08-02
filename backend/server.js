@@ -8,6 +8,7 @@ import gajiRoutes from './routes/data_gaji.js';
 import presensiRoutes from './routes/data_presensi.js';
 import cutiRoutes from './routes/data_cuti.js';
 import pelatihanRoutes from './routes/data_pelatihan.js';
+import roleRoutes from './routes/role.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,6 +32,7 @@ app.use('/api/data_gaji', gajiRoutes);
 app.use('/api/data_presensi', presensiRoutes);
 app.use('/api/data_cuti', cutiRoutes);
 app.use('/api/data_pelatihan', pelatihanRoutes);
+app.use('/api/role', roleRoutes);
 
 // Melayani file statis frontend
 app.use(express.static(path.join(__dirname, '../public')));
