@@ -86,7 +86,17 @@ const LoginPage = () => {
             </button>
 
             <div className="w-full flex items-center justify-center p-3">
-              <span className="text-xs font-sans text-green-900 cursor-pointer">Forgot Password?</span>
+              <span className="text-xs font-sans">
+                Butuh Bantuan?
+                <a 
+                  href="https://wa.me/628(isi wa ponpes disini)?text=Nama:%20%0A%0ANIP:%20%0A%0AKebutuhan:%20%0A%0AIsi%20pesan%20keluhan%20Anda%20di%20sini." 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-green-900"
+                >
+                  Hubungi Admin
+                </a>
+              </span>
             </div>
           </div>
         </div>

@@ -90,32 +90,49 @@ router.delete('/pegawai/:id_pegawai', (req, res) => {
 // Mengedit data pegawai
 router.put('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, jumlah_tanggungan } = req.body;
-    const sql = `
-        UPDATE data_pegawai
-        SET
-            nama_pegawai = ?,
-            nip = ?,
-            tempat_lahir = ?,
-            tanggal_lahir = ?,
-            jenis_kelamin = ?,
-            alamat = ?,
-            no_telp = ?,
-            email = ?,
-            role =  ?,
-            status_bpjs = ?,
-            status_kepegawaian = ?,
-            jumlah_tanggungan = ?
-        WHERE id_pegawai = ?
-    `;
-    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, role, status_bpjs, status_kepegawaian, jumlah_tanggungan, id_pegawai];
-    db.query(sql, values, (err, result) => {
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, jumlah_tanggungan } = req.body;
+    // Mengambil password lama dari database
+    const sqlSelect = `SELECT password FROM data_pegawai WHERE id_pegawai = ?`;
+    db.query(sqlSelect, [id_pegawai], async (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
-            res.status(500).json({ error: 'Internal server error' });
-        } else {
-            res.json({ message: 'Pegawai updated successfully' });
+            return res.status(500).json({ error: 'Internal server error' });
         }
+
+        let hashedPassword = result[0].password;
+        if (password && password !== '') {
+            const salt = await bcrypt.genSalt(10);
+            hashedPassword = await bcrypt.hash(password, salt);
+        }
+
+        const sqlUpdate = `
+            UPDATE data_pegawai
+            SET
+                nama_pegawai = ?,
+                nip = ?,
+                tempat_lahir = ?,
+                tanggal_lahir = ?,
+                jenis_kelamin = ?,
+                alamat = ?,
+                no_telp = ?,
+                email = ?,
+                password = ?,
+                role = ?,
+                status_bpjs = ?,
+                status_kepegawaian = ?,
+                jumlah_tanggungan = ?
+            WHERE id_pegawai = ?
+        `;
+        const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, hashedPassword, role, status_bpjs, status_kepegawaian, jumlah_tanggungan, id_pegawai];
+
+        db.query(sqlUpdate, values, (err, result) => {
+            if (err) {
+                console.error('Error executing query:', err);
+                return res.status(500).json({ error: 'Internal server error' });
+            } else {
+                return res.json({ message: 'Pegawai updated successfully' });
+            }
+        });
     });
 });
 

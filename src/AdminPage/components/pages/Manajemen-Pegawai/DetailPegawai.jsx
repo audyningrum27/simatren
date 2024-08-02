@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaUserCircle } from "react-icons/fa";
+import { FaUserCircle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { PiEmptyBold } from "react-icons/pi";
 import { getPegawaiStatus } from "../../utils/status";
@@ -14,6 +14,8 @@ export default function DetailPegawai() {
     const [isDeleting, setIsDeleting] = useState(false);
     const [showPopup, setShowPopup] = useState(false);
     const [showPopupEdit, setShowPopupEdit] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [originalPassword, setOriginalPassword] = useState('');
 
     useEffect(() => {
         fetchPegawaiDetail();
@@ -29,6 +31,7 @@ export default function DetailPegawai() {
                 data.tanggal_lahir = formattedDate;
             }
             setPegawai(data);
+            setOriginalPassword(data.password)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -40,6 +43,7 @@ export default function DetailPegawai() {
                 const updatedPegawai = { ...pegawai };
                 if (pegawai.tanggal_lahir) {
                     updatedPegawai.tanggal_lahir = moment(pegawai.tanggal_lahir).format('YYYY-MM-DD');
+                    updatedPegawai.password === originalPassword ? '' : pegawai.password
                 }
                 console.log('Updating pegawai:', updatedPegawai);
 
@@ -114,6 +118,10 @@ export default function DetailPegawai() {
     const viewKartuKeluarga = () => {
         const url = `http://localhost:5000/api/data_pegawai/pegawai/view-kk/${id_pegawai}`;
         window.open(url, '_blank');
+    };
+
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword);
     };
 
     return (
@@ -258,6 +266,25 @@ export default function DetailPegawai() {
                                             />
                                         </td>
                                     </tr>
+                                    {isEditable && (
+                                <tr>
+                                    <td className="w-1/3">Password</td>
+                                    <td className="p-2">:</td>
+                                    <td className="px-2 border border-gray-400 rounded-md relative">
+                                        <input
+                                            type={showPassword ? 'text' : 'password'}
+                                            name="password"
+                                            value={pegawai.password}
+                                            readOnly={!isEditable}
+                                            onChange={handleChange}
+                                            className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                                        />
+                                        <div className="absolute right-2 top-2 cursor-pointer" onClick={toggleShowPassword}>
+                                            {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
                                     <tr>
                                         <td>Posisi</td>
                                         <td className="p-2">:</td>
