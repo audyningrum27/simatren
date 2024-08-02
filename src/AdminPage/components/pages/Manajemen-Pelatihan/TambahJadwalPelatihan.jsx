@@ -12,7 +12,7 @@ const TambahJadwalPelatihan = () => {
   const [tanggal_mulai, setTanggalMulai] = useState('');
   const [tanggal_selesai, setTanggalSelesai] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-
+  
   useEffect(() => {
     axios.get('http://localhost:5000/api/data_pegawai/pegawai')
       .then(response => {

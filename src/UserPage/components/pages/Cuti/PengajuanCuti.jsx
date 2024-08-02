@@ -25,6 +25,11 @@ const PengajuanCuti = () => {
       });
 
       if (response.status === 201) {
+        await axios.post('http://localhost:5000/api/data_cuti/notifikasi', {
+          id_pegawai: idPegawai,
+          message: `Pegawai dengan ID ${idPegawai} melakukan pengajuan cuti dari ${tanggalMulai} hingga ${tanggalSelesai}.`
+        });
+
         console.log('Pengajuan Cuti Berhasil');
         setTanggalMulai('');
         setTanggalSelesai('');

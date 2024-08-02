@@ -199,4 +199,52 @@ router.get('/cuti/daily', (req, res) => {
     });
 });
 
+// Menambah Notifikasi
+router.post('/notifikasi', (req, res) => {
+    const { id_pegawai, message } = req.body;
+    const query = `
+        INSERT INTO notifikasi (id_pegawai, message, tanggal)
+        VALUES (?, ?, NOW())
+    `;
+    db.query(query, [id_pegawai, message], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        return res.status(201).json({ message: 'Notifikasi berhasil ditambahkan' });
+    });
+});
+
+// Mengambil Notifikasi untuk Admin
+router.get('/notifikasi', (req, res) => {
+    const query = `
+        SELECT * FROM notifikasi
+        ORDER BY tanggal DESC
+    `;
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        return res.json(results);
+    });
+});
+
+// Update status notifikasi
+router.put('/notifikasi/:id_notifikasi', (req, res) => {
+    const { id_notifikasi } = req.params;
+    const query = `
+        UPDATE notifikasi
+        SET status = 'read'
+        WHERE id_notifikasi = ?
+    `;
+    db.query(query, [id_notifikasi], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        return res.status(200).json({ message: 'Status notifikasi berhasil diperbarui' });
+    });
+});
+
 export default router;

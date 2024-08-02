@@ -74,7 +74,6 @@ function App() {
             <Route path="/AdminPage/atur_jadwal_pelatihan" element={<TambahJadwalPelatihan />} />
             <Route path="/AdminPage/manajemen_kinerja" element={<ManajemenKinerja />} />
             <Route path="/AdminPage/grafik_kinerja/:id_pegawai" element={<GrafikManajemenKinerja />} />
-            <Route path="/AdminPage/manajemen_cuti" element={<ManajemenCuti />} />
           </Route>
 
           {/* User Page */}
