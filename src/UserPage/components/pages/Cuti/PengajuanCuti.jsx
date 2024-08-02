@@ -7,7 +7,7 @@ const PengajuanCuti = () => {
   const navigate = useNavigate()
   const [tanggalMulai, setTanggalMulai] = useState('');
   const [tanggalSelesai, setTanggalSelesai] = useState('');
-  const [alasanCuti, setAlasanCuti] = useState('');
+  const [buktiFormIzin, setBuktiFormIzin] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
   const idPegawai = localStorage.getItem('id_pegawai');
@@ -16,12 +16,18 @@ const PengajuanCuti = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('id_pegawai', idPegawai);
+    formData.append('tanggalMulai', tanggalMulai);
+    formData.append('tanggalSelesai', tanggalSelesai);
+    formData.append('bukti_form_izin', buktiFormIzin);
+
     try {
-      const response = await axios.post('http://localhost:5000/api/data_cuti/cuti', {
-        id_pegawai: idPegawai,
-        tanggalMulai,
-        tanggalSelesai,
-        alasanCuti
+      const response = await axios.post('http://localhost:5000/api/data_cuti/cuti', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
       if (response.status === 201) {
@@ -33,7 +39,6 @@ const PengajuanCuti = () => {
         console.log('Pengajuan Cuti Berhasil');
         setTanggalMulai('');
         setTanggalSelesai('');
-        setAlasanCuti('');
         setShowPopup(true);
       }
     } catch (error) {
@@ -109,17 +114,16 @@ const PengajuanCuti = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td className="p-2 text-sm">Alasan Cuti<span className="text-red-600">*</span></td>
+                  <td className="p-2 text-sm">Bukti Form Izin<span className="text-red-600">*</span></td>
                   <td className="p-2">:</td>
                   <td className="p-2">
                     <input
-                      type="text"
-                      name="alasan_cuti"
-                      id="alasan_cuti"
-                      value={alasanCuti}
-                      onChange={(e) => setAlasanCuti(e.target.value)}
-                      className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="Masukkan Alasan Pengajuan Cuti"
+                      type="file"
+                      name="bukti_form_izin"
+                      id="bukti_form_izin"
+                      accept=".jpeg, .jpg, .png, .pdf"
+                      onChange={(e) => setBuktiFormIzin(e.target.files[0])}
+                      className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                       required
                     />
                   </td>

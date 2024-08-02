@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
+import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils/formatDate';
 
@@ -24,9 +25,9 @@ function ManajemenCuti() {
       const result = await response.json();
 
       if (result && Array.isArray(result)) {
-        const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+        const today = new Date().toISOString().split('T')[0];
         const data = result
-          .filter(item => item.status_cuti === 'Proses' && item.tanggal_selesai >= today) // Filter out expired leave requests
+          .filter(item => item.status_cuti === 'Proses' && item.tanggal_selesai >= today)
           .map(item => ({
             ...item,
             tanggalMulai: formatDate(item.tanggal_mulai),
@@ -50,7 +51,7 @@ function ManajemenCuti() {
     data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
     data.nip.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   const handleConfirm = (id_cuti, status_cuti) => {
     setSelectedId(id_cuti);
     setSelectedStatus(status_cuti);
@@ -88,7 +89,7 @@ function ManajemenCuti() {
     }
     handleClosePopup();
   };
-  
+
   const totalPages = Math.ceil(filteredCuti.length / itemsPerPage);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -104,14 +105,18 @@ function ManajemenCuti() {
 
   const BoxWrapper = ({ children, isActive, onClick }) => (
     <button
-      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-      }`}
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
       onClick={onClick}
     >
       {children}
     </button>
   );
+
+  const viewBuktiFormIzin = (id_cuti) => {
+    const url = `http://localhost:5000/api/data_cuti/cuti/view-bukti/${id_cuti}`;
+    window.open(url, '_blank');
+  };
 
   return (
     <div>
@@ -143,7 +148,7 @@ function ManajemenCuti() {
                   <td className='font-bold py-4'>Nama</td>
                   <td className='font-bold py-4'>Tanggal Mulai</td>
                   <td className='font-bold py-4'>Tanggal Selesai</td>
-                  <td className='font-bold py-4'>Alasan Cuti</td>
+                  <td className='font-bold py-4'>Bukti Form Izin</td>
                   <td className='font-bold py-4'>Action</td>
                 </tr>
               </thead>
@@ -165,7 +170,22 @@ function ManajemenCuti() {
                       <td>{data.nama_pegawai}</td>
                       <td>{data.tanggalMulai}</td>
                       <td>{data.tanggalSelesai}</td>
-                      <td>{data.alasan_cuti}</td>
+                      <td className='font-semibold'>
+                        <button
+                          className='flex justify-start items-center'
+                          onClick={() => data.bukti_form_izin && viewBuktiFormIzin(data.id_cuti)}
+                          disabled={!data.bukti_form_izin}
+                        >
+                          {data.bukti_form_izin ? (
+                            <>
+                              Lihat
+                              <HiChevronRight fontSize={18} className='ml-1' />
+                            </>
+                          ) : (
+                            '-'
+                          )}
+                        </button>
+                      </td>
                       <td className='font-semibold text-xs'>
                         <div className='flex flex-row gap-3'>
                           <button

@@ -19,9 +19,9 @@ function HistoriCutiPegawai() {
       const result = await response.json();
 
       if (result && Array.isArray(result)) {
-        const today = new Date().toISOString().split('T')[0]; // Get today's date in 'YYYY-MM-DD' format
+        const today = new Date().toISOString().split('T')[0];
         const filteredData = result
-          .filter(item => 
+          .filter(item =>
             (item.status_cuti !== 'Proses' || item.tanggal_selesai >= today)
           )
           .map(item => ({
@@ -63,14 +63,18 @@ function HistoriCutiPegawai() {
 
   const BoxWrapper = ({ children, isActive, onClick }) => (
     <button
-      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-        isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-      }`}
+      className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${isActive ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+        }`}
       onClick={onClick}
     >
       {children}
     </button>
   );
+
+  const viewBuktiFormIzin = (id_cuti) => {
+    const url = `http://localhost:5000/api/data_cuti/cuti/view-bukti/${id_cuti}`;
+    window.open(url, '_blank');
+  };
 
   return (
     <div>
@@ -99,8 +103,8 @@ function HistoriCutiPegawai() {
                 <td className="font-bold py-4">Nama</td>
                 <td className="font-bold py-4">Tanggal Mulai</td>
                 <td className="font-bold py-4">Tanggal Selesai</td>
-                <td className="font-bold py-4">Alasan Cuti</td>
                 <td className="font-bold py-4">Status</td>
+                <td className="font-bold py-4">Bukti Form Izin</td>
               </tr>
             </thead>
 
@@ -119,8 +123,23 @@ function HistoriCutiPegawai() {
                   <td>{data.nama_pegawai}</td>
                   <td>{data.tanggalMulai}</td>
                   <td>{data.tanggalSelesai}</td>
-                  <td>{data.alasan_cuti}</td>
                   <td>{getPegawaiStatus(data.status_cuti)}</td>
+                  <td className='font-semibold'>
+                    <button
+                      className='flex justify-start items-center'
+                      onClick={() => data.bukti_form_izin && viewBuktiFormIzin(data.id_cuti)}
+                      disabled={!data.bukti_form_izin}
+                    >
+                      {data.bukti_form_izin ? (
+                        <>
+                          Lihat
+                          <HiChevronRight fontSize={18} className='ml-1' />
+                        </>
+                      ) : (
+                        '-'
+                      )}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

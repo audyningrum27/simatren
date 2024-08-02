@@ -1,7 +1,11 @@
 import express from 'express';
 import db from '../db.js';
+import multer from 'multer';
 
 const router = express.Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 //Menampilkan Data Cuti Pada Manajemen Cuti
 router.get('/cuti/all', (req, res) => {
@@ -14,7 +18,7 @@ router.get('/cuti/all', (req, res) => {
         c.id_pegawai,
         c.tanggal_mulai,
         c.tanggal_selesai,
-        c.alasan_cuti,
+        c.bukti_form_izin,
         c.status_cuti
     FROM 
         data_cuti c
@@ -58,7 +62,7 @@ router.get('/cuti/approved', (req, res) => {
         c.id_pegawai,
         c.tanggal_mulai,
         c.tanggal_selesai,
-        c.alasan_cuti,
+        c.bukti_form_izin,
         c.status_cuti
     FROM 
         data_cuti c
@@ -113,13 +117,21 @@ router.get('/cuti/approved/:id_pegawai', (req, res) => {
 });
 
 //Menambah Data Cuti Pada User
-router.post('/cuti', (req, res) => {
-    const { id_pegawai, tanggalMulai, tanggalSelesai, alasanCuti } = req.body;
+router.post('/cuti', upload.single('bukti_form_izin'), (req, res) => {
+    const { id_pegawai, tanggalMulai, tanggalSelesai } = req.body;
+    const file = req.file;
+    
+    if (!file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const buktiFormIzinBuffer = file.buffer;
+
     const query = `
-        INSERT INTO data_cuti (id_pegawai, tanggal_mulai, tanggal_selesai, alasan_cuti, status_cuti)
+        INSERT INTO data_cuti (id_pegawai, tanggal_mulai, tanggal_selesai, bukti_form_izin, status_cuti)
         VALUES (?, ?, ?, ?, 'Proses')
     `;
-    db.query(query, [id_pegawai, tanggalMulai, tanggalSelesai, alasanCuti], (err, result) => {
+    db.query(query, [id_pegawai, tanggalMulai, tanggalSelesai, buktiFormIzinBuffer], (err, result) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Internal Server Error' });
@@ -138,7 +150,7 @@ router.get('/cuti/:id_pegawai', (req, res) => {
         c.id_pegawai,
         c.tanggal_mulai,
         c.tanggal_selesai,
-        c.alasan_cuti,
+        c.bukti_form_izin,
         c.status_cuti
     FROM 
         data_cuti c
@@ -152,6 +164,43 @@ router.get('/cuti/:id_pegawai', (req, res) => {
         }
 
         return res.json(results);
+    });
+});
+
+// Menampilkan Bukti Form Izin
+router.get('/cuti/view-bukti/:id_cuti', (req, res) => {
+    const { id_cuti } = req.params;
+
+    const sql = 'SELECT bukti_form_izin FROM data_cuti WHERE id_cuti = ?';
+    db.query(sql, [id_cuti], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        if (result.length > 0) {
+            const buktiFormIzin = result[0].bukti_form_izin;
+            if (buktiFormIzin) {
+                const buffer = Buffer.from(buktiFormIzin, 'base64');
+
+                // Default type is jpeg
+                let contentType = 'image/jpeg';
+                const fileSignature = buffer.slice(0, 4).toString('hex');
+
+                if (fileSignature === '89504e47') {
+                    contentType = 'image/png';
+                } else if (fileSignature === '25504446') {
+                    contentType = 'application/pdf';
+                }
+                
+                res.setHeader('Content-Type', contentType);
+                res.send(buffer);
+            } else {
+                res.status(404).json({ error: 'Bukti Form Izin not found' });
+            }
+        } else {
+            res.status(404).json({ error: 'Cuti not found' });
+        }
     });
 });
 

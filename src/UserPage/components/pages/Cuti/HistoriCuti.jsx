@@ -68,6 +68,11 @@ function HistoriCuti() {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
+  const viewBuktiFormIzin = (id_cuti) => {
+    const url = `http://localhost:5000/api/data_cuti/cuti/view-bukti/${id_cuti}`;
+    window.open(url, '_blank');
+  };
+
   return (
     <div>
       <p className="text-xl font-bold px-5">Histori Cuti</p>
@@ -91,8 +96,8 @@ function HistoriCuti() {
                 <td className='font-bold py-4'>No.</td>
                 <td className='font-bold py-4'>Tanggal Mulai</td>
                 <td className='font-bold py-4'>Tanggal Selesai</td>
-                <td className='font-bold py-4'>Alasan Cuti</td>
                 <td className='font-bold py-4'>Status Cuti</td>
+                <td className='font-bold py-4'>Bukti Form Izin</td>
               </tr>
             </thead>
 
@@ -109,8 +114,23 @@ function HistoriCuti() {
                   <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td>{data.tanggalMulai}</td>
                   <td>{data.tanggalSelesai}</td>
-                  <td>{data.alasan_cuti}</td>
                   <td>{getStatus(data.status_cuti)}</td>
+                  <td className='font-semibold'>
+                    <button
+                      className='flex justify-start items-center'
+                      onClick={() => data.bukti_form_izin && viewBuktiFormIzin(data.id_cuti)}
+                      disabled={!data.bukti_form_izin}
+                    >
+                      {data.bukti_form_izin ? (
+                        <>
+                          Lihat
+                          <HiChevronRight fontSize={18} className='ml-1' />
+                        </>
+                      ) : (
+                        '-'
+                      )}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -124,9 +144,8 @@ function HistoriCuti() {
           {Array.from({ length: totalPages }, (_, index) => (
             <button
               key={index}
-              className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${
-                currentPage === index + 1 ? 'bg-green-900 text-white' : 'hover:bg-green-900'
-              }`}
+              className={`rounded-sm px-2.5 py-1 flex-1 border-none flex items-center text-xs font-semibold ${currentPage === index + 1 ? 'bg-green-900 text-white' : 'hover:bg-green-900'
+                }`}
               onClick={() => setCurrentPage(index + 1)}
             >
               {index + 1}
