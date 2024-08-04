@@ -42,7 +42,7 @@ const TambahGajiExcel = () => {
         <div className="px-5">
             <span className="text-2xl text-gray-950 font-semibold flex justify-center">Tambah Data Gaji Excel</span>
 
-            <div className='md:w-[80%] w-[70%] mx-auto h-full flex flex-col py-5 justify-between'>
+            <div className='md:w-[70%] w-[100%] mx-auto h-full flex flex-col py-5 justify-between'>
                 <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>

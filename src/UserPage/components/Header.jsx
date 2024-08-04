@@ -85,7 +85,7 @@ const Header = ({ isOpen, setIsOpen }) => {
         <button onClick={() => setIsOpen((prev) => !prev)} className="text-gray-400 md:hidden">
           <FaBars className="w-6 h-6" />
         </button>
-        <div className="md:w-full w-[34rem] max-[500px]:w-[22rem]">
+        <div className="md:w-full w-[34rem] max-[500px]:w-[23rem]">
           <div className="ml-auto flex items-center justify-center box-border h-6 w-8 border-2 border-green-900 rounded-md shadow-md shadow-gray-400 cursor-pointer relative">
             <button onClick={toggleDropdown} className="relative">
               <MdNotifications className="icon-gray-200" />

@@ -89,7 +89,7 @@ const LoginPage = () => {
               <span className="text-xs font-sans">
                 Butuh Bantuan?
                 <a 
-                  href="https://wa.me/628(isi wa ponpes disini)?text=Nama:%20%0A%0ANIP:%20%0A%0AKebutuhan:%20%0A%0AIsi%20pesan%20keluhan%20Anda%20di%20sini." 
+                  href="https://wa.me/6281945443025?text=Nama:%20%0A%0ANIP:%20%0A%0AKebutuhan:%20%0A%0AIsi%20pesan%20keluhan%20Anda%20di%20sini." 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="text-green-900"

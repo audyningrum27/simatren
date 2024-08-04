@@ -169,9 +169,9 @@ const ScanQR = () => {
       </div>
 
       <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-between'>
-        <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
+        <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10 overflow-x-auto">
           <div className="space-y-4">
-            <div className="flex space-x-4">
+            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
               <div className="flex-1">
                 <button
                   onClick={() => setIsScanningMasuk(true)}
