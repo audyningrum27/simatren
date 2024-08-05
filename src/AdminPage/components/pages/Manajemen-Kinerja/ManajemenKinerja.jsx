@@ -77,7 +77,7 @@ function ManajemenKinerja() {
                 <tr className="border-b-[1.5px]">
                   <td className='font-bold py-4'>No.</td>
                   <td className='font-bold py-4'>NIP</td>
-                  <td className='font-bold py-4'>Nama</td>
+                  <td className='font-bold py-4'>Nama Pegawai</td>
                   <td className='font-bold py-4'>Gender</td>
                   <td className='font-bold py-4'>Role</td>
                   <td className='font-bold py-4'>Status</td>

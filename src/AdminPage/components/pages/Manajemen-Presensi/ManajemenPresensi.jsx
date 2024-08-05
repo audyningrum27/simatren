@@ -98,7 +98,7 @@ function ManajemenPresensi() {
                 <tr className="border-b-[1.5px]">
                   <td className='font-bold py-4'>No.</td>
                   <td className='font-bold py-4'>NIP</td>
-                  <td className='font-bold py-4'>Nama</td>
+                  <td className='font-bold py-4'>Nama Pegawai</td>
                   <td className='font-bold py-4'>Tanggal</td>
                   <td className='font-bold py-4'>Jam Masuk</td>
                   <td className='font-bold py-4'>Jam Keluar</td>
