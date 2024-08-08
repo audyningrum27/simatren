@@ -174,7 +174,7 @@ const PelaporanPelatihan = () => {
                 </tr>
 
                 <tr>
-                  <td className="p-2 text-sm">Tanggal Selesai Cuti<span className="text-red-600">*</span></td>
+                  <td className="p-2 text-sm">Tanggal Selesai<span className="text-red-600">*</span></td>
                   <td className="p-2">:</td>
                   <td className="p-2">
                     <input

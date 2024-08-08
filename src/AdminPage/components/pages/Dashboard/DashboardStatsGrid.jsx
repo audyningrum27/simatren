@@ -107,7 +107,7 @@ const DashboardStatsGrid = ({ selectedDate }) => {
             <div>
               <p className="ml-auto h-5 w-5 text-[10px] font-semibold">{cutiPercentage}%</p>
               <div className="flex bg-gray-300 h-2 w-64 rounded">
-                <div className="bg-green-500 h-2 rounded" style={{ width: `${cutiPercentage}%` }}></div>
+                <div className="bg-red-500 h-2 rounded" style={{ width: `${cutiPercentage}%` }}></div>
               </div>
             </div>
           </div>

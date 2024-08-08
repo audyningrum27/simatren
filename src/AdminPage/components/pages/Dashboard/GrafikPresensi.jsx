@@ -116,7 +116,7 @@ const GrafikPresensi = ({ selectedDate }) => {
             <Tooltip />
             <Legend />
             <Bar dataKey="Hadir" fill='rgb(21 128 61)' />
-            <Bar dataKey="Cuti" fill='rgb(34 197 94)' />
+            <Bar dataKey="Cuti" fill='rgb(220, 0, 0)' />
           </BarChart>
         </ResponsiveContainer>
       </div>

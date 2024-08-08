@@ -101,7 +101,9 @@ function ManajemenKinerja() {
                     <td className='pr-4'>{data.role}</td>
                     <td>{getPegawaiStatus(data.status_kepegawaian)}</td>
                     <td className='font-semibold'>
-                      <button onClick={() => navigate(`/AdminPage/grafik_kinerja/${data.id_pegawai}`)} className='flex justify-start items-center'>
+                      <button
+                        onClick={() => navigate(`/AdminPage/grafik_kinerja/${data.id_pegawai}`, { state: { nama: data.nama_pegawai, nip: data.nip } })}
+                        className='flex justify-start items-center'>
                         Grafik Kinerja
                         <HiChevronRight fontSize={18} className='ml-1' />
                       </button>

@@ -80,9 +80,9 @@ function GrafikPelatihan({ selectedDate }) {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="Selesai" fill='rgb(34 197 94)' />
-            <Bar dataKey="Proses" fill='rgb(21 168 61)' />
-            <Bar dataKey="Belum Dimulai" fill='rgb(21 128 61)' />
+            <Bar dataKey="Selesai" fill='rgb(21 128 61)' />
+            <Bar dataKey="Proses" fill='rgb(50, 140, 255)' />
+            <Bar dataKey="Belum Dimulai" fill='rgb(220, 0, 0)' />
           </BarChart>
         </ResponsiveContainer>
       </div>
