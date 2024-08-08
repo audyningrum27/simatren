@@ -27,7 +27,7 @@ router.get('/gaji', (req, res) => {
         p.nip,
         p.nama_pegawai,
         g.id_gaji,
-        g.id_pegawai,
+        g.nip,
         g.bulan_gaji,
         g.gaji_dasar,
         g.tunjangan,
@@ -36,7 +36,7 @@ router.get('/gaji', (req, res) => {
     FROM 
         data_gaji g
     JOIN 
-        data_pegawai p ON g.id_pegawai = p.id_pegawai
+        data_pegawai p ON g.nip = p.nip
     `;
     db.query(query, (err, results) => {
         if (err) {
@@ -50,11 +50,11 @@ router.get('/gaji', (req, res) => {
 
 // Menambah data gaji
 router.post('/gaji', (req, res) => {
-    const { id_pegawai, bulan_gaji, gaji_dasar, tunjangan, potongan } = req.body;
+    const { nip, bulan_gaji, gaji_dasar, tunjangan, potongan } = req.body;
 
-    if (Array.isArray(id_pegawai)) {
-        const values = id_pegawai.map(id => [id, bulan_gaji, gaji_dasar, tunjangan, potongan]);
-        const query = 'INSERT INTO data_gaji (id_pegawai, bulan_gaji, gaji_dasar, tunjangan, potongan) VALUES ?';
+    if (Array.isArray(nip)) {
+        const values = nip.map(id => [id, bulan_gaji, gaji_dasar, tunjangan, potongan]);
+        const query = 'INSERT INTO data_gaji (nip, bulan_gaji, gaji_dasar, tunjangan, potongan) VALUES ?';
 
         db.query(query, [values], (err, result) => {
             if (err) {
@@ -65,9 +65,9 @@ router.post('/gaji', (req, res) => {
             return res.status(201).json({ message: 'Data Gaji Berhasil Ditambahkan!' });
         });
     } else {
-        const query = 'INSERT INTO data_gaji (id_pegawai, bulan_gaji, gaji_dasar, tunjangan, potongan) VALUES (?, ?, ?, ?, ?)';
+        const query = 'INSERT INTO data_gaji (nip, bulan_gaji, gaji_dasar, tunjangan, potongan) VALUES (?, ?, ?, ?, ?)';
 
-        db.query(query, [id_pegawai, bulan_gaji, gaji_dasar, tunjangan, potongan], (err, result) => {
+        db.query(query, [nip, bulan_gaji, gaji_dasar, tunjangan, potongan], (err, result) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ message: 'Internal Server Error' });
@@ -94,7 +94,7 @@ router.post('/import-gaji', upload.single('file'), (req, res) => {
 
     // Proses data dan insert ke database
     const queries = data.map(row => {
-        const { id_pegawai, bulan_gaji, gaji_dasar, tunjangan, potongan } = row;
+        const { nip, bulan_gaji, gaji_dasar, tunjangan, potongan } = row;
 
         // Konversi bulan_gaji ke format tanggal yang benar
         let formattedBulanGaji;
@@ -114,8 +114,8 @@ router.post('/import-gaji', upload.single('file'), (req, res) => {
         console.log('Formatted bulan_gaji:', formattedBulanGaji);
 
         return new Promise((resolve, reject) => {
-            const query = 'INSERT INTO data_gaji (id_pegawai, bulan_gaji, gaji_dasar, tunjangan, potongan) VALUES (?, ?, ?, ?, ?)';
-            db.query(query, [id_pegawai, formattedBulanGaji, gaji_dasar, tunjangan, potongan], (err, result) => {
+            const query = 'INSERT INTO data_gaji (nip, bulan_gaji, gaji_dasar, tunjangan, potongan) VALUES (?, ?, ?, ?, ?)';
+            db.query(query, [nip, formattedBulanGaji, gaji_dasar, tunjangan, potongan], (err, result) => {
                 if (err) {
                     console.error(err);
                     reject(err);
@@ -131,18 +131,28 @@ router.post('/import-gaji', upload.single('file'), (req, res) => {
         .catch(err => res.status(500).json({ message: 'Internal Server Error' }));
 });
 
+// Endpoint untuk mendownload template gaji
+router.get('/download-template', (req, res) => {
+    const filePath = './template_excel/template_data_gaji.xlsx';
+    res.download(filePath, 'template_data_gaji.xlsx', (err) => {
+        if (err) {
+            console.error('Error downloading template:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+    });
+});
 
 // USER
 // Menampilkan data gaji berdasarkan id pegawai
-router.get('/gaji/:id_pegawai', (req, res) => {
-    const { id_pegawai } = req.params;
-    console.log("GET /api/data_gaji/gaji/:id_pegawai");
+router.get('/gaji/:nip', (req, res) => {
+    const { nip } = req.params;
+    console.log("GET /api/data_gaji/gaji/:nip");
     const query = `
     SELECT 
         p.nip,
         p.nama_pegawai,
         g.id_gaji,
-        g.id_pegawai,
+        g.nip,
         g.bulan_gaji,
         g.gaji_dasar,
         g.tunjangan,
@@ -152,11 +162,11 @@ router.get('/gaji/:id_pegawai', (req, res) => {
     FROM 
         data_gaji g
     JOIN 
-        data_pegawai p ON g.id_pegawai = p.id_pegawai
+        data_pegawai p ON g.nip = p.nip
     WHERE 
-        g.id_pegawai = ?
+        g.nip = ?
     `;
-    db.query(query, [id_pegawai], (err, results) => {
+    db.query(query, [nip], (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Internal Server Error' });

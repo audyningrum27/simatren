@@ -24,12 +24,12 @@ function Penggajian() {
   const fetchDataGaji = async () => {
     try {
       const token = localStorage.getItem('token');
-      const id_pegawai = localStorage.getItem('id_pegawai');
-      if (!id_pegawai) {
-        console.error('id_pegawai is undefined');
+      const nip = localStorage.getItem('nip');
+      if (!nip) {
+        console.error('nip is undefined');
         return;
       }
-      const response = await axios.get(`http://localhost:5000/api/data_gaji/gaji/${id_pegawai}`, {
+      const response = await axios.get(`http://localhost:5000/api/data_gaji/gaji/${nip}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const TambahDataGaji = () => {
   const navigate = useNavigate();
-  const [idPegawai, setIdPegawai] = useState([]);
+  const [nomorIndukPegawai, setNip] = useState([]);
   const [pegawaiList, setPegawaiList] = useState([]);
   const [gajiDasar, setGajiDasar] = useState('');
   const [tunjangan, setTunjangan] = useState('');
@@ -25,20 +25,20 @@ const TambahDataGaji = () => {
   const handleSelectChange = (e) => {
     const { value } = e.target;
     if (value === 'ALL') {
-      setIdPegawai(pegawaiList.map(pegawai => pegawai.id_pegawai));
+      setNip(pegawaiList.map(pegawai => pegawai.nip));
     } else {
-      setIdPegawai([value]);
+      setNip([value]);
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataGaji = { id_pegawai: idPegawai, bulan_gaji: tanggalGaji, gaji_dasar: gajiDasar, tunjangan, potongan };
+    const dataGaji = { nip: nomorIndukPegawai, bulan_gaji: tanggalGaji, gaji_dasar: gajiDasar, tunjangan, potongan };
 
     axios.post('http://localhost:5000/api/data_gaji/gaji', dataGaji)
       .then(response => {
         console.log(response.data);
-        setIdPegawai('');
+        setNip('');
         setGajiDasar('');
         setTunjangan('');
         setPotongan('');
@@ -76,18 +76,18 @@ const TambahDataGaji = () => {
                   <td className="p-2">:</td>
                   <td className="p-2">
                     <select
-                      name="id_pegawai"
-                      id="id_pegawai"
-                      value={idPegawai.length === 1 ? idPegawai[0] : idPegawai.length ? 'ALL' : ''}
+                      name="nip"
+                      id="nip"
+                      value={nomorIndukPegawai.length === 1 ? nomorIndukPegawai[0] : nomorIndukPegawai.length ? 'ALL' : ''}
                       onChange={handleSelectChange}
-                      className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md ${idPegawai.length ? 'text-black' : 'text-gray-400'}`}
+                      className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md ${nomorIndukPegawai.length ? 'text-black' : 'text-gray-400'}`}
                       required
                       defaultValue=""
                     >
                       <option value="" disabled selected className='text-gray-400'>Masukkan nama pegawai</option>
                       <option value="ALL" className='text-black'>Pilih Semua Pegawai</option>
                       {pegawaiList.map((pegawai) => (
-                        <option className='text-black' key={pegawai.id_pegawai} value={pegawai.id_pegawai}>
+                        <option className='text-black' key={pegawai.nip} value={pegawai.nip}>
                           {pegawai.nama_pegawai} - {pegawai.nip}
                         </option>
                       ))}

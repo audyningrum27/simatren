@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { GoDownload } from "react-icons/go";
 import axios from 'axios';
 
 const TambahGajiExcel = () => {
@@ -38,12 +39,43 @@ const TambahGajiExcel = () => {
         }
     };
 
+    const handleDownloadTemplate = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/data_gaji/download-template', {
+                responseType: 'blob', 
+            });
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'template_data_gaji.xlsx'); 
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link); 
+        } catch (error) {
+            console.error('Error downloading template:', error);
+            alert('Failed to download template.');
+        }
+    };
+
     return (
         <div className="px-5">
             <span className="text-2xl text-gray-950 font-semibold flex justify-center">Tambah Data Gaji Excel</span>
 
             <div className='md:w-[70%] w-[100%] mx-auto h-full flex flex-col py-5 justify-between'>
                 <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
+                    {/* Button Download Template */}
+                    <div className="flex justify-center md:justify-start mb-4">
+                        <button
+                            type="button"
+                            onClick={handleDownloadTemplate}
+                            className="flex flex-row w-fit text-black bg-gray-100 border border-gray-400 focus:outline-none rounded-md text-sm px-1.5 py-1.5 text-center"
+                        >
+                            Download Template
+                            <GoDownload fontSize={18} className='ml-1'/>
+                        </button>
+                    </div>
+
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>
                             <table className="w-full">
