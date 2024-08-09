@@ -32,9 +32,54 @@ const TambahDataGaji = () => {
     }
   };
 
+  const formatCurrency = (value) => {
+    const numberString = value.replace(/[^,\d]/g, '');
+    const split = numberString.split(',');
+    const sisa = split[0].length % 3;
+    let rupiah = split[0].substr(0, sisa);
+    const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    if (ribuan) {
+      const separator = sisa ? '.' : '';
+      rupiah += separator + ribuan.join('.');
+    }
+
+    rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+    return 'Rp ' + rupiah;
+  };
+
+  const handleGajiDasarChange = (e) => {
+    setGajiDasar(formatCurrency(e.target.value));
+  };
+
+  const handleTunjanganChange = (e) => {
+    setTunjangan(formatCurrency(e.target.value));
+  };
+
+  const handlePotonganChange = (e) => {
+    setPotongan(formatCurrency(e.target.value));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const dataGaji = { nip: nomorIndukPegawai, bulan_gaji: tanggalGaji, gaji_dasar: gajiDasar, tunjangan, potongan };
+
+    // Membersihkan nilai dari "Rp" dan pemisah ribuan
+    const cleanedGajiDasar = gajiDasar.replace(/[^0-9,-]+/g, "").replace(',', '.');
+    const cleanedTunjangan = tunjangan.replace(/[^0-9,-]+/g, "").replace(',', '.');
+    const cleanedPotongan = potongan.replace(/[^0-9,-]+/g, "").replace(',', '.');
+
+    // Mengubah nilai menjadi angka
+    const parsedGajiDasar = cleanedGajiDasar ? parseFloat(cleanedGajiDasar) : null;
+    const parsedTunjangan = cleanedTunjangan ? parseFloat(cleanedTunjangan) : null;
+    const parsedPotongan = cleanedPotongan ? parseFloat(cleanedPotongan) : null;
+
+    const dataGaji = { 
+      nip: nomorIndukPegawai, 
+      bulan_gaji: tanggalGaji, 
+      gaji_dasar: parsedGajiDasar, 
+      tunjangan: parsedTunjangan, 
+      potongan: parsedPotongan 
+    };  
 
     axios.post('http://localhost:5000/api/data_gaji/gaji', dataGaji)
       .then(response => {
@@ -106,7 +151,6 @@ const TambahDataGaji = () => {
                       value={tanggalGaji}
                       onChange={(e) => setTanggalGaji(e.target.value)}
                       className={`bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 ${tanggalGaji ? 'text-black' : 'text-gray-400'}`}
-                      placeholder="3.000.000"
                       required
                     />
                   </td>
@@ -116,13 +160,13 @@ const TambahDataGaji = () => {
                   <td className="p-2">:</td>
                   <td className="p-2">
                     <input
-                      type="number"
+                      type="text"
                       name="gaji_dasar"
                       id="gaji_dasar"
                       value={gajiDasar}
-                      onChange={(e) => setGajiDasar(e.target.value)}
+                      onChange={handleGajiDasarChange}
                       className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="3000000"
+                      placeholder="3.000.000"
                       required
                     />
                   </td>
@@ -132,13 +176,13 @@ const TambahDataGaji = () => {
                   <td className="p-2">:</td>
                   <td className="p-2">
                     <input
-                      type="number"
+                      type="text"
                       name="tunjangan"
                       id="tunjangan"
                       value={tunjangan}
-                      onChange={(e) => setTunjangan(e.target.value)}
+                      onChange={handleTunjanganChange}
                       className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="2500000"
+                      placeholder="2.500.000"
                       required
                     />
                   </td>
@@ -148,13 +192,13 @@ const TambahDataGaji = () => {
                   <td className="p-2">:</td>
                   <td className="p-2">
                     <input
-                      type="number"
+                      type="text"
                       name="potongan"
                       id="potongan"
                       value={potongan}
-                      onChange={(e) => setPotongan(e.target.value)}
+                      onChange={handlePotonganChange}
                       className="bg-gray-50 border-[1.5px] border-gray-300 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                      placeholder="500000"
+                      placeholder="500.000"
                       required
                     />
                   </td>

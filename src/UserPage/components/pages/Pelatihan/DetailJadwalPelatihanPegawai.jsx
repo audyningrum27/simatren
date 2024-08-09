@@ -147,15 +147,15 @@ const DetailPelatihanPegawai = () => {
             </div>
           </div>
           {/* Buttons */}
-          <div className="flex justify-end space-x-2 m-10">
+          <div className="flex justify-end space-x-4 m-10 font-semibold text-xs">
             <button
-              className='flex justify-start items-center bg-green-700 px-3 py-1 rounded-sm'
+              className='flex justify-start items-center bg-green-500 px-4 py-2 rounded-md'
               onClick={() => handleButtonOke(pelatihan.id_pelatihan)}
             >
             Oke
             </button>
             <button
-              className='flex justify-start items-center bg-red-500 px-3 py-1 rounded-sm'
+              className='flex justify-start items-center bg-red-500 px-4 py-2 rounded-md'
               onClick={() => handleButtonBatal(pelatihan.id_pelatihan)}
             >
             Batal
