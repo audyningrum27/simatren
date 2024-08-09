@@ -15,7 +15,8 @@ const TambahDataGaji = () => {
   useEffect(() => {
     axios.get('http://localhost:5000/api/data_pegawai/pegawai')
       .then(response => {
-        setPegawaiList(response.data);
+        const aktifPegawai = response.data.filter(pegawai => pegawai.status_kepegawaian === 'Aktif');
+        setPegawaiList(aktifPegawai);
       })
       .catch(error => {
         console.error('There was an error fetching the employee data!', error);
