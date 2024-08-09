@@ -267,24 +267,24 @@ export default function DetailPegawai() {
                                         </td>
                                     </tr>
                                     {isEditable && (
-                                <tr>
-                                    <td className="w-1/3">Password</td>
-                                    <td className="p-2">:</td>
-                                    <td className="px-2 border border-gray-400 rounded-md relative">
-                                        <input
-                                            type={showPassword ? 'text' : 'password'}
-                                            name="password"
-                                            value={pegawai.password}
-                                            readOnly={!isEditable}
-                                            onChange={handleChange}
-                                            className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
-                                        />
-                                        <div className="absolute right-2 top-2 cursor-pointer" onClick={toggleShowPassword}>
-                                            {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
+                                        <tr>
+                                            <td className="w-1/3">Password</td>
+                                            <td className="p-2">:</td>
+                                            <td className="px-2 border border-gray-400 rounded-md relative">
+                                                <input
+                                                    type={showPassword ? 'text' : 'password'}
+                                                    name="password"
+                                                    value={pegawai.password}
+                                                    readOnly={!isEditable}
+                                                    onChange={handleChange}
+                                                    className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                                                />
+                                                <div className="absolute right-2 top-2 cursor-pointer" onClick={toggleShowPassword}>
+                                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
                                     <tr>
                                         <td>Posisi</td>
                                         <td className="p-2">:</td>
@@ -299,6 +299,23 @@ export default function DetailPegawai() {
                                                 <option value="Guru">Guru</option>
                                                 <option value="TPA">TPA</option>
                                                 <option value="Non TPA">Non TPA</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status Pegawai</td>
+                                        <td className="p-2">:</td>
+                                        <td className="px-2 border border-gray-400 rounded-md">
+                                            <select
+                                                name="status_kepegawaian"
+                                                value={pegawai.status_kepegawaian || ''}
+                                                disabled={!isEditable}
+                                                onChange={handleChange}
+                                                className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                                            >
+                                                <option value="Aktif">Aktif</option>
+                                                <option value="Tidak Aktif">Tidak Aktif</option>
+                                                <option value="Cuti">Cuti</option>
                                             </select>
                                         </td>
                                     </tr>

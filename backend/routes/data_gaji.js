@@ -133,12 +133,39 @@ router.post('/import-gaji', upload.single('file'), (req, res) => {
 
 // Endpoint untuk mendownload template gaji
 router.get('/download-template', (req, res) => {
-    const filePath = './template_excel/template_data_gaji.xlsx';
-    res.download(filePath, 'template_data_gaji.xlsx', (err) => {
+    db.query('SELECT nip, nama_pegawai FROM data_pegawai WHERE status_kepegawaian = "Aktif"', (err, rows) => {
         if (err) {
-            console.error('Error downloading template:', err);
+            console.error('Error querying database:', err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
+
+        const workbook = xlsx.utils.book_new();
+        
+        // Buat sheet baru
+        const worksheetData = [
+            ['nip', 'nama_pegawai', 'bulan_gaji', 'gaji_dasar', 'tunjangan', 'potongan'],
+            ...rows.map(row => [row.nip, row.nama_pegawai, '', '', '', '']) 
+        ];
+        
+        const worksheet = xlsx.utils.aoa_to_sheet(worksheetData);
+
+        // Set format kolom
+        worksheet['!cols'] = [
+            { wch: 20 }, 
+            { wch: 20 }, 
+            { wch: 20 }, 
+            { wch: 15 }, 
+            { wch: 15 }, 
+            { wch: 15 }, 
+        ];
+
+        xlsx.utils.book_append_sheet(workbook, worksheet, 'Template Gaji');
+        
+        const buffer = xlsx.write(workbook, { bookType: 'xlsx', type: 'buffer' });
+        
+        res.setHeader('Content-Disposition', 'attachment; filename="template_data_gaji.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buffer);
     });
 });
 

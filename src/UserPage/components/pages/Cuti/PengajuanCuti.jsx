@@ -32,13 +32,17 @@ const PengajuanCuti = () => {
       });
 
       if (response.status === 201) {
+        // Ambil nama pegawai
+        const { data: pegawai } = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${idPegawai}`);
+        const namaPegawai = pegawai.nama_pegawai;
+
         //Format Tanggal
         const formatTanggalMulai = formatDate(tanggalMulai);
         const formatTanggalSelesai = formatDate(tanggalSelesai);
 
         await axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-admin', {
           id_pegawai: idPegawai,
-          message: `Pegawai dengan ID ${idPegawai} melakukan pengajuan cuti dari ${formatTanggalMulai} hingga ${formatTanggalSelesai}.`
+          message: `${namaPegawai} melakukan pengajuan cuti dari ${formatTanggalMulai} hingga ${formatTanggalSelesai}.`
         });
 
         console.log('Pengajuan Cuti Berhasil');
