@@ -165,6 +165,22 @@ const TambahJadwalPelatihan = () => {
             </div>
             <div>
               <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Deskripsi Kegiatan</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <textarea
+                type="text"
+                name="deskripsi_kegiatan"
+                value={deskripsi_kegiatan}
+                onChange={(e) => setDeskripsi(e.target.value)}
+                rows={4}
+                placeholder="Masukkan deskripsi kegiatan"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full pl-2 rounded-md"
+                required
+              />
+            </div>
+            <div>
+              <div className='flex flex-row mb-2'>
                 <span className='text-gray-900 text-sm font-medium'>Tanggal Selesai</span>
                 <span className='text-red-700'>*</span>
               </div>
@@ -178,21 +194,7 @@ const TambahJadwalPelatihan = () => {
                 required
               />
             </div>
-            <div>
-              <div className='flex flex-row mb-2'>
-                <span className='text-gray-900 text-sm font-medium'>Deskripsi Kegiatan</span>
-                <span className='text-red-700'>*</span>
-              </div>
-              <input
-                type="text"
-                name="deskripsi_kegiatan"
-                value={deskripsi_kegiatan}
-                onChange={(e) => setDeskripsi(e.target.value)}
-                placeholder="Masukkan deskripsi kegiatan"
-                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 rounded-md"
-                required
-              />
-            </div>
+            
           </div>
         </div>
       </div>

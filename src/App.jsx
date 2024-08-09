@@ -31,8 +31,9 @@ import PengajuanCuti from "./UserPage/components/pages/Cuti/PengajuanCuti";
 import HistoriCuti from "./UserPage/components/pages/Cuti/HistoriCuti";
 import PelaporanPelatihan from "./UserPage/components/pages/Pelatihan/PelaporanPelatihan";
 import HistoriPelatihanPegawai from './UserPage/components/pages/Pelatihan/HistoriPelatihanPegawai';
-import DetailPelatihanPegawai from './UserPage/components/pages/Pelatihan/DetailPelatihanPegawai';
+import DetailHistoriPelatihanPegawai from './UserPage/components/pages/Pelatihan/DetailHistoriPelatihanPegawai';
 import JadwalPelatihanPegawai from './UserPage/components/pages/Pelatihan/JadwalPelatihanPegawai';
+import DetailJadwalPelatihanPegawai from './UserPage/components/pages/Pelatihan/DetailJadwalPelatihanPegawai';
 import Kinerja from './UserPage/components/pages/Kinerja/Kinerja';
 import PresensiForm from './UserPage/components/pages/Presensi/PresensiForm';
 import RoleStafDapur from './UserPage/components/pages/Presensi/RoleStafDapur';
@@ -91,7 +92,8 @@ function App() {
             <Route path="/UserPage/pelaporan_pelatihan" element={<PelaporanPelatihan />} />
             <Route path="/UserPage/histori_pelatihan_pegawai" element={<HistoriPelatihanPegawai />} />
             <Route path="/UserPage/jadwal_pelatihan_pegawai" element={<JadwalPelatihanPegawai />} />
-            <Route path="/UserPage/detail_pelatihan_pegawai/:id_pelatihan" element={<DetailPelatihanPegawai />} />
+            <Route path="/UserPage/detail_histori_pelatihan_pegawai/:id_pelatihan" element={<DetailHistoriPelatihanPegawai />} />
+            <Route path="/UserPage/detail_jadwal_pelatihan_pegawai/:id_pelatihan" element={<DetailJadwalPelatihanPegawai />} />
             <Route path="/UserPage/grafik_kinerja" element={<Kinerja />} />
             <Route path="/UserPage/lengkapi_presensi/:id_presensi" element={<PresensiForm />} />
             <Route path="/UserPage/ceklis_harian_staf_dapur/:id_presensi" element={<RoleStafDapur/>} />

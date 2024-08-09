@@ -228,13 +228,13 @@ export default function DetailPegawai() {
                                         <td>Alamat</td>
                                         <td className="p-2">:</td>
                                         <td className="px-2 border border-gray-400 rounded-md">
-                                            <input
-                                                type='text'
+                                            <textarea
                                                 name="alamat"
                                                 value={pegawai.alamat}
                                                 readOnly={!isEditable}
                                                 onChange={handleChange}
                                                 className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                                                rows={3} // Ubah jumlah baris sesuai kebutuhan
                                             />
                                         </td>
                                     </tr>

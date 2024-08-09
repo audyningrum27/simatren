@@ -3,12 +3,10 @@ import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import axios from 'axios';
 import { formatDate } from '../../utils/formatDate';
 import { useNavigate } from 'react-router-dom';
-import { IoIosClose } from "react-icons/io";
 
 function JadwalPelatihanPegawai() {
     const [dataPelatihan, setDataPelatihan] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [showPopup, setShowPopup] = useState(false);
     const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 10;
@@ -45,32 +43,6 @@ function JadwalPelatihanPegawai() {
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
-    };
-
-    const handleButtonClick = (id_pelatihan) => {
-        updateStatusPelatihan(id_pelatihan, 'Proses');
-        setShowPopup(true);
-    };
-
-    const updateStatusPelatihan = async (id_pelatihan, status) => {
-        try {
-            const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
-                { status },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-            setShowPopup(true);
-        } catch (error) {
-            console.error('Error updating status:', error);
-        }
-    };
-
-    const handleClosePopup = () => {
-        setShowPopup(false);
-        navigate('/UserPage/histori_pelatihan_pegawai');
     };
 
     const filteredPelatihan = dataPelatihan.filter((data) =>
@@ -145,12 +117,10 @@ function JadwalPelatihanPegawai() {
                                         <td>{data.nama_kegiatan}</td>
                                         <td>{data.tanggalMulai}</td>
                                         <td>{data.tanggalSelesai}</td>
-                                        <td className='font-semibold text-xs'>
-                                            <button
-                                                className='flex justify-start items-center bg-green-400 px-3 py-1 rounded-sm'
-                                                onClick={() => handleButtonClick(data.id_pelatihan)}
-                                            >
-                                                Oke
+                                        <td className='font-semibold'>
+                                            <button onClick={() => navigate(`/UserPage/detail_jadwal_pelatihan_pegawai/${data.id_pelatihan}`)} className='flex justify-start items-center'>
+                                            Detail
+                                            <HiChevronRight fontSize={18} className='ml-1' />
                                             </button>
                                         </td>
                                     </tr>
@@ -176,21 +146,6 @@ function JadwalPelatihanPegawai() {
                     <button onClick={goToNextPage} disabled={currentPage === totalPages}><HiChevronRight fontSize={18} className='ml-2' /></button>
                 </div>
             </div>
-
-            {showPopup && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-                    <div className="text-green-900 font-medium bg-white p-6 rounded-md shadow-lg text-sm w-96 relative">
-                        <IoIosClose
-                            fontSize={24}
-                            className="absolute top-1 right-1 cursor-pointer text-red-700"
-                            onClick={handleClosePopup}
-                        />
-                        <p>Pelatihan berhasil dikonfirmasi!</p>
-                        <p>Silahkan untuk melaksanakan pelatihan tersebut dan</p>
-                        <p>Kirim bukti pelaksanaan setelah pelatihan selesai!</p>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getPegawaiStatus } from "../../utils/status";
+import { useParams, useNavigate } from 'react-router-dom';
 import moment from 'moment-timezone';
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { PiEmptyBold } from "react-icons/pi";
+import { IoIosClose } from "react-icons/io";
+import axios from 'axios';
 
-const DetailHistoryPelatihan = () => {
+const DetailPelatihanPegawai = () => {
   const { id_pelatihan } = useParams();
   const [pelatihan, setDataPelatihan] = useState(null);
-  const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
+  const [showPopupBatal, setShowPopupBatal] = useState(false);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     fetchDetailPelatihan();
@@ -30,18 +31,44 @@ const DetailHistoryPelatihan = () => {
     }
   };
 
+  const handleButtonOke = (id_pelatihan) => {
+    updateStatusPelatihan(id_pelatihan, 'Proses');
+    setShowPopup(true);
+  };
+
+  const handleButtonBatal = (id_pelatihan) => {
+    updateStatusPelatihan(id_pelatihan, 'Tidak Diambil');
+    setShowPopupBatal(true);
+  };
+
+  const updateStatusPelatihan = async (id_pelatihan, status) => {
+      try {
+          const token = localStorage.getItem('token');
+          await axios.put(`http://localhost:5000/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
+              { status },
+              {
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                  }
+              });
+          setShowPopup(true);
+      } catch (error) {
+          console.error('Error updating status:', error);
+      }
+  };
+
+  const handleClosePopup = () => {
+      setShowPopup(false);
+      navigate('/UserPage/histori_pelatihan_pegawai');
+  };
+
   if (!pelatihan) {
     return <div>Loading...</div>;
   }
 
-  const viewBuktiPelaksanaan = () => {
-    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-bukti/${id_pelatihan}`;
-    window.open(url, '_blank');
-  };
-
   return (
     <div className="px-5">
-      <span className="text-2xl text-gray-950 font-semibold flex justify-center mb-5">Detail Histori Pelatihan</span>
+      <span className="text-2xl text-gray-950 font-semibold flex justify-center mb-5">Detail Jadwal Pelatihan</span>
 
       <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col justify-between'>
         <div className="box-border rounded-sm border border-gray-200 flex-1 shadow-lg overflow-auto">
@@ -49,30 +76,6 @@ const DetailHistoryPelatihan = () => {
             <div className="flex-1">
               <table className='w-full border-separate p-5 text-gray-950 text-sm'>
                 <tbody>
-                  <tr>
-                    <td>Nomor Induk Pegawai</td>
-                    <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">
-                      <input
-                        type="number"
-                        name="nip"
-                        value={pelatihan.nip}
-                        className="w-full border-none bg-transparent focus:outline-none"
-                      />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Nama Pegawai</td>
-                    <td className="p-2">:</td>
-                    <td className="px-2 border border-gray-400 rounded-md">
-                      <input
-                        type="text"
-                        name="nama_pegawai"
-                        value={pelatihan.nama_pegawai}
-                        className="w-full border-none bg-transparent focus:outline-none"
-                      />
-                    </td>
-                  </tr>
                   <tr>
                     <td>Nama Penyelenggara</td>
                     <td className="p-2">:</td>
@@ -82,6 +85,7 @@ const DetailHistoryPelatihan = () => {
                         name="nama_penyelenggara"
                         value={pelatihan.nama_penyelenggara}
                         className="w-full border-none bg-transparent focus:outline-none"
+                        readOnly
                       />
                     </td>
                   </tr>
@@ -94,6 +98,7 @@ const DetailHistoryPelatihan = () => {
                         name="nama_kegiatan"
                         value={pelatihan.nama_kegiatan}
                         className="w-full border-none bg-transparent focus:outline-none"
+                        readOnly
                       />
                     </td>
                   </tr>
@@ -102,10 +107,11 @@ const DetailHistoryPelatihan = () => {
                     <td className="p-2">:</td>
                     <td className="px-2 border border-gray-400 rounded-md">
                       <input
-                        type="date"
+                        type="text"
                         name="tanggal_mulai"
-                        value={moment(pelatihan.tanggal_mulai, 'DD/MM/YYYY').format('YYYY-MM-DD')}
+                        value={pelatihan.tanggal_mulai}
                         className="w-full border-none bg-transparent focus:outline-none"
+                        readOnly
                       />
                     </td>
                   </tr>
@@ -114,10 +120,11 @@ const DetailHistoryPelatihan = () => {
                     <td className="p-2">:</td>
                     <td className="px-2 border border-gray-400 rounded-md">
                       <input
-                        type="date"
+                        type="text"
                         name="tanggal_selesai"
-                        value={moment(pelatihan.tanggal_selesai, 'DD/MM/YYYY').format('YYYY-MM-DD')}
+                        value={pelatihan.tanggal_selesai}
                         className="w-full border-none bg-transparent focus:outline-none"
+                        readOnly
                       />
                     </td>
                   </tr>
@@ -126,60 +133,67 @@ const DetailHistoryPelatihan = () => {
                     <td className="p-2">:</td>
                     <td className="px-2 border border-gray-400 rounded-md">
                       <textarea
+                        type="text"
                         name="deskripsi_kegiatan"
+                        rows={3}
                         value={pelatihan.deskripsi_kegiatan}
-                        className="w-full border-none bg-transparent focus:outline-none resize-none"
-                        rows="4"
+                        className="w-full border-none bg-transparent focus:outline-none"
                         readOnly
                       />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Status</td>
-                    <td className="p-2">:</td>
-                    <td>{getPegawaiStatus(pelatihan.status)}</td>
-                  </tr>
-                  <tr>
-                    <td>Bukti Pelaksanaan</td>
-                    <td className="p-2">:</td>
-                    <td className='font-semibold text-xs'>
-                      {pelatihan.bukti_pelaksanaan ? (
-                        <button
-                          className='flex justify-start items-center bg-green-500 px-3 py-1 rounded-sm'
-                          onClick={viewBuktiPelaksanaan}
-                        >
-                          <MdOutlineRemoveRedEye fontSize={16} className='mr-1'/>
-                          Lihat
-                        </button>
-                      ) : (
-                        <div>
-                          <button
-                            className='flex justify-start items-center bg-gray-300 text-gray-700 px-3 py-1 rounded-sm'
-                            disabled
-                          >
-                            <PiEmptyBold fontSize={18} className='mr-1'/>
-                            Belum ada data
-                          </button>
-                        </div>
-                      )}
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
-      </div>
-
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
-            <p>{popupMessage}</p>
+          {/* Buttons */}
+          <div className="flex justify-end space-x-2 m-10">
+            <button
+              className='flex justify-start items-center bg-green-700 px-3 py-1 rounded-sm'
+              onClick={() => handleButtonOke(pelatihan.id_pelatihan)}
+            >
+            Oke
+            </button>
+            <button
+              className='flex justify-start items-center bg-red-500 px-3 py-1 rounded-sm'
+              onClick={() => handleButtonBatal(pelatihan.id_pelatihan)}
+            >
+            Batal
+            </button>
           </div>
         </div>
-      )}
-    </div>
-  )
-}
 
-export default DetailHistoryPelatihan;
+        {showPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="text-green-900 font-medium bg-white p-6 rounded-md shadow-lg text-sm w-96 relative">
+              <IoIosClose
+              fontSize={24}
+              className="absolute top-1 right-1 cursor-pointer text-red-700"
+              onClick={handleClosePopup}
+            />
+              <p>Pelatihan berhasil dikonfirmasi!</p>
+              <p>Silahkan untuk melaksanakan pelatihan tersebut dan</p>
+              <p>Kirim bukti pelaksanaan setelah pelatihan selesai!</p>
+            </div>
+          </div>
+        )}
+
+        {showPopupBatal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="text-green-900 font-medium bg-white p-6 rounded-md shadow-lg text-sm w-96 relative">
+              <IoIosClose
+              fontSize={24}
+              className="absolute top-1 right-1 cursor-pointer text-red-700"
+              onClick={handleClosePopup}
+            />
+              <p>Pelatihan tidak diambil!</p>
+              <p>Hubungi admin untuk perubahan keputusan mendatang!</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default DetailPelatihanPegawai;

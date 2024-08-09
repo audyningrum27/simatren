@@ -120,7 +120,7 @@ function HistoriPelatihanPegawai() {
                   <td>{pelatihan.tanggalSelesai}</td>
                   <td>{getStatus(pelatihan.status)}</td>
                   <td className='font-semibold'>
-                    <button onClick={() => navigate(`/UserPage/detail_pelatihan_pegawai/${pelatihan.id_pelatihan}`)} className='flex justify-start items-center'>
+                    <button onClick={() => navigate(`/UserPage/detail_histori_pelatihan_pegawai/${pelatihan.id_pelatihan}`)} className='flex justify-start items-center'>
                       Detail
                       <HiChevronRight fontSize={18} className='ml-2' />
                     </button>

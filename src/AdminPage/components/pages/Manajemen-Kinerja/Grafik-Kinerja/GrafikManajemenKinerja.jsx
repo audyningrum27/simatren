@@ -12,18 +12,18 @@ const GrafikManajemenKinerja = () => {
   return (
     <div>
       <p className="text-xl font-bold mb-4 px-5">Laporan Kinerja</p>
-      <div className="px-3">
+      <div className="px-5">
         <table className="min-w-[50%]">
           <tbody>
             <tr>
-              <td className="py-2 font-semibold">Nama</td>
+              <td className="font-semibold">Nama</td>
               <td className="py-2">:</td>
               <td className="py-2">{nama}</td>
             </tr>
             <tr>
-              <td className="py-2 font-semibold">NIP</td>
-              <td className="py-2">:</td>
-              <td className="py-2">{nip}</td>
+              <td className="font-semibold">NIP</td>
+              <td>:</td>
+              <td>{nip}</td>
             </tr>
           </tbody>
         </table>

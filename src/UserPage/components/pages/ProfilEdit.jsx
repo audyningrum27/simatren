@@ -321,13 +321,14 @@ const ProfilEdit = () => {
                                 <td className="w-1/3">Alamat</td>
                                 <td className="p-2">:</td>
                                 <td className="px-2 border border-gray-400 rounded-md">
-                                    <input
+                                    <textarea
                                         type="text"
                                         name="alamat"
                                         value={profil.alamat}
                                         readOnly={!isEditable}
                                         onChange={handleChange}
                                         className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
+                                        rows={3}
                                     />
                                 </td>
                             </tr>
