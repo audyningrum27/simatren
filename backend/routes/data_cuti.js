@@ -1,6 +1,15 @@
 import express from 'express';
 import db from '../db.js';
 import multer from 'multer';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+// Mendapatkan direktori dari file ini
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Path ke file template
+const TEMPLATE_PATH = path.join(__dirname, '../templates/form_izin_template.docx');
 
 const router = express.Router();
 
@@ -330,5 +339,14 @@ router.get('/notifikasi/:id_pegawai', (req, res) => {
       return res.json(results);
     });
 });  
+
+router.get('/download-template-cuti', (req, res) => {
+    res.download(TEMPLATE_PATH, 'form_izin_template.docx', (err) => {
+        if (err) {
+            console.error('Error downloading file:', err);
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
+    });
+});
 
 export default router;

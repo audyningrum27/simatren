@@ -1,18 +1,18 @@
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import axios from 'axios';
 import moment from 'moment';
 import { formatDate } from '../../utils/formatDate';
+import { GoDownload } from "react-icons/go";
 
 const PengajuanCuti = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [tanggalMulai, setTanggalMulai] = useState('');
   const [tanggalSelesai, setTanggalSelesai] = useState('');
   const [buktiFormIzin, setBuktiFormIzin] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
   const idPegawai = localStorage.getItem('id_pegawai');
-
   const today = moment().tz('Asia/Jakarta').format('YYYY-MM-DD');
 
   const handleSubmit = async (e) => {
@@ -36,7 +36,7 @@ const PengajuanCuti = () => {
         const { data: pegawai } = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${idPegawai}`);
         const namaPegawai = pegawai.nama_pegawai;
 
-        //Format Tanggal
+        // Format Tanggal
         const formatTanggalMulai = formatDate(tanggalMulai);
         const formatTanggalSelesai = formatDate(tanggalSelesai);
 
@@ -54,6 +54,26 @@ const PengajuanCuti = () => {
       console.error('Error submitting cuti:', error);
     }
   };
+
+  const handleDownloadTemplate = async () => {
+    try {
+        const response = await axios.get('http://localhost:5000/api/data_cuti/download-template-cuti', {
+            responseType: 'blob',
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'form_izin_template.docx');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } catch (error) {
+        console.error('Error downloading template:', error);
+        alert('Failed to download template.');
+    }
+};
+
 
   useEffect(() => {
     if (showPopup) {
@@ -82,8 +102,20 @@ const PengajuanCuti = () => {
         </div>
       </div>
 
-      <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-betwee'>
+      <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-between'>
         <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
+
+          {/* Button Download Template */}
+          <div className="flex justify-between mb-4">
+            <button
+              type="button"
+              onClick={handleDownloadTemplate}
+              className="flex flex-row w-fit text-black bg-gray-100 border border-gray-400 focus:outline-none rounded-md text-sm px-1.5 py-1.5 text-center"
+            >
+              Download Form Izin
+              <GoDownload fontSize={18} className='ml-1'/>
+            </button>
+          </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
@@ -147,7 +179,7 @@ const PengajuanCuti = () => {
         <button
           type="submit"
           onClick={handleSubmit}
-          className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white focus:outline-none  font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+          className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
         >
           Kirim
         </button>
@@ -160,9 +192,8 @@ const PengajuanCuti = () => {
           </div>
         </div>
       )}
-
     </div>
-  )
-}
+  );
+};
 
 export default PengajuanCuti;
