@@ -30,7 +30,7 @@ function HistoriPelatihanPegawai() {
         }
       });
       const data = response.data
-        .filter(item => item.status === 'Selesai' || item.status === 'Proses')
+        .filter(item => item.status === 'Selesai' || item.status === 'Proses' || item.status === 'Belum Acc' || item.status === 'Ditolak')
         .map(item => ({
           ...item,
           tanggalMulai: formatDate(item.tanggal_mulai),
@@ -48,7 +48,7 @@ function HistoriPelatihanPegawai() {
 
   const filteredPelatihan = historiPelatihanPegawai.filter((data) =>
     data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nama_penyelenggara.toLowerCase().includes(searchTerm.toLowerCase())
+    data.status.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredPelatihan.length / itemsPerPage);

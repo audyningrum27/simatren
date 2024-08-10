@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getPegawaiStatus } from "../../utils/status";
 import moment from 'moment-timezone';
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { PiEmptyBold } from "react-icons/pi";
+import axios from 'axios';
 
 const DetailHistoryPelatihan = () => {
   const { id_pelatihan } = useParams();
+  const navigate = useNavigate();
   const [pelatihan, setDataPelatihan] = useState(null);
-  const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
@@ -30,9 +31,53 @@ const DetailHistoryPelatihan = () => {
     }
   };
 
+  const handleButtonYes = (id_pelatihan) => {
+    updateStatusPelatihan(id_pelatihan, 'Selesai');
+  };
+
+  const handleButtonNo = (id_pelatihan) => {
+    updateStatusPelatihan(id_pelatihan, 'Ditolak');
+  };
+
+  const updateStatusPelatihan = async (id_pelatihan, status) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`http://localhost:5000/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
+        { status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+      // Menambahkan notifikasi
+      const message = `Pelaporan pelatihan Anda telah ${status === 'Selesai' ? 'disetujui' : 'ditolak'}.`;
+      await axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-pegawai/accpelatihan', {
+        id_pegawai: pelatihan.id_pegawai,
+        message,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setShowPopup(true);
+      setTimeout(() => {
+        setShowPopup(false);
+        navigate('/AdminPage/histori_pelatihan');
+      }, 2000);
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
+  };
+
   if (!pelatihan) {
     return <div>Loading...</div>;
   }
+
+  const viewBrosurPelatihan = (id_pelatihan) => {
+    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
+    window.open(url, '_blank');
+  };
 
   const viewBuktiPelaksanaan = () => {
     const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-bukti/${id_pelatihan}`;
@@ -135,6 +180,31 @@ const DetailHistoryPelatihan = () => {
                     </td>
                   </tr>
                   <tr>
+                    <td>Brosur Pelatihan</td>
+                    <td className="p-2">:</td>
+                    <td className="font-semibold text-xs">
+                      {pelatihan.brosur_pelatihan ? (
+                        <button
+                          className='flex justify-start items-center bg-green-500 px-3 py-1 rounded-sm'
+                          onClick={() => pelatihan.brosur_pelatihan && viewBrosurPelatihan(pelatihan.id_pelatihan)}
+                        >
+                          <MdOutlineRemoveRedEye fontSize={16} className='mr-1' />
+                          Lihat
+                        </button>
+                      ) : (
+                        <div>
+                          <button
+                            className='flex justify-start items-center bg-gray-300 px-2 py-1 text-gray-900'
+                            disabled
+                          >
+                            <PiEmptyBold fontSize={18} className='mr-1' />
+                            Tidak ada
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                  <tr>
                     <td>Status</td>
                     <td className="p-2">:</td>
                     <td>{getPegawaiStatus(pelatihan.status)}</td>
@@ -148,7 +218,7 @@ const DetailHistoryPelatihan = () => {
                           className='flex justify-start items-center bg-green-500 px-3 py-1 rounded-sm'
                           onClick={viewBuktiPelaksanaan}
                         >
-                          <MdOutlineRemoveRedEye fontSize={16} className='mr-1'/>
+                          <MdOutlineRemoveRedEye fontSize={16} className='mr-1' />
                           Lihat
                         </button>
                       ) : (
@@ -157,7 +227,7 @@ const DetailHistoryPelatihan = () => {
                             className='flex justify-start items-center bg-gray-300 text-gray-700 px-3 py-1 rounded-sm'
                             disabled
                           >
-                            <PiEmptyBold fontSize={18} className='mr-1'/>
+                            <PiEmptyBold fontSize={18} className='mr-1' />
                             Belum ada data
                           </button>
                         </div>
@@ -168,16 +238,33 @@ const DetailHistoryPelatihan = () => {
               </table>
             </div>
           </div>
+          {/* Buttons */}
+          {pelatihan.status === 'Belum Acc' && (
+            <div className="flex justify-end space-x-4 m-5 font-semibold text-xs">
+              <button
+                className='flex justify-start items-center bg-green-500 px-4 py-2 rounded-md'
+                onClick={() => handleButtonYes(pelatihan.id_pelatihan)}
+              >
+                Setujui
+              </button>
+              <button
+                className='flex justify-start items-center bg-red-500 px-4 py-2 rounded-md'
+                onClick={() => handleButtonNo(pelatihan.id_pelatihan)}
+              >
+                Tolak
+              </button>
+            </div>
+          )}
+
+          {showPopup && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
+                <p>Status pelatihan berhasil diperbarui!</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white font-semibold text-green-900 p-5 rounded-md shadow-lg">
-            <p>{popupMessage}</p>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

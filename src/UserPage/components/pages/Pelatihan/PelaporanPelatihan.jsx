@@ -65,6 +65,7 @@ const PelaporanPelatihan = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('bukti_pelaksanaan', buktiKegiatan);
+    const idPegawai = localStorage.getItem('id_pegawai');
 
     try {
       await axios.post(`http://localhost:5000/api/data_pelatihan/upload-bukti/${selectedPelatihan}`, formData, {
@@ -72,6 +73,15 @@ const PelaporanPelatihan = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
+
+      // Ambil nama pegawai dan kirim notifikasi
+      const { data } = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${idPegawai}`);
+      const notifikasiData = {
+        id_pegawai: idPegawai,
+        message: `${data.nama_pegawai} mengirimkan pelaporan pelatihan.`
+      };
+
+      await axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-admin/pelatihan', notifikasiData);
       setShowPopup(true);
     } catch (error) {
       console.error('Error uploading bukti pelaksanaan:', error);

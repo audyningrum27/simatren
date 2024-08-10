@@ -40,7 +40,7 @@ const PengajuanCuti = () => {
         const formatTanggalMulai = formatDate(tanggalMulai);
         const formatTanggalSelesai = formatDate(tanggalSelesai);
 
-        await axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-admin', {
+        await axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-admin/cuti', {
           id_pegawai: idPegawai,
           message: `${namaPegawai} melakukan pengajuan cuti dari ${formatTanggalMulai} hingga ${formatTanggalSelesai}.`
         });

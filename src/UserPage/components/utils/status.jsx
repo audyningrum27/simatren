@@ -30,6 +30,12 @@ export function getStatus(status) {
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			)
+		case 'Belum Acc':
+			return (
+				<span className="capitalize py-1 px-2 rounded-md text-xs text-yellow-600 bg-yellow-100 font-semibold">
+					{status.replaceAll('_', ' ').toLowerCase()}
+				</span>
+			)
 		case 'Tidak Diambil':
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-red-500 bg-red-100 font-semibold">

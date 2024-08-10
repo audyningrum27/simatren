@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import moment from 'moment-timezone';
 import { IoIosClose } from "react-icons/io";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { PiEmptyBold } from "react-icons/pi";
 import axios from 'axios';
 
 const DetailPelatihanPegawai = () => {
@@ -31,40 +33,44 @@ const DetailPelatihanPegawai = () => {
     }
   };
 
-  const handleButtonOke = (id_pelatihan) => {
+  const handleButtonYes = (id_pelatihan) => {
     updateStatusPelatihan(id_pelatihan, 'Proses');
     setShowPopup(true);
   };
 
-  const handleButtonBatal = (id_pelatihan) => {
+  const handleButtonNo = (id_pelatihan) => {
     updateStatusPelatihan(id_pelatihan, 'Tidak Diambil');
     setShowPopupBatal(true);
   };
 
   const updateStatusPelatihan = async (id_pelatihan, status) => {
-      try {
-          const token = localStorage.getItem('token');
-          await axios.put(`http://localhost:5000/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
-              { status },
-              {
-                  headers: {
-                      Authorization: `Bearer ${token}`
-                  }
-              });
-          setShowPopup(true);
-      } catch (error) {
-          console.error('Error updating status:', error);
-      }
+    try {
+      const token = localStorage.getItem('token');
+      await axios.put(`http://localhost:5000/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
+        { status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      setShowPopup(true);
+    } catch (error) {
+      console.error('Error updating status:', error);
+    }
   };
 
   const handleClosePopup = () => {
-      setShowPopup(false);
-      navigate('/UserPage/histori_pelatihan_pegawai');
+    setShowPopup(false);
+    navigate('/UserPage/histori_pelatihan_pegawai');
   };
 
   if (!pelatihan) {
     return <div>Loading...</div>;
   }
+  const viewBrosurPelatihan = (id_pelatihan) => {
+    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="px-5">
@@ -142,23 +148,48 @@ const DetailPelatihanPegawai = () => {
                       />
                     </td>
                   </tr>
+                  <tr>
+                    <td>Brosur Pelatihan</td>
+                    <td className="p-2">:</td>
+                    <td className="font-semibold text-xs">
+                      {pelatihan.brosur_pelatihan ? (
+                        <button
+                          className='flex justify-start items-center bg-green-500 px-3 py-1 rounded-sm'
+                          onClick={() => pelatihan.brosur_pelatihan && viewBrosurPelatihan(pelatihan.id_pelatihan)}
+                        >
+                          <MdOutlineRemoveRedEye fontSize={16} className='mr-1' />
+                          Lihat
+                        </button>
+                      ) : (
+                        <div>
+                          <button
+                            className='flex justify-start items-center bg-gray-300 px-2 py-1 text-gray-900'
+                            disabled
+                          >
+                            <PiEmptyBold fontSize={18} className='mr-1' />
+                            Tidak ada
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
           {/* Buttons */}
-          <div className="flex justify-end space-x-2 m-10">
+          <div className="flex justify-end space-x-4 m-10 font-semibold text-xs">
             <button
-              className='flex justify-start items-center bg-green-700 px-3 py-1 rounded-sm'
-              onClick={() => handleButtonOke(pelatihan.id_pelatihan)}
+              className='flex justify-start items-center bg-green-500 px-4 py-2 rounded-md'
+              onClick={() => handleButtonYes(pelatihan.id_pelatihan)}
             >
-            Oke
+              Ambil
             </button>
             <button
-              className='flex justify-start items-center bg-red-500 px-3 py-1 rounded-sm'
-              onClick={() => handleButtonBatal(pelatihan.id_pelatihan)}
+              className='flex justify-start items-center bg-red-500 px-4 py-2 rounded-md'
+              onClick={() => handleButtonNo(pelatihan.id_pelatihan)}
             >
-            Batal
+              Tidak Ambil
             </button>
           </div>
         </div>
@@ -167,10 +198,10 @@ const DetailPelatihanPegawai = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="text-green-900 font-medium bg-white p-6 rounded-md shadow-lg text-sm w-96 relative">
               <IoIosClose
-              fontSize={24}
-              className="absolute top-1 right-1 cursor-pointer text-red-700"
-              onClick={handleClosePopup}
-            />
+                fontSize={24}
+                className="absolute top-1 right-1 cursor-pointer text-red-700"
+                onClick={handleClosePopup}
+              />
               <p>Pelatihan berhasil dikonfirmasi!</p>
               <p>Silahkan untuk melaksanakan pelatihan tersebut dan</p>
               <p>Kirim bukti pelaksanaan setelah pelatihan selesai!</p>
@@ -182,10 +213,10 @@ const DetailPelatihanPegawai = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="text-green-900 font-medium bg-white p-6 rounded-md shadow-lg text-sm w-96 relative">
               <IoIosClose
-              fontSize={24}
-              className="absolute top-1 right-1 cursor-pointer text-red-700"
-              onClick={handleClosePopup}
-            />
+                fontSize={24}
+                className="absolute top-1 right-1 cursor-pointer text-red-700"
+                onClick={handleClosePopup}
+              />
               <p>Pelatihan tidak diambil!</p>
               <p>Hubungi admin untuk perubahan keputusan mendatang!</p>
             </div>

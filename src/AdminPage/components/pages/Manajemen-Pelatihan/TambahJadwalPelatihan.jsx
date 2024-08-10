@@ -12,6 +12,7 @@ const TambahJadwalPelatihan = () => {
   const [deskripsi_kegiatan, setDeskripsi] = useState('');
   const [tanggal_mulai, setTanggalMulai] = useState('');
   const [tanggal_selesai, setTanggalSelesai] = useState('');
+  const [brosur_pelatihan, setBrosurPelatihan] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
@@ -33,6 +34,10 @@ const TambahJadwalPelatihan = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    setBrosurPelatihan(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const dataPelatihan = {
@@ -41,12 +46,17 @@ const TambahJadwalPelatihan = () => {
       nama_kegiatan,
       tanggal_mulai,
       tanggal_selesai,
+      brosur_pelatihan,
       deskripsi_kegiatan
     };
 
     try {
       // Tambahkan jadwal pelatihan
-      await axios.post('http://localhost:5000/api/data_pelatihan/pelatihan', dataPelatihan);
+      await axios.post('http://localhost:5000/api/data_pelatihan/pelatihan', dataPelatihan, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
 
       //Format Tanggal
       const formatTanggalMulai = formatDate(tanggal_mulai);
@@ -70,6 +80,7 @@ const TambahJadwalPelatihan = () => {
       setTanggalMulai('');
       setTanggalSelesai('');
       setDeskripsi('');
+      setBrosurPelatihan(null);
       setShowPopup(true);
 
     } catch (error) {
@@ -165,6 +176,34 @@ const TambahJadwalPelatihan = () => {
             </div>
             <div>
               <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Tanggal Selesai</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <input
+                type="date"
+                name="tanggal_selesai"
+                value={tanggal_selesai}
+                onChange={(e) => setTanggalSelesai(e.target.value)}
+                placeholder="Pilih tanggal selesai"
+                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 pr-2 rounded-md ${tanggal_selesai ? 'text-black' : 'text-gray-400'}`}
+                required
+              />
+            </div>
+            <div>
+              <div className='flex flex-row mb-2'>
+                <span className='text-gray-900 text-sm font-medium'>Brosur Pelatihan</span>
+                <span className='text-red-700'>*</span>
+              </div>
+              <input
+                type="file"
+                name="brosur_pelatihan"
+                onChange={handleFileChange}
+                accept=".jpeg, .jpg, .png, .pdf"
+                className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 pr-2 py-1.5 rounded-md"
+              />
+            </div>
+            <div>
+              <div className='flex flex-row mb-2'>
                 <span className='text-gray-900 text-sm font-medium'>Deskripsi Kegiatan</span>
                 <span className='text-red-700'>*</span>
               </div>
@@ -179,22 +218,6 @@ const TambahJadwalPelatihan = () => {
                 required
               />
             </div>
-            <div>
-              <div className='flex flex-row mb-2'>
-                <span className='text-gray-900 text-sm font-medium'>Tanggal Selesai</span>
-                <span className='text-red-700'>*</span>
-              </div>
-              <input
-                type="date"
-                name="tanggal_selesai"
-                value={tanggal_selesai}
-                onChange={(e) => setTanggalSelesai(e.target.value)}
-                placeholder="Pilih tanggal selesai"
-                className={`text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-2 pr-2 rounded-md ${tanggal_selesai ? 'text-black' : 'text-gray-400'}`}
-                required
-              />
-            </div>
-            
           </div>
         </div>
       </div>
