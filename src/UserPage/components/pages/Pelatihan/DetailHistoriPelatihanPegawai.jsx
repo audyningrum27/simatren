@@ -32,6 +32,11 @@ const DetailPelatihanPegawai = () => {
     return <div>Loading...</div>;
   }
 
+  const viewBrosurPelatihan = (id_pelatihan) => {
+    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
+    window.open(url, '_blank');
+  };
+
   const viewBuktiPelaksanaan = () => {
     const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-bukti/${id_pelatihan}`;
     window.open(url, '_blank');
@@ -109,9 +114,29 @@ const DetailPelatihanPegawai = () => {
                     </td>
                   </tr>
                   <tr>
-                    <td>Status</td>
+                    <td>Brosur Pelatihan</td>
                     <td className="p-2">:</td>
-                    <td>{getStatus(pelatihan.status)}</td>
+                    <td className="font-semibold text-xs">
+                      {pelatihan.brosur_pelatihan ? (
+                        <button
+                          className='flex justify-start items-center bg-green-500 px-3 py-1 rounded-sm'
+                          onClick={() => pelatihan.brosur_pelatihan && viewBrosurPelatihan(pelatihan.id_pelatihan)}
+                        >
+                          <MdOutlineRemoveRedEye fontSize={16} className='mr-1' />
+                          Lihat
+                        </button>
+                      ) : (
+                        <div>
+                          <button
+                            className='flex justify-start items-center bg-gray-300 px-2 py-1 text-gray-900'
+                            disabled
+                          >
+                            <PiEmptyBold fontSize={18} className='mr-1' />
+                            Tidak ada
+                          </button>
+                        </div>
+                      )}
+                    </td>
                   </tr>
                   <tr>
                     <td>Bukti Pelaksanaan</td>
@@ -137,6 +162,11 @@ const DetailPelatihanPegawai = () => {
                         </div>
                       )}
                     </td>
+                  </tr>
+                  <tr>
+                    <td>Status</td>
+                    <td className="p-2">:</td>
+                    <td>{getStatus(pelatihan.status)}</td>
                   </tr>
                 </tbody>
               </table>

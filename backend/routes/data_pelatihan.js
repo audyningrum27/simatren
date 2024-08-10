@@ -95,6 +95,7 @@ router.get('/pelatihan/:id_pelatihan', (req, res) => {
         pel.tanggal_mulai,
         pel.tanggal_selesai,
         pel.deskripsi_kegiatan,
+        pel.brosur_pelatihan,
         pel.status,
         pel.bukti_pelaksanaan
     FROM 
@@ -156,7 +157,7 @@ router.get('/pelatihan/view-bukti/:id_pelatihan', (req, res) => {
                 } else if (fileSignature === '25504446') {
                     contentType = 'application/pdf';
                 }
-                
+
                 res.setHeader('Content-Type', contentType);
                 res.send(buffer);
             } else {
@@ -168,15 +169,53 @@ router.get('/pelatihan/view-bukti/:id_pelatihan', (req, res) => {
     });
 });
 
+// Menampilkan Brosur Pelatihan
+router.get('/pelatihan/view-brosur/:id_pelatihan', (req, res) => {
+    const { id_pelatihan } = req.params;
+
+    const sql = 'SELECT brosur_pelatihan FROM data_pelatihan WHERE id_pelatihan = ?';
+    db.query(sql, [id_pelatihan], (err, result) => {
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        if (result.length > 0) {
+            const brosurPelatihan = result[0].brosur_pelatihan;
+            if (brosurPelatihan) {
+                const buffer = Buffer.from(brosurPelatihan, 'base64');
+
+                // Default type is jpeg
+                let contentType = 'image/jpeg';
+                const fileSignature = buffer.slice(0, 4).toString('hex');
+
+                if (fileSignature === '89504e47') {
+                    contentType = 'image/png';
+                } else if (fileSignature === '25504446') {
+                    contentType = 'application/pdf';
+                }
+
+                res.setHeader('Content-Type', contentType);
+                res.send(buffer);
+            } else {
+                res.status(404).json({ error: 'Brosur Pelatihan Izin not found' });
+            }
+        } else {
+            res.status(404).json({ error: 'Pelatihan not found' });
+        }
+    });
+});
+
 // Menambah Jadwal Pelatihan
-router.post('/pelatihan', (req, res) => {
+router.post('/pelatihan', upload.single('brosur_pelatihan'), (req, res) => {
     const { id_pegawai, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan } = req.body;
+    const brosur_pelatihan = req.file.buffer;
     const status = 'Belum Dimulai';
-    const query = `INSERT INTO data_pelatihan (id_pegawai, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const query = `INSERT INTO data_pelatihan (id_pegawai, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, brosur_pelatihan, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
     let promises = id_pegawai.map(id => {
         return new Promise((resolve, reject) => {
-            db.query(query, [id, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, status], (err, result) => {
+            db.query(query, [id, nama_penyelenggara, nama_kegiatan, tanggal_mulai, tanggal_selesai, deskripsi_kegiatan, brosur_pelatihan, status], (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -333,7 +372,7 @@ router.post('/upload-bukti/:id_pelatihan', upload.single('bukti_pelaksanaan'), (
     const fileBuffer = file.buffer;
 
     const query = 'UPDATE data_pelatihan SET bukti_pelaksanaan = ?, status = ? WHERE id_pelatihan = ? AND status = ?';
-    db.query(query, [fileBuffer, 'Selesai', id_pelatihan, 'Proses'], (err, result) => {
+    db.query(query, [fileBuffer, 'Belum Acc', id_pelatihan, 'Proses'], (err, result) => {
         if (err) {
             console.error('Error uploading file to the database:', err);
             return res.status(500).json({ message: 'Error uploading file' });

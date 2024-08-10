@@ -4,6 +4,7 @@ import { TbCheck } from "react-icons/tb";
 import { IoMdClose } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import { getPegawaiStatus } from '../../utils/status';
+import { formatDate } from '../../utils/formatDate';
 
 function HistoryPelatihan() {
   const [historiPelatihan, setHistoriPelatihan] = useState([]);
@@ -19,7 +20,7 @@ function HistoryPelatihan() {
     try {
       const response = await fetch('http://localhost:5000/api/data_pelatihan/pelatihan');
       const data = await response.json();
-      const filteredData = data.filter(item => item.status === 'Selesai');
+      const filteredData = data.filter(item => item.status === 'Selesai' || item.status === 'Ditolak' || item.status === 'Belum Acc');
       setHistoriPelatihan(filteredData);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -35,8 +36,7 @@ function HistoryPelatihan() {
   const filteredPelatihan = historiPelatihan.filter((data) =>
     data.nama_kegiatan.toLowerCase().includes(searchTerm.toLowerCase()) ||
     data.nama_pegawai.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nama_penyelenggara.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    data.nip.toLowerCase().includes(searchTerm.toLowerCase())
+    data.status.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredPelatihan.length / itemsPerPage);
@@ -83,8 +83,9 @@ function HistoryPelatihan() {
                 <td className='font-bold py-4'>No.</td>
                 <td className='font-bold py-4'>NIP</td>
                 <td className='font-bold py-4'>Nama Pegawai</td>
-                <td className='font-bold py-4'>Penyelenggara</td>
                 <td className='font-bold py-4'>Nama Kegiatan</td>
+                <td className='font-bold py-4'>Tanggal Mulai</td>
+                <td className='font-bold py-4'>Tanggal Selesai</td>
                 <td className='font-bold py-4'>Status</td>
                 <td className='font-bold py-4'>Action</td>
               </tr>
@@ -103,8 +104,9 @@ function HistoryPelatihan() {
                   <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
                   <td>{data.nip}</td>
                   <td>{data.nama_pegawai}</td>
-                  <td>{data.nama_penyelenggara}</td>
                   <td>{data.nama_kegiatan}</td>
+                  <td>{formatDate(data.tanggal_mulai)}</td>
+                  <td>{formatDate(data.tanggal_selesai)}</td>
                   <td>{getPegawaiStatus(data.status)}</td>
                   <td className='font-semibold'>
                     <button onClick={() => navigate(`/AdminPage/detail_history_pelatihan/${data.id_pelatihan}`)} className='flex justify-start items-center'>

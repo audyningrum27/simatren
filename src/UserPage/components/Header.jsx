@@ -28,15 +28,18 @@ const Header = ({ isOpen, setIsOpen }) => {
     try {
       const response = await axios.all([
         axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-cuti/${idPegawai}`),
-        axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-pelatihan/${idPegawai}`)
+        axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-pelatihan/${idPegawai}`),
+        axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-acc-pelatihan/${idPegawai}`)
       ]);
 
       const cutiNotifications = response[0].data;
       const pelatihanNotifications = response[1].data;
+      const accPelatihanNotifications = response[2].data;
 
       setNotifications([
         ...cutiNotifications.filter(n => n.status !== 'read'),
-        ...pelatihanNotifications.filter(n => n.status !== 'read')
+        ...pelatihanNotifications.filter(n => n.status !== 'read'),
+        ...accPelatihanNotifications.filter(n => n.status !== 'read')
       ]);
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -58,9 +61,18 @@ const Header = ({ isOpen, setIsOpen }) => {
 
   const handleNotificationClick = async (notification) => {
     try {
-      const endpoint = notification.category === 'cuti'
-        ? `http://localhost:5000/api/data_notifikasi/notifikasi-cuti/${notification.id_notifikasi}`
-        : `http://localhost:5000/api/data_notifikasi/notifikasi-pelatihan/${notification.id_notifikasi}`;
+      let endpoint, path;
+
+      if (notification.category === 'cuti') {
+        endpoint = `http://localhost:5000/api/data_notifikasi/notifikasi-cuti/${notification.id_notifikasi}`;
+        path = '/UserPage/histori_cuti';
+      } else if (notification.category === 'pelatihan') {
+        endpoint = `http://localhost:5000/api/data_notifikasi/notifikasi-pelatihan/${notification.id_notifikasi}`;
+        path = '/UserPage/jadwal_pelatihan_pegawai';
+      } else if (notification.category === 'acc-pelatihan') {
+        endpoint = `http://localhost:5000/api/data_notifikasi/notifikasi-acc-pelatihan/${notification.id_notifikasi}`;
+        path = '/UserPage/histori_pelatihan_pegawai';
+      }
 
       await axios.put(endpoint);
 
@@ -68,16 +80,13 @@ const Header = ({ isOpen, setIsOpen }) => {
         prevNotifications.filter(n => n.id_notifikasi !== notification.id_notifikasi)
       );
 
-      const path = notification.category === 'cuti'
-        ? '/UserPage/histori_cuti'
-        : '/UserPage/jadwal_pelatihan_pegawai';
-
       navigate(path);
       setIsDropdownOpen(false);
     } catch (error) {
       console.error('Error updating notification status:', error);
     }
   };
+
 
   return (
     <div>

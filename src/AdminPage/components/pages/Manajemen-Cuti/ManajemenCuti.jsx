@@ -75,6 +75,11 @@ function ManajemenCuti() {
       });
 
       if (response.ok) {
+        // Menentukan pesan notifikasi berdasarkan status cuti
+        const message = selectedStatus === 'Diterima'
+          ? `Cuti Anda dari ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_mulai)} sampai ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_selesai)} telah diterima.`
+          : `Cuti Anda dari ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_mulai)} sampai ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_selesai)} telah ditolak.`;
+
         // Menambahkan notifikasi
         const notificationResponse = await fetch('http://localhost:5000/api/data_notifikasi/notifikasi-pegawai/cuti', {
           method: 'POST',
@@ -83,7 +88,7 @@ function ManajemenCuti() {
           },
           body: JSON.stringify({
             id_pegawai: dataCuti.find(item => item.id_cuti === selectedId).id_pegawai,
-            message: `Cuti Anda dari ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_mulai)} sampai ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_selesai)} telah diterima.`,
+            message: message,
           }),
         });
 
