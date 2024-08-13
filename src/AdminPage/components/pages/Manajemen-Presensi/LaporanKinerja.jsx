@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const LaporanKinerja = () => {
     const { id_presensi } = useParams();
     const [presensi, setDataPresensi] = useState(null);
-    const [roleData, setRoleData] = useState(null);
-    const [roleGuru, setRoleGuru] = useState(null);
+    const [questions, setQuestions] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const laporanResponse = await fetch(`http://localhost:5000/api/data_presensi/presensi/laporan_kinerja/${id_presensi}`);
-                const laporanData = await laporanResponse.json();
+                const laporanResponse = await axios.get(`http://localhost:5000/api/data_presensi/presensi/laporan_kinerja/${id_presensi}`);
+                setDataPresensi(laporanResponse.data);
 
-                const roleResponse = await fetch(`http://localhost:5000/api/role/laporan-kinerja/non-tpa/${id_presensi}`);
-                const roleData = await roleResponse.json();
+                const questionsResponse = await axios.get(`http://localhost:5000/api/data_role/questions/${id_presensi}`);
+                setQuestions(questionsResponse.data);
 
-                const roleGuruResponse = await fetch(`http://localhost:5000/api/role/laporan-kinerja/guru/${id_presensi}`);
-                const roleGuru = await roleGuruResponse.json();
-
-                setDataPresensi(laporanData);
-                setRoleData(roleData);
-                setRoleGuru(roleGuru);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -30,9 +24,7 @@ const LaporanKinerja = () => {
         fetchData();
     }, [id_presensi]);
 
-    const isChecked = (value) => value === 'ya';
-
-    if (!presensi || !roleData || !roleGuru) {
+    if (!presensi || questions.length === 0) {
         return <div>Loading...</div>;
     }
 
@@ -44,173 +36,19 @@ const LaporanKinerja = () => {
                 <div className="flex flex-col md:flex-row justify-between">
                     <div className="box-border w-full md:w-1/2 mr-0 md:mr-2 mb-4 md:mb-0 rounded-sm border border-gray-200 flex-1 shadow-lg overflow-auto">
                         <div className="p-5">
-                            {presensi.role === 'Non TPA' ? (
-                                <ul className="list-none">
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Memasak nasi</span>
+                            {questions.map((question) => (
+                                <div key={question.id_deskripsi} className="mb-4">
+                                    <label className="flex items-center space-x-3">
                                         <input
                                             type="checkbox"
-                                            name="masakNasi"
+                                            checked={question.jawaban}
                                             className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.masak_nasi)}
                                             readOnly
                                         />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Memasak lauk dan sayur</span>
-                                        <input
-                                            type="checkbox"
-                                            name="masakLauk"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.masak_lauk)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Membuat bubur</span>
-                                        <input
-                                            type="checkbox"
-                                            name="membuatBubur"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.membuat_bubur)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Mengontrol kompor dan gas sebelum dan sesudah dipakai</span>
-                                        <input
-                                            type="checkbox"
-                                            name="kontrolKompor"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.kontrol_kompor)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Mengecek nasi sisa makan malam dan perabot di ruang makan</span>
-                                        <input
-                                            type="checkbox"
-                                            name="cekNasiSisa"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.cek_nasi_sisa)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Mencuci peralatan masak nasi & membersihkan area tempat kerja</span>
-                                        <input
-                                            type="checkbox"
-                                            name="cuciAlatMasak"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.cuci_alat_masak)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Membantu pendistribusian nasi dan lauk</span>
-                                        <input
-                                            type="checkbox"
-                                            name="distribusiLauk"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.distribusi_lauk)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Melakukan Jum'at bersih</span>
-                                        <input
-                                            type="checkbox"
-                                            name="jumatBersih"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.jumat_bersih)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Menggantikan supir apabila supir libur</span>
-                                        <input
-                                            type="checkbox"
-                                            name="gantiSupirLibur"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleData.ganti_supir_libur)}
-                                            readOnly
-                                        />
-                                    </li>
-                                </ul>
-                            ) : presensi.role === 'Guru' || presensi.role === 'TPA' ? (
-                                <ul className="list-none">
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Menyusun rencana pembelajaran</span>
-                                        <input
-                                            type="checkbox"
-                                            name="menyusunRencana"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleGuru.menyusun_rencana)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Menyiapkan materi ajar dan sumber belajar</span>
-                                        <input
-                                            type="checkbox"
-                                            name="menyiapkanMateri"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleGuru.menyiapkan_materi)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Mengajar sesuai dengan jadwal dan rencana pelajaran</span>
-                                        <input
-                                            type="checkbox"
-                                            name="sesuaiJadwal"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleGuru.sesuai_jadwal)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Mengisi catatan kehadiran siswa</span>
-                                        <input
-                                            type="checkbox"
-                                            name="catatKehadiran"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleGuru.catat_kehadiran)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Menilai hasil pekerjaan siswa, seperti tugas, kuis, dan ujian</span>
-                                        <input
-                                            type="checkbox"
-                                            name="menilaiTugas"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleGuru.menilai_tugas)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Mencatat kemajuan siswa selama proses belajar</span>
-                                        <input
-                                            type="checkbox"
-                                            name="catatKemajuan"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleGuru.catat_kemajuan)}
-                                            readOnly
-                                        />
-                                    </li>
-                                    <li className="p-2 flex items-center justify-between">
-                                        <span className="text-sm">Mengikuti pelatihan atau workshop untuk pengembangan professional</span>
-                                        <input
-                                            type="checkbox"
-                                            name="mengikutiPelatihan"
-                                            className="p-2 w-4 h-4 flex-shrink-0"
-                                            checked={isChecked(roleGuru.mengikuti_pelatihan)}
-                                            readOnly
-                                        />
-                                    </li>
-                                </ul>
-                            ) : null}
+                                        <span className='text-sm'>{question.pertanyaan_role}</span>
+                                    </label>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

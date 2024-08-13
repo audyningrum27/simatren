@@ -11,7 +11,6 @@ router.get('/presensi', (req, res) => {
     SELECT 
         p.nip,
         p.nama_pegawai,
-        p.role,
         pr.id_presensi,
         pr.id_pegawai,
         pr.tanggal_presensi,
@@ -50,7 +49,7 @@ router.get('/presensi/laporan_kinerja/:id_presensi', (req, res) => {
             dp.kegiatan_rutin, 
             dp.penyelesaian_masalah, 
             dp.inisiatif_proyek,
-            d.role
+            d.id_role
         FROM 
             data_presensi dp
         JOIN 
@@ -228,7 +227,6 @@ router.get('/presensi/:id_pegawai', (req, res) => {
     SELECT 
         p.nip,
         p.nama_pegawai,
-        p.role,
         pr.id_presensi,
         pr.id_pegawai,
         pr.tanggal_presensi,

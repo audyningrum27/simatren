@@ -41,6 +41,14 @@ export default function DetailPegawai() {
         if (isEditable) {
             try {
                 const updatedPegawai = { ...pegawai };
+
+                const roleMapping = {
+                    'TPA': 1,  
+                    'Non TPA': 2 
+                };
+
+                updatedPegawai.id_role = roleMapping[pegawai.unit_kerja] || updatedPegawai.id_role;
+
                 if (pegawai.tanggal_lahir) {
                     updatedPegawai.tanggal_lahir = moment(pegawai.tanggal_lahir).format('YYYY-MM-DD');
                     updatedPegawai.password === originalPassword ? '' : pegawai.password
@@ -290,13 +298,12 @@ export default function DetailPegawai() {
                                         <td className="p-2">:</td>
                                         <td className="px-2 border border-gray-400 rounded-md">
                                             <select
-                                                name="role"
-                                                value={pegawai.role || ''}
+                                                name="unit_kerja"
+                                                value={pegawai.unit_kerja || ''}
                                                 disabled={!isEditable}
                                                 onChange={handleChange}
                                                 className={`w-full border-none bg-transparent focus:outline-none ${isEditable ? 'bg-white' : ''}`}
                                             >
-                                                <option value="Guru">Guru</option>
                                                 <option value="TPA">TPA</option>
                                                 <option value="Non TPA">Non TPA</option>
                                             </select>

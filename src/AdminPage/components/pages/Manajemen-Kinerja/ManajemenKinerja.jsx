@@ -98,7 +98,7 @@ function ManajemenKinerja() {
                     <td>{data.nip}</td>
                     <td>{data.nama_pegawai}</td>
                     <td>{data.jenis_kelamin}</td>
-                    <td className='pr-4'>{data.role}</td>
+                    <td className='pr-4'>{data.unit_kerja}</td>
                     <td>{getPegawaiStatus(data.status_kepegawaian)}</td>
                     <td className='font-semibold'>
                       <button

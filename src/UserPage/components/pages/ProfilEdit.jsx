@@ -352,8 +352,8 @@ const ProfilEdit = () => {
                                 <td className="px-2 border border-gray-400 rounded-md">
                                     <input
                                         type="text"
-                                        name="role"
-                                        value={profil.role}
+                                        name="unit_kerja"
+                                        value={profil.unit_kerja}
                                         readOnly={!isEditable}
                                         className='w-full border-none bg-transparent focus:outline-none'
                                     />

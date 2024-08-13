@@ -23,10 +23,19 @@ const TambahDataPegawai = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    if (name === 'role') {
+      const id_role = value === 'TPA' ? 1 : value === 'Non TPA' ? 2 : '';
+      setFormData({
+        ...formData,
+        id_role: id_role,
+        role: value,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSave = async () => {
@@ -184,7 +193,6 @@ const TambahDataPegawai = () => {
                 required
               >
                 <option value="" disabled hidden>Pilih Posisi</option>
-                <option value="Guru" className='text-black'>Guru</option>
                 <option value="TPA" className='text-black'>TPA</option>
                 <option value="Non TPA" className='text-black'>Non TPA</option>
               </select>

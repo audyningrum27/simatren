@@ -12,13 +12,13 @@ const upload = multer({ storage: storage });
 // ADMIN
 // Menambah data pegawai
 router.post('/pegawai', (req, res) => {
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kawin } = req.body;
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, id_role, status_bpjs, status_kawin } = req.body;
     const status_kepegawaian = 'Aktif';
     const sql = `
-        INSERT INTO data_pegawai (nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, status_kawin)
+        INSERT INTO data_pegawai (nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, id_role, status_bpjs, status_kepegawaian, status_kawin)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, status_kawin];
+    const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, id_role, status_bpjs, status_kepegawaian, status_kawin];
     db.query(sql, values, (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -32,13 +32,26 @@ router.post('/pegawai', (req, res) => {
 // Menampilkan seluruh data pegawai
 router.get('/pegawai', (req, res) => {
     console.log("GET /api/data_pegawai/pegawai");
-    const query = 'SELECT * FROM data_pegawai';
+    const query = `
+        SELECT 
+            dp.id_pegawai, 
+            dp.nip, 
+            dp.nama_pegawai, 
+            dp.jenis_kelamin, 
+            dp.status_kepegawaian,
+            r.unit_kerja
+        FROM 
+            data_pegawai dp
+        JOIN 
+            role r ON dp.id_role = r.id_role
+        ORDER BY 
+            dp.nip ASC
+    `;
     db.query(query, (err, results) => {
         if (err) {
             console.error(err);
             return res.status(500).json({ message: 'Internal Server Error' });
         }
-
         return res.json(results);
     });
 });
@@ -46,7 +59,28 @@ router.get('/pegawai', (req, res) => {
 // Menampilkan detail setiap pegawai
 router.get('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    const sql = `SELECT * FROM data_pegawai WHERE id_pegawai = ?`;
+    const sql = `
+        SELECT 
+            dp.id_pegawai,
+            dp.nip,
+            dp.nama_pegawai,
+            dp.tempat_lahir,
+            dp.tanggal_lahir,
+            dp.jenis_kelamin,
+            dp.alamat,
+            dp.no_telp,
+            dp.email,
+            dp.password,
+            dp.id_role,
+            dp.status_bpjs,
+            dp.status_kepegawaian,
+            r.unit_kerja
+        FROM 
+            data_pegawai dp
+        JOIN 
+            role r ON dp.id_role = r.id_role
+        WHERE dp.id_pegawai = ?
+    `;
     db.query(sql, [id_pegawai], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -90,7 +124,7 @@ router.delete('/pegawai/:id_pegawai', (req, res) => {
 // Mengedit data pegawai
 router.put('/pegawai/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, jumlah_tanggungan } = req.body;
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, id_role, status_bpjs, status_kepegawaian } = req.body;
     // Mengambil password lama dari database
     const sqlSelect = `SELECT password FROM data_pegawai WHERE id_pegawai = ?`;
     db.query(sqlSelect, [id_pegawai], async (err, result) => {
@@ -117,13 +151,12 @@ router.put('/pegawai/:id_pegawai', (req, res) => {
                 no_telp = ?,
                 email = ?,
                 password = ?,
-                role = ?,
+                id_role = ?,
                 status_bpjs = ?,
-                status_kepegawaian = ?,
-                jumlah_tanggungan = ?
+                status_kepegawaian = ?
             WHERE id_pegawai = ?
         `;
-        const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, hashedPassword, role, status_bpjs, status_kepegawaian, jumlah_tanggungan, id_pegawai];
+        const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, hashedPassword, id_role, status_bpjs, status_kepegawaian, id_pegawai];
 
         db.query(sqlUpdate, values, (err, result) => {
             if (err) {
@@ -184,21 +217,21 @@ router.get('/pegawai/cuti/count', (req, res) => {
       AND ? BETWEEN dc.tanggal_mulai AND dc.tanggal_selesai
     `;
     db.query(query, [date], (err, results) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ message: 'Internal Server Error' });
-      }
-      console.log('Hasil jumlah pegawai cuti:', results);
-      return res.json(results[0]);
+        if (err) {
+            console.error('Error executing query:', err);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+        console.log('Hasil jumlah pegawai cuti:', results);
+        return res.json(results[0]);
     });
 });
 
 // Menghitung Role atau Kategori Pegawai
 router.get('/pegawai/role/count', (req, res) => {
     const sql = `
-        SELECT role, COUNT(*) as count
+        SELECT id_role, COUNT(*) as count
         FROM data_pegawai
-        GROUP BY role
+        GROUP BY id_role
     `;
     db.query(sql, (err, results) => {
         if (err) {
@@ -213,7 +246,12 @@ router.get('/pegawai/role/count', (req, res) => {
 // Menampilkan data pegawai sesuai id pegawai yang sedang login
 router.get('/pegawai/profil/:id_pegawai', (req, res) => {
     const { id_pegawai } = req.params;
-    const sql = `SELECT * FROM data_pegawai WHERE id_pegawai = ?`;
+    const sql = `
+        SELECT dp.*, r.unit_kerja
+        FROM data_pegawai dp
+        JOIN role r ON dp.id_role = r.id_role
+        WHERE dp.id_pegawai = ?
+    `;
     db.query(sql, [id_pegawai], (err, result) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -321,7 +359,7 @@ router.get('/pegawai/view-kk/:id_pegawai', (req, res) => {
 // Mengedit profil pegawai
 router.put('/pegawai/profil/:id_pegawai', async (req, res) => {
     const { id_pegawai } = req.params;
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, role, status_bpjs, status_kepegawaian, jumlah_tanggungan } = req.body;
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, id_role, status_bpjs, status_kepegawaian } = req.body;
 
     // Mengambil password lama dari database
     const sqlSelect = `SELECT password FROM data_pegawai WHERE id_pegawai = ?`;
@@ -349,13 +387,12 @@ router.put('/pegawai/profil/:id_pegawai', async (req, res) => {
                 no_telp = ?,
                 email = ?,
                 password = ?,
-                role = ?,
+                id_role = ?,
                 status_bpjs = ?,
                 status_kepegawaian = ?,
-                jumlah_tanggungan = ?
             WHERE id_pegawai = ?
         `;
-        const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, hashedPassword, role, status_bpjs, status_kepegawaian, jumlah_tanggungan, id_pegawai];
+        const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, hashedPassword, role, status_bpjs, status_kepegawaian, id_pegawai];
 
         db.query(sqlUpdate, values, (err, result) => {
             if (err) {

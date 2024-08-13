@@ -36,12 +36,10 @@ import JadwalPelatihanPegawai from './UserPage/components/pages/Pelatihan/Jadwal
 import DetailJadwalPelatihanPegawai from './UserPage/components/pages/Pelatihan/DetailJadwalPelatihanPegawai';
 import Kinerja from './UserPage/components/pages/Kinerja/Kinerja';
 import PresensiForm from './UserPage/components/pages/Presensi/PresensiForm';
-import RoleStafDapur from './UserPage/components/pages/Presensi/RoleStafDapur';
-import RoleGuru from './UserPage/components/pages/Presensi/RoleGuru';
+import Role from './UserPage/components/pages/Presensi/Role';
 
 import { AuthProvider } from './AuthContext';
 import PrivateRoute from './PrivateRoute';
-
 
 function App() {
   return (
@@ -96,8 +94,7 @@ function App() {
             <Route path="/UserPage/detail_jadwal_pelatihan_pegawai/:id_pelatihan" element={<DetailJadwalPelatihanPegawai />} />
             <Route path="/UserPage/grafik_kinerja" element={<Kinerja />} />
             <Route path="/UserPage/lengkapi_presensi/:id_presensi" element={<PresensiForm />} />
-            <Route path="/UserPage/ceklis_harian_staf_dapur/:id_presensi" element={<RoleStafDapur/>} />
-            <Route path="/UserPage/ceklis_harian_guru/:id_presensi" element={<RoleGuru/>} />
+            <Route path="/UserPage/ceklis_harian/:id_presensi" element={<Role/>} />
           </Route>
 
           <Route path="logout" element={<LoginPage />} />

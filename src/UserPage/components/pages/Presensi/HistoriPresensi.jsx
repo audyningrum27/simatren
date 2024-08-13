@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 const HistoriPresensi = () => {
   const [dataPresensi, setDataPresensi] = useState([]);
-  const [role, setRole] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -35,13 +34,6 @@ const HistoriPresensi = () => {
         tanggalPresensi: formatDate(item.tanggal_presensi)
       }));
       setDataPresensi(data);
-
-      const employeeResponse = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${id_pegawai}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setRole(employeeResponse.data.role);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -136,11 +128,7 @@ const HistoriPresensi = () => {
                         ) : (
                           data.jam_masuk && data.tanggalPresensi === today ? (
                             <button
-                              onClick={() => navigate(
-                                role === 'Guru' || role === 'TPA'
-                                  ? `/UserPage/ceklis_harian_guru/${data.id_presensi}`
-                                  : `/UserPage/ceklis_harian_staf_dapur/${data.id_presensi}`
-                              )}
+                              onClick={() => navigate(`/UserPage/ceklis_harian/${data.id_presensi}`)}
                               className='flex justify-start items-center'>
                               Lengkapi Presensi
                               <HiChevronRight fontSize={18} className='ml-1' />
