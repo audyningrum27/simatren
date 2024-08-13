@@ -34,38 +34,57 @@ const Kinerja_Presensi = () => {
         };                
 
         fetchData();
-    }, []);
+    }, [id_pegawai]);
+
+    const calculateWorkdays = (startDate, endDate) => {
+        let count = 0;
+        let currentDate = moment(startDate);
+
+        while (currentDate.isSameOrBefore(endDate)) {
+            const dayOfWeek = currentDate.isoWeekday();
+            if (dayOfWeek >= 1 && dayOfWeek <= 5) { // Hari Senin (1) sampai Jumat (5)
+                count++;
+            }
+            currentDate.add(1, 'days');
+        }
+
+        return count;
+    };
 
     const processMonthlyData = (presensiData, cutiData) => {
         const months = moment.monthsShort();
+        const year = moment().year(); 
+
         const monthlySummary = months.map((month, index) => {
             const monthNumber = index + 1;
-            const year = moment().year(); 
-    
-            const startDate = moment(`${year}-${monthNumber}-01`).startOf('month').format('YYYY-MM-DD');
-            const endDate = moment(`${year}-${monthNumber}-01`).endOf('month').format('YYYY-MM-DD');
-    
+
+            const startDate = moment(`${year}-${monthNumber}-01`).startOf('month');
+            const endDate = moment(`${year}-${monthNumber}-01`).endOf('month');
+
             const presensiCount = presensiData.reduce((count, item) => {
-                const date = moment(item.date).format('YYYY-MM-DD');
-                if (date >= startDate && date <= endDate) {
+                const date = moment(item.date);
+                if (date.isBetween(startDate, endDate, null, '[]')) {
                     return count + item.Hadir;
                 }
                 return count;
             }, 0);
     
             const cutiCount = cutiData.reduce((count, item) => {
-                const cutiStartDate = moment(`${item.tahun}-${item.bulan}-01`).startOf('month').format('YYYY-MM-DD');
-                const cutiEndDate = moment(cutiStartDate).endOf('month').format('YYYY-MM-DD');
-                if (cutiStartDate >= startDate && cutiEndDate <= endDate) {
+                const cutiStartDate = moment(`${item.tahun}-${item.bulan}-01`).startOf('month');
+                const cutiEndDate = moment(cutiStartDate).endOf('month');
+                if (cutiStartDate.isSameOrAfter(startDate) && cutiEndDate.isSameOrBefore(endDate)) {
                     return count + item.jumlah_cuti;
                 }
                 return count;
             }, 0);
+
+            const workdays = calculateWorkdays(startDate, endDate);
     
             return {
                 name: month,
                 Hadir: presensiCount,
-                Cuti: cutiCount
+                Cuti: cutiCount,
+                HariKerja: workdays
             };
         });
     
@@ -91,6 +110,7 @@ const Kinerja_Presensi = () => {
                         <YAxis />
                         <Tooltip />
                         <Legend />
+                        <Bar dataKey="HariKerja" name="Hari Kerja" fill='rgb(75, 192, 192)' />
                         <Bar dataKey="Hadir" fill='rgb(21 128 61)' />
                         <Bar dataKey="Cuti" fill='rgb(220, 0, 0)' />
                     </BarChart>
