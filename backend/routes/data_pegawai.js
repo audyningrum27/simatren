@@ -226,12 +226,13 @@ router.get('/pegawai/cuti/count', (req, res) => {
     });
 });
 
-// Menghitung Role atau Kategori Pegawai
+// Menghitung Role atau Kategori Pegawai dengan unit_kerja
 router.get('/pegawai/role/count', (req, res) => {
     const sql = `
-        SELECT id_role, COUNT(*) as count
-        FROM data_pegawai
-        GROUP BY id_role
+        SELECT r.unit_kerja, COUNT(d.id_role) as count
+        FROM data_pegawai d
+        JOIN role r ON d.id_role = r.id_role
+        GROUP BY r.unit_kerja
     `;
     db.query(sql, (err, results) => {
         if (err) {

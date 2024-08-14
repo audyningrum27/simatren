@@ -29,14 +29,19 @@ export default function KategoriPegawaiChart() {
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:5000/api/data_pegawai/pegawai/role/count');
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          // Menampilkan error jika respons tidak oke
+          const errorText = await response.text();
+          console.error('Error fetching data:', errorText);
+          return;
         }
+        
         const result = await response.json();
         const totalCount = result.reduce((sum, item) => sum + item.count, 0);
 
         const chartData = result.map(item => ({
-          name: item.role,
+          name: item.unit_kerja,
           value: item.count,
           percentage: ((item.count / totalCount) * 100).toFixed(2)
         }));
@@ -74,9 +79,6 @@ export default function KategoriPegawaiChart() {
 					</PieChart>
 				</ResponsiveContainer>
 			</div>
-      <div>
-        
-      </div>
 		</div>
 	)
 }
