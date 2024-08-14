@@ -1,82 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
 import axios from 'axios';
-import { formatDate } from '../../utils/formatDate';
-import { getStatus } from '../../utils/status';
+import moment from 'moment';
 
 function TabelKinerja() {
-  const [dataCuti, setDataCuti] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const [kinerja, setKinerja] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const id_pegawai = localStorage.getItem('id_pegawai');
 
   useEffect(() => {
-    fetchDataCuti();
-  }, []);
-
-  const isPastDate = (dateString) => {
-    const today = new Date();
-    const date = new Date(dateString);
-    return date < today;
-  };
-
-  const fetchDataCuti = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const id_pegawai = localStorage.getItem('id_pegawai');
-      if (!id_pegawai) {
-        console.error('id_pegawai is undefined');
-        return;
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/data_role/hasil-kinerja/${id_pegawai}`);
+        setKinerja(response.data);
+      } catch (error) {
+        console.error('Error fetching performance data:', error);
       }
-      const response = await axios.get(`http://localhost:5000/api/data_cuti/cuti/${id_pegawai}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+    };
 
-      const filteredData = response.data
-        .filter(item => !(item.status_cuti.toLowerCase() === 'proses' && isPastDate(item.tanggal_selesai)))
-        .map(item => ({
-          ...item,
-          tanggalMulai: formatDate(item.tanggal_mulai),
-          tanggalSelesai: formatDate(item.tanggal_selesai)
-        }));
+    fetchData();
+  }, [id_pegawai]);
 
-      setDataCuti(filteredData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const filteredCuti = dataCuti.filter((data) =>
-    data.status_cuti.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const totalPages = Math.ceil(filteredCuti.length / itemsPerPage);
-  const currentPageData = filteredCuti.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
-  const goToPreviousPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  const goToNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const viewBuktiFormIzin = (id_cuti) => {
-    const url = `http://localhost:5000/api/data_cuti/cuti/view-bukti/${id_cuti}`;
-    window.open(url, '_blank');
-  };
+  const filteredKinerja = kinerja.filter(item => {
+    if (!selectedMonth) return true;
+    return moment(item.tanggal).format('MM') === selectedMonth;
+  });
 
   return (
     <div>
-      <div className="px-4 text-sm rounded-sm border-[1.5px] border-gray-200 items-center">
-        <div className="h-96 md:w-full w-[34rem] max[500px]:w-[24rem] overflow-auto">
+      <div className="px-4 rounded-sm border-[1.5px] border-gray-200 items-center shadow-md shadow-gray-400">
+        <strong className="text-gray-700 font-medium mt-4 block">Aktivitas Harian</strong>
+        {/* Dropdown filter bulan berada di atas tabel */}
+        <div className="flex justify-start mt-4 text-sm">
+          <select
+            className="border rounded px-2 py-1"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          >
+            <option value="">All</option>
+            <option value="01">Januari</option>
+            <option value="02">Februari</option>
+            <option value="03">Maret</option>
+            <option value="04">April</option>
+            <option value="05">Mei</option>
+            <option value="06">Juni</option>
+            <option value="07">Juli</option>
+            <option value="08">Agustus</option>
+            <option value="09">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+        </div>
+
+        {/* Tabel Kinerja */}
+        <div className="h-96 md:w-full w-[34rem] max-[500px]:w-[24rem] overflow-auto text-sm">
           <table className='text-gray-700 min-w-[900px]'>
             <thead className="sticky top-0 bg-white">
               <tr className="border-b-[1.5px]">
@@ -85,20 +62,19 @@ function TabelKinerja() {
                 <td className='font-bold py-4'>Jumlah Terlaksana</td>
               </tr>
             </thead>
-
             <tbody>
-              {currentPageData.length === 0 && (
+              {filteredKinerja.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="text-center py-4">
-                    Tidak ada data cuti untuk ditampilkan.
+                  <td colSpan="10" className="text-center py-4">
+                    Tidak ada data untuk ditampilkan
                   </td>
                 </tr>
               )}
-              {currentPageData.map((data, index) => (
-                <tr key={index}>
-                  <td className="p-1 pt-2">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                  <td>{data.tanggalMulai}</td>
-                  <td>{data.tanggalSelesai}</td>
+              {filteredKinerja.map((item, index) => (
+                <tr key={index} className="border-b-[1.5px]">
+                  <td className='py-4'>{index + 1}</td>
+                  <td className='py-4'>{item.pertanyaan_role}</td>
+                  <td className='py-4'>{item.jumlah_terlaksana || 0}</td>
                 </tr>
               ))}
             </tbody>
@@ -106,7 +82,7 @@ function TabelKinerja() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default TabelKinerja;

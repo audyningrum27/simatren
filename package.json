@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "docx": "^8.5.0",
     "express": "^4.19.2",
+    "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
     "jsqr": "^1.4.0",

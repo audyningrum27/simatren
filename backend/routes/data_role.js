@@ -85,4 +85,32 @@ router.get('/questions/:id_presensi', (req, res) => {
     });
 });
 
+//Menampilkan Jumlah Dari Aktivitas Harian yang Diisi
+router.get('/hasil-kinerja/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+
+    const query = `
+        SELECT dr.pertanyaan_role, 
+               COUNT(CASE WHEN tr.jawaban = true THEN 1 END) AS jumlah_terlaksana
+        FROM deskripsi_role dr
+        JOIN role r ON dr.id_role = r.id_role
+        JOIN data_pegawai dp ON dp.id_role = r.id_role
+        LEFT JOIN transaksi_role tr 
+        ON dr.id_deskripsi = tr.id_deskripsi 
+        AND tr.id_pegawai = dp.id_pegawai
+        WHERE dp.id_pegawai = ?
+        GROUP BY dr.id_deskripsi, dr.pertanyaan_role
+        ORDER BY dr.id_deskripsi ASC
+    `;
+
+    db.query(query, [id_pegawai], (error, results) => {
+        if (error) {
+            console.error('Error fetching performance data:', error);
+            return res.status(500).json({ message: 'Error fetching performance data' });
+        }
+
+        res.json(results);
+    });
+});
+
 export default router;

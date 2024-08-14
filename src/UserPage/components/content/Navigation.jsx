@@ -34,7 +34,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
   },
   {
     key: "grafik_kinerja",
-    label: "Grafik Kinerja",
+    label: "Kinerja",
     path: "/UserPage/grafik_kinerja",
     icon: <AiOutlineLineChart />
   },

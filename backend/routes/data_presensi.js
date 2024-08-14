@@ -57,7 +57,7 @@ router.get('/presensi/laporan_kinerja/:id_presensi', (req, res) => {
         WHERE 
             dp.id_presensi = ? 
     `;
-    
+
     db.query(query, [id_presensi], (err, results) => {
         if (err) {
             console.error('Error executing query:', err);
@@ -68,7 +68,7 @@ router.get('/presensi/laporan_kinerja/:id_presensi', (req, res) => {
             console.log('No data found for id_presensi:', id_presensi);
             return res.status(404).json({ message: 'No data found' });
         }
-        
+
         // Kirim data presensi dan role pegawai ke frontend
         return res.json(results[0]);
     });
@@ -216,6 +216,18 @@ router.get('/formkinerja/:id_pegawai', (req, res) => {
         }
         console.log('Data hafalan harian untuk pegawai:', results);
         res.json(results);
+    });
+});
+
+//Menampilkan tabel Keaktifan Pegawai berdasarkan id pegawai
+router.get('/formkeaktifan/:id_pegawai', (req, res) => {
+    const { id_pegawai } = req.params;
+
+    db.query('SELECT tanggal_presensi, hafalan, amalan_baik, kegiatan_rutin, penyelesaian_masalah, inisiatif_proyek FROM data_presensi WHERE id_pegawai = ?', [id_pegawai], (error, rows) => {
+        if (error) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(rows);
     });
 });
 

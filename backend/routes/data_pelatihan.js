@@ -46,6 +46,26 @@ router.get('/pelatihan-per-bulan/:id_pegawai', (req, res) => {
     });
 });
 
+//Menampilkan tabel Pelatihan Pegawai berdasarkan id pegawai
+router.get('/status_count/:id_pegawai', async (req, res) => {
+    const { id_pegawai } = req.params;
+
+    try {
+        const query = `
+        SELECT status, COUNT(*) as jumlah
+        FROM data_pelatihan
+        WHERE id_pegawai = ?
+        GROUP BY status;
+      `;
+        const [rows] = await db.execute(query, [id_pegawai]);
+        res.json(rows);
+    } catch (error) {
+        console.error('Error fetching pelatihan count:', error);
+        res.status(500).send('Server error');
+    }
+});
+
+
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
