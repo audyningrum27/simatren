@@ -360,7 +360,7 @@ router.get('/pegawai/view-kk/:id_pegawai', (req, res) => {
 // Mengedit profil pegawai
 router.put('/pegawai/profil/:id_pegawai', async (req, res) => {
     const { id_pegawai } = req.params;
-    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, id_role, status_bpjs, status_kepegawaian } = req.body;
+    const { nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, password, status_bpjs, status_kepegawaian } = req.body;
 
     // Mengambil password lama dari database
     const sqlSelect = `SELECT password FROM data_pegawai WHERE id_pegawai = ?`;
@@ -388,12 +388,11 @@ router.put('/pegawai/profil/:id_pegawai', async (req, res) => {
                 no_telp = ?,
                 email = ?,
                 password = ?,
-                id_role = ?,
                 status_bpjs = ?,
-                status_kepegawaian = ?,
+                status_kepegawaian = ?
             WHERE id_pegawai = ?
         `;
-        const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, hashedPassword, role, status_bpjs, status_kepegawaian, id_pegawai];
+        const values = [nama_pegawai, nip, tempat_lahir, tanggal_lahir, jenis_kelamin, alamat, no_telp, email, hashedPassword, status_bpjs, status_kepegawaian, id_pegawai];
 
         db.query(sqlUpdate, values, (err, result) => {
             if (err) {
