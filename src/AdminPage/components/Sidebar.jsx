@@ -9,7 +9,7 @@ import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import { useAuth } from "../../AuthContext";
 
-const linkClasses = "flex items-center gap-3 font-semibold px-4 py-3 hover:scale-95 hover:bg-[#98FB98] hover:text-green-900 hover:no-underline active:bg-[#98FB98] rounded-md text-sm";
+const linkClasses = "flex items-center gap-3 font-semibold px-4 py-3 hover:scale-95 hover:bg-[#AADC93] hover:text-green-900 hover:no-underline active:bg-[#AADC93] rounded-md text-sm";
 
 // eslint-disable-next-line react/prop-types
 export default function Sidebar({ isOpen }) {
@@ -84,7 +84,7 @@ function SidebarLink({ item }) {
   const { pathname } = useLocation();
   return (
     <Link to={item.path} className={classNames(
-      pathname === item.path ? "bg-[#98FB98] text-green-900" : "bg-green-900 text-white",
+      pathname === item.path ? "bg-[#AADC93] text-green-900" : "bg-green-900 text-white",
       linkClasses)}>
       <span className="text-xl">{item.icon}</span>
       {item.label}
@@ -96,7 +96,7 @@ function DropdownLink({ to, label, icon }) {
   const { pathname } = useLocation();
   return (
     <Link to={to} className={classNames(
-      pathname === to ? "bg-[#98FB98] text-green-900" : "bg-green-900 text-white",
+      pathname === to ? "bg-[#AADC93] text-green-900" : "bg-green-900 text-white",
       linkClasses)}>
       <span className="text-xl">{icon}</span>
       {label}

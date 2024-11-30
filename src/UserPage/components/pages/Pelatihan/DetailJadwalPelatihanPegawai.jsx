@@ -20,7 +20,7 @@ const DetailPelatihanPegawai = () => {
 
   const fetchDetailPelatihan = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`);
+      const response = await fetch(`https://backend.simatren.space/api/data_pelatihan/pelatihan/${id_pelatihan}`);
       const data = await response.json();
       const formattedData = {
         ...data,
@@ -46,7 +46,7 @@ const DetailPelatihanPegawai = () => {
   const updateStatusPelatihan = async (id_pelatihan, status) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
+      await axios.put(`https://backend.simatren.space/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
         { status },
         {
           headers: {
@@ -68,7 +68,7 @@ const DetailPelatihanPegawai = () => {
     return <div>Loading...</div>;
   }
   const viewBrosurPelatihan = (id_pelatihan) => {
-    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
+    const url = `https://backend.simatren.space/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
     window.open(url, '_blank');
   };
 

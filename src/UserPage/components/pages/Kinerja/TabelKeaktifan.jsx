@@ -9,7 +9,7 @@ function TabelKeaktifan() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/data_presensi/formkeaktifan/${id_pegawai}`);
+                const response = await axios.get(`https://backend.simatren.space/api/data_presensi/formkeaktifan/${id_pegawai}`);
                 const formattedData = response.data.map(item => ({
                     ...item,
                     tanggal_presensi: new Date(item.tanggal_presensi)

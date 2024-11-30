@@ -21,7 +21,7 @@ function ManajemenPresensi() {
 
   const fetchDataPresensi = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_presensi/presensi');
+      const response = await fetch('https://backend.simatren.space/api/data_presensi/presensi');
       const data = await response.json();
       const formattedData = data.map(item => ({
         ...item,

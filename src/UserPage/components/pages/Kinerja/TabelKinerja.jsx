@@ -10,7 +10,7 @@ function TabelKinerja() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/data_role/hasil-kinerja/${id_pegawai}`);
+        const response = await axios.get(`https://backend.simatren.space/api/data_role/hasil-kinerja/${id_pegawai}`);
         setKinerja(response.data);
       } catch (error) {
         console.error('Error fetching performance data:', error);

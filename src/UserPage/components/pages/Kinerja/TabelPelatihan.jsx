@@ -14,7 +14,7 @@ function TabelPelatihan() {
   useEffect(() => {
     const fetchPelatihanData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/data_pelatihan/pelatihan-per-bulan/${id_pegawai}`);
+        const response = await axios.get(`https://backend.simatren.space/api/data_pelatihan/pelatihan-per-bulan/${id_pegawai}`);
         setAllPelatihanData(response.data);
         // Filter data setelah data diambil
         filterPelatihanCounts(selectedMonth, response.data);

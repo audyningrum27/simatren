@@ -20,7 +20,7 @@ function ManajemenCuti() {
 
   const fetchDataCuti = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_cuti/cuti/all');
+      const response = await fetch('https://backend.simatren.space/api/data_cuti/cuti/all');
       const result = await response.json();
 
       if (result && Array.isArray(result)) {
@@ -66,7 +66,7 @@ function ManajemenCuti() {
   const handleYes = async () => {
     try {
       // Memperbarui status cuti
-      const response = await fetch(`http://localhost:5000/api/data_cuti/cuti/${selectedId}`, {
+      const response = await fetch(`https://backend.simatren.space/api/data_cuti/cuti/${selectedId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ function ManajemenCuti() {
           : `Cuti Anda dari ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_mulai)} sampai ${formatDate(dataCuti.find(item => item.id_cuti === selectedId).tanggal_selesai)} telah ditolak.`;
 
         // Menambahkan notifikasi
-        const notificationResponse = await fetch('http://localhost:5000/api/data_notifikasi/notifikasi-pegawai/cuti', {
+        const notificationResponse = await fetch('https://backend.simatren.space/api/data_notifikasi/notifikasi-pegawai/cuti', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ function ManajemenCuti() {
   );
 
   const viewBuktiFormIzin = (id_cuti) => {
-    const url = `http://localhost:5000/api/data_cuti/cuti/view-bukti/${id_cuti}`;
+    const url = `https://backend.simatren.space/api/data_cuti/cuti/view-bukti/${id_cuti}`;
     window.open(url, '_blank');
   };
 

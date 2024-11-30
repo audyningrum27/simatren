@@ -27,7 +27,7 @@ export default function Sidebar({ isOpen }) {
       const token = localStorage.getItem('token');
       const id_pegawai = localStorage.getItem('id_pegawai');
 
-      const response = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${id_pegawai}`, {
+      const response = await axios.get(`https://backend.simatren.space/api/data_pegawai/pegawai/profil/${id_pegawai}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

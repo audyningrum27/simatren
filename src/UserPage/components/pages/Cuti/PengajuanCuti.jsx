@@ -25,7 +25,7 @@ const PengajuanCuti = () => {
     formData.append('bukti_form_izin', buktiFormIzin);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/data_cuti/cuti', formData, {
+      const response = await axios.post('https://backend.simatren.space/api/data_cuti/cuti', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -33,14 +33,14 @@ const PengajuanCuti = () => {
 
       if (response.status === 201) {
         // Ambil nama pegawai
-        const { data: pegawai } = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${idPegawai}`);
+        const { data: pegawai } = await axios.get(`https://backend.simatren.space/api/data_pegawai/pegawai/profil/${idPegawai}`);
         const namaPegawai = pegawai.nama_pegawai;
 
         // Format Tanggal
         const formatTanggalMulai = formatDate(tanggalMulai);
         const formatTanggalSelesai = formatDate(tanggalSelesai);
 
-        await axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-admin/cuti', {
+        await axios.post('https://backend.simatren.space/api/data_notifikasi/notifikasi-admin/cuti', {
           id_pegawai: idPegawai,
           message: `${namaPegawai} melakukan pengajuan cuti dari ${formatTanggalMulai} hingga ${formatTanggalSelesai}.`
         });
@@ -57,7 +57,7 @@ const PengajuanCuti = () => {
 
   const handleDownloadTemplate = async () => {
     try {
-        const response = await axios.get('http://localhost:5000/api/data_cuti/download-template-cuti', {
+        const response = await axios.get('https://backend.simatren.space/api/data_cuti/download-template-cuti', {
             responseType: 'blob',
         });
 

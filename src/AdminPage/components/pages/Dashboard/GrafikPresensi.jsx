@@ -20,7 +20,7 @@ const GrafikPresensi = ({ selectedDate }) => {
         const formattedDate = moment(selectedDate).format('YYYY-MM-DD');
   
         // Fetch data kehadiran
-        const presensiResponse = await fetch(`http://localhost:5000/api/data_presensi/presensi/daily?date=${formattedDate}`);
+        const presensiResponse = await fetch(`https://backend.simatren.space/api/data_presensi/presensi/daily?date=${formattedDate}`);
         if (!presensiResponse.ok) {
           throw new Error('Failed to fetch data presensi');
         }
@@ -28,7 +28,7 @@ const GrafikPresensi = ({ selectedDate }) => {
         console.log('Presensi Data:', presensiData);
   
         // Fetch data cuti
-        const cutiResponse = await fetch(`http://localhost:5000/api/data_cuti/cuti/approved?date=${formattedDate}`);
+        const cutiResponse = await fetch(`https://backend.simatren.space/api/data_cuti/cuti/approved?date=${formattedDate}`);
         if (!cutiResponse.ok) {
           throw new Error('Failed to fetch data cuti');
         }

@@ -13,7 +13,7 @@ const TambahDataGaji = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/data_pegawai/pegawai')
+    axios.get('https://backend.simatren.space/api/data_pegawai/pegawai')
       .then(response => {
         const aktifPegawai = response.data.filter(pegawai => pegawai.status_kepegawaian === 'Aktif');
         setPegawaiList(aktifPegawai);
@@ -81,7 +81,7 @@ const TambahDataGaji = () => {
       potongan: parsedPotongan 
     };  
 
-    axios.post('http://localhost:5000/api/data_gaji/gaji', dataGaji)
+    axios.post('https://backend.simatren.space/api/data_gaji/gaji', dataGaji)
       .then(response => {
         console.log(response.data);
         setNip('');

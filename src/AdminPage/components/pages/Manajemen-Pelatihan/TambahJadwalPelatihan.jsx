@@ -16,7 +16,7 @@ const TambahJadwalPelatihan = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/data_pegawai/pegawai')
+    axios.get('https://backend.simatren.space/api/data_pegawai/pegawai')
       .then(response => {
         setPegawaiList(response.data);
       })
@@ -52,7 +52,7 @@ const TambahJadwalPelatihan = () => {
 
     try {
       // Tambahkan jadwal pelatihan
-      await axios.post('http://localhost:5000/api/data_pelatihan/pelatihan', dataPelatihan, {
+      await axios.post('https://backend.simatren.space/api/data_pelatihan/pelatihan', dataPelatihan, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -65,7 +65,7 @@ const TambahJadwalPelatihan = () => {
       // Kirim notifikasi ke setiap pegawai
       const notifikasiPromises = idPegawai.map(id => {
         const message = `Anda memiliki jadwal pelatihan baru dari ${formatTanggalMulai} sampai ${formatTanggalSelesai}`;
-        return axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-pegawai/pelatihan', {
+        return axios.post('https://backend.simatren.space/api/data_notifikasi/notifikasi-pegawai/pelatihan', {
           id_pegawai: id,
           message
         });

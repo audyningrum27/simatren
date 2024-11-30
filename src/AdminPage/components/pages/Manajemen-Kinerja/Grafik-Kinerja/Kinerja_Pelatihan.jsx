@@ -17,7 +17,7 @@ function Kinerja_Pelatihan() {
     const { id_pegawai } = useParams();
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/data_pelatihan/pelatihan-per-bulan/${id_pegawai}`)
+        axios.get(`https://backend.simatren.space/api/data_pelatihan/pelatihan-per-bulan/${id_pegawai}`)
             .then(response => {
                 const results = response.data;
 

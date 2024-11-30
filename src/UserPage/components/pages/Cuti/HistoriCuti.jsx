@@ -28,7 +28,7 @@ function HistoriCuti() {
         console.error('id_pegawai is undefined');
         return;
       }
-      const response = await axios.get(`http://localhost:5000/api/data_cuti/cuti/${id_pegawai}`, {
+      const response = await axios.get(`https://backend.simatren.space/api/data_cuti/cuti/${id_pegawai}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -69,7 +69,7 @@ function HistoriCuti() {
   };
 
   const viewBuktiFormIzin = (id_cuti) => {
-    const url = `http://localhost:5000/api/data_cuti/cuti/view-bukti/${id_cuti}`;
+    const url = `https://backend.simatren.space/api/data_cuti/cuti/view-bukti/${id_cuti}`;
     window.open(url, '_blank');
   };
 

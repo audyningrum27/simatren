@@ -28,7 +28,7 @@ export default function KategoriPegawaiChart() {
 	useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/data_pegawai/pegawai/role/count');
+        const response = await fetch('https://backend.simatren.space/api/data_pegawai/pegawai/role/count');
         
         if (!response.ok) {
           // Menampilkan error jika respons tidak oke

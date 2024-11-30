@@ -21,7 +21,7 @@ function GrafikKinerja() {
 
   const fetchDataKinerja = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/data_presensi/formkinerja/all');
+      const response = await axios.get('https://backend.simatren.space/api/data_presensi/formkinerja/all');
       const data = response.data;
 
       console.log('Data kinerja:', data);

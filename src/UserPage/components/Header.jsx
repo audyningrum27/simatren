@@ -12,7 +12,7 @@ const Header = ({ isOpen, setIsOpen }) => {
   const idPegawai = localStorage.getItem('id_pegawai');
 
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io('https://backend.simatren.space/api');
 
     socket.on('notification', (notification) => {
       setNotifications((prevNotifications) => [notification, ...prevNotifications]);
@@ -27,9 +27,9 @@ const Header = ({ isOpen, setIsOpen }) => {
     if (!idPegawai) return;
     try {
       const response = await axios.all([
-        axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-cuti/${idPegawai}`),
-        axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-pelatihan/${idPegawai}`),
-        axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-acc-pelatihan/${idPegawai}`)
+        axios.get(`https://backend.simatren.space/api/data_notifikasi/notifikasi-cuti/${idPegawai}`),
+        axios.get(`https://backend.simatren.space/api/data_notifikasi/notifikasi-pelatihan/${idPegawai}`),
+        axios.get(`https://backend.simatren.space/api/data_notifikasi/notifikasi-acc-pelatihan/${idPegawai}`)
       ]);
 
       const cutiNotifications = response[0].data;
@@ -64,13 +64,13 @@ const Header = ({ isOpen, setIsOpen }) => {
       let endpoint, path;
 
       if (notification.category === 'cuti') {
-        endpoint = `http://localhost:5000/api/data_notifikasi/notifikasi-cuti/${notification.id_notifikasi}`;
+        endpoint = `https://backend.simatren.space/api/data_notifikasi/notifikasi-cuti/${notification.id_notifikasi}`;
         path = '/UserPage/histori_cuti';
       } else if (notification.category === 'pelatihan') {
-        endpoint = `http://localhost:5000/api/data_notifikasi/notifikasi-pelatihan/${notification.id_notifikasi}`;
+        endpoint = `https://backend.simatren.space/api/data_notifikasi/notifikasi-pelatihan/${notification.id_notifikasi}`;
         path = '/UserPage/jadwal_pelatihan_pegawai';
       } else if (notification.category === 'acc-pelatihan') {
-        endpoint = `http://localhost:5000/api/data_notifikasi/notifikasi-acc-pelatihan/${notification.id_notifikasi}`;
+        endpoint = `https://backend.simatren.space/api/data_notifikasi/notifikasi-acc-pelatihan/${notification.id_notifikasi}`;
         path = '/UserPage/histori_pelatihan_pegawai';
       }
 

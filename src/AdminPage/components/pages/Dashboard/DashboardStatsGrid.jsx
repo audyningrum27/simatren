@@ -15,9 +15,9 @@ const DashboardStatsGrid = ({ selectedDate }) => {
         const formattedDate = selectedDate.toISOString().split('T')[0];
         
         // Mengambil jumlah pegawai aktif berdasarkan tanggal yang dipilih
-        const responseActive = await fetch(`http://localhost:5000/api/data_pegawai/pegawai/active/count?date=${formattedDate}`);
-        const responseTotal = await fetch('http://localhost:5000/api/data_pegawai/pegawai/total/count');
-        const responseCuti = await fetch(`http://localhost:5000/api/data_pegawai/pegawai/cuti/count?date=${formattedDate}`);
+        const responseActive = await fetch(`https://backend.simatren.space/api/data_pegawai/pegawai/active/count?date=${formattedDate}`);
+        const responseTotal = await fetch('https://backend.simatren.space/api/data_pegawai/pegawai/total/count');
+        const responseCuti = await fetch(`https://backend.simatren.space/api/data_pegawai/pegawai/cuti/count?date=${formattedDate}`);
         
         if (!responseActive.ok || !responseTotal.ok || !responseCuti.ok) {
           throw new Error('Failed to fetch employee counts');
@@ -48,7 +48,7 @@ const DashboardStatsGrid = ({ selectedDate }) => {
     const fetchPresensiData = async () => {
       try {
         const formattedDate = selectedDate.toISOString().split('T')[0];
-        const responsePresensi = await fetch(`http://localhost:5000/api/data_presensi/presensi/count?date=${formattedDate}`);
+        const responsePresensi = await fetch(`https://backend.simatren.space/api/data_presensi/presensi/count?date=${formattedDate}`);
         
         if (!responsePresensi.ok) {
           throw new Error('Failed to fetch presensi data');

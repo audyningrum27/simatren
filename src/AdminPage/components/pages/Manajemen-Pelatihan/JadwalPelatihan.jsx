@@ -17,7 +17,7 @@ function JadwalPelatihan() {
 
   const fetchDataPelatihan = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_pelatihan/pelatihan');
+      const response = await fetch('https://backend.simatren.space/api/data_pelatihan/pelatihan');
       const data = await response.json();
       const filteredData = data.filter(item => item.status === 'Belum Dimulai' || item.status === 'Proses');
       setDataPelatihan(filteredData);

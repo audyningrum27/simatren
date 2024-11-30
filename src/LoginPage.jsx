@@ -13,7 +13,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post('https://backend.simatren.space/api/auth/login', {
         email,
         password,
       });
@@ -36,6 +36,9 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
+      console.error(error.response.data);
+      console.error(error.response.status);
+      console.error(error.response.headers);
       setError('Login gagal. Email atau Password salah!');
       setShowError(true);
     }

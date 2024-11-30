@@ -18,7 +18,7 @@ const DetailHistoryPelatihan = () => {
 
   const fetchDetailPelatihan = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`);
+      const response = await fetch(`https://backend.simatren.space/api/data_pelatihan/pelatihan/${id_pelatihan}`);
       const data = await response.json();
       const formattedData = {
         ...data,
@@ -42,7 +42,7 @@ const DetailHistoryPelatihan = () => {
   const updateStatusPelatihan = async (id_pelatihan, status) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5000/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
+      await axios.put(`https://backend.simatren.space/api/data_pelatihan/pelatihan/status/${id_pelatihan}`,
         { status },
         {
           headers: {
@@ -52,7 +52,7 @@ const DetailHistoryPelatihan = () => {
 
       // Menambahkan notifikasi
       const message = `Pelaporan pelatihan Anda telah ${status === 'Selesai' ? 'disetujui' : 'ditolak'}.`;
-      await axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-pegawai/accpelatihan', {
+      await axios.post('https://backend.simatren.space/api/data_notifikasi/notifikasi-pegawai/accpelatihan', {
         id_pegawai: pelatihan.id_pegawai,
         message,
       }, {
@@ -75,12 +75,12 @@ const DetailHistoryPelatihan = () => {
   }
 
   const viewBrosurPelatihan = (id_pelatihan) => {
-    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
+    const url = `https://backend.simatren.space/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
     window.open(url, '_blank');
   };
 
   const viewBuktiPelaksanaan = () => {
-    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-bukti/${id_pelatihan}`;
+    const url = `https://backend.simatren.space/api/data_pelatihan/pelatihan/view-bukti/${id_pelatihan}`;
     window.open(url, '_blank');
   };
 

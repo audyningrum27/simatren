@@ -1,4 +1,4 @@
-import { MdInsertChartOutlined, MdOutlineCalendarMonth } from "react-icons/md";
+import { MdInsertChartOutlined, MdOutlineCalendarMonth, MdWorkOutline } from "react-icons/md";
 import { HiOutlineUserGroup } from "react-icons/hi2";
 import { TbWallet, TbLogout, TbCalendarMonth } from "react-icons/tb";
 import { AiOutlineLineChart } from "react-icons/ai";
@@ -34,6 +34,12 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     path: "/AdminPage/manajemen_cuti",
     icon: <TbCalendarMonth />
   },
+  /*{
+    key: "manajemen_rapat",
+    label: "Manajemen Rapat",
+    path: "/AdminPage/manajemen_rapat",
+    icon: <MdWorkOutline />
+  },*/
 ]
 
 export const DASHBOARD_SIDEBAR_KINERJA = [

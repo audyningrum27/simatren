@@ -16,7 +16,7 @@ const PelaporanPelatihan = () => {
     const fetchPelatihanProses = async () => {
       const idPegawai = localStorage.getItem('id_pegawai');
       try {
-        const response = await axios.get(`http://localhost:5000/api/data_pelatihan/pelatihan-proses/${idPegawai}`);
+        const response = await axios.get(`https://backend.simatren.space/api/data_pelatihan/pelatihan-proses/${idPegawai}`);
         setPelatihanProses(response.data);
       } catch (error) {
         console.error('Error fetching pelatihan proses:', error);
@@ -68,20 +68,20 @@ const PelaporanPelatihan = () => {
     const idPegawai = localStorage.getItem('id_pegawai');
 
     try {
-      await axios.post(`http://localhost:5000/api/data_pelatihan/upload-bukti/${selectedPelatihan}`, formData, {
+      await axios.post(`https://backend.simatren.space/api/data_pelatihan/upload-bukti/${selectedPelatihan}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
 
       // Ambil nama pegawai dan kirim notifikasi
-      const { data } = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${idPegawai}`);
+      const { data } = await axios.get(`https://backend.simatren.space/api/data_pegawai/pegawai/profil/${idPegawai}`);
       const notifikasiData = {
         id_pegawai: idPegawai,
         message: `${data.nama_pegawai} mengirimkan pelaporan pelatihan.`
       };
 
-      await axios.post('http://localhost:5000/api/data_notifikasi/notifikasi-admin/pelatihan', notifikasiData);
+      await axios.post('https://backend.simatren.space/api/data_notifikasi/notifikasi-admin/pelatihan', notifikasiData);
       setShowPopup(true);
     } catch (error) {
       console.error('Error uploading bukti pelaksanaan:', error);

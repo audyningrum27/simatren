@@ -20,7 +20,7 @@ function GrafikPelatihan({ selectedDate }) {
 
   const fetchDataPelatihan = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/data_pelatihan/pelatihan-per-bulan');
+      const response = await axios.get('https://backend.simatren.space/api/data_pelatihan/pelatihan-per-bulan');
       const data = response.data;
 
       console.log('Data pelatihan:', data);

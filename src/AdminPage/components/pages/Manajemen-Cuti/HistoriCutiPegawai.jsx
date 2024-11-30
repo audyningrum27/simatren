@@ -15,7 +15,7 @@ function HistoriCutiPegawai() {
 
   const fetchDataCuti = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_cuti/cuti/all');
+      const response = await fetch('https://backend.simatren.space/api/data_cuti/cuti/all');
       const result = await response.json();
 
       if (result && Array.isArray(result)) {
@@ -72,7 +72,7 @@ function HistoriCutiPegawai() {
   );
 
   const viewBuktiFormIzin = (id_cuti) => {
-    const url = `http://localhost:5000/api/data_cuti/cuti/view-bukti/${id_cuti}`;
+    const url = `https://backend.simatren.space/api/data_cuti/cuti/view-bukti/${id_cuti}`;
     window.open(url, '_blank');
   };
 

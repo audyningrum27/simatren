@@ -37,7 +37,7 @@ const ScanQR = () => {
   useEffect(() => {
     const idPegawai = localStorage.getItem('id_pegawai');
     if (idPegawai) {
-      fetch(`http://localhost:5000/api/data_presensi/presensi/status/${idPegawai}`)
+      fetch(`https://backend.simatren.space/api/data_presensi/presensi/status/${idPegawai}`)
         .then(response => response.json())
         .then(data => {
           setMasukDisabled(data.masuk);
@@ -84,7 +84,7 @@ const ScanQR = () => {
     if (data && idPegawai) {
       const jakartaTime = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
 
-      fetch(`http://localhost:5000/api/data_presensi/save-presensi/${idPegawai}`, {
+      fetch(`https://backend.simatren.space/api/data_presensi/save-presensi/${idPegawai}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -114,7 +114,7 @@ const ScanQR = () => {
     if (data && idPegawai) {
       const jakartaTime = moment().tz('Asia/Jakarta').format('YYYY-MM-DD HH:mm:ss');
 
-      fetch(`http://localhost:5000/api/data_presensi/save-presensi/${idPegawai}`, {
+      fetch(`https://backend.simatren.space/api/data_presensi/save-presensi/${idPegawai}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
