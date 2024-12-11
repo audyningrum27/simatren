@@ -19,10 +19,10 @@ const app = express();
 // Konfigurasi CORS
 app.use(cors({
     // origin: 'http://localhost:5173',
-    origin: 'http://simatren.space',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization, X-Requested-With', 'Origin', 'Accept']
 }));
 
 app.use(express.json({ limit: '20mb' }));
