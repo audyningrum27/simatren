@@ -37,7 +37,7 @@ export const DASHBOARD_SIDEBAR_LINKS = [
   {
     key: "manajemen_Rapat",
     label: "Manajemen Rapat",
-    path: "/AdminPage/manajemen_Rapat",
+    path: "/AdminPage/manajemen_rapat",
     icon: <MdOutlineWorkOutline />
   },
 ]

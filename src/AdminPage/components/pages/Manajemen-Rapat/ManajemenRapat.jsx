@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { HiMiniPlus } from "react-icons/hi2";
 
 function ManajemenRapat() {
+   const navigate = useNavigate();
    const rapatHariIni = [
       { id: 1, nama: "Rapat Pengelola Masjid", lokasi: "Gedung 1", waktu: "09.00 - Selesai" },
       { id: 2, nama: "Rapat Guru MA", lokasi: "Gedung 1", waktu: "09.00 - Selesai" },
@@ -15,7 +17,7 @@ function ManajemenRapat() {
          <p className="text-xl font-bold px-5">Manajemen Rapat</p>
          <div className="relative py-4 flex flex-row justify-between items-center w-full md:w-full px-4 md:px-0">
             <div className="relative flex-1 mr-2">
-               <button onClick={() => navigate('')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-5">
+               <button onClick={() => navigate('/AdminPage/tambah_rapat')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-5">
                   <HiMiniPlus fontSize={22} className="inline mr-1" /> Buat Rapat Baru
                </button>
             </div>
