@@ -1,6 +1,6 @@
 import { FaUser } from "react-icons/fa";
 import { TbWallet, TbLogout } from "react-icons/tb";
-import { MdOutlineCalendarMonth } from "react-icons/md";
+import { MdOutlineCalendarMonth, MdOutlineWorkOutline } from "react-icons/md";
 import { VscTools } from "react-icons/vsc";
 import { AiOutlineLineChart } from "react-icons/ai";
 
@@ -25,6 +25,12 @@ export const DASHBOARD_SIDEBAR_LINKS = [
     label: "Cuti",
     path: "/UserPage/pengajuan_cuti",
     icon: <MdOutlineCalendarMonth />
+  },
+  {
+    key: "rapat",
+    label: "Rapat",
+    path: "/UserPage/rapat",
+    icon: <MdOutlineWorkOutline />
   },
   {
     key: "pelatihan",

@@ -14,6 +14,7 @@ import ManajemenPresensi from './AdminPage/components/pages/Manajemen-Presensi/M
 import LaporanKinerja from './AdminPage/components/pages/Manajemen-Presensi/LaporanKinerja';
 import ManajemenCuti from './AdminPage/components/pages/Manajemen-Cuti/ManajemenCuti';
 import HistoriCutiPegawai from './AdminPage/components/pages/Manajemen-Cuti/HistoriCutiPegawai';
+import ManajemenRapat from './AdminPage/components/pages/Manajemen-Rapat/ManajemenRapat';
 import HistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/HistoryPelatihan';
 import JadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/JadwalPelatihan';
 import TambahJadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/TambahJadwalPelatihan';
@@ -29,6 +30,7 @@ import ScanQR from './UserPage/components/pages/Presensi/ScanQR';
 import Penggajian from './UserPage/components/pages/Penggajian';
 import PengajuanCuti from "./UserPage/components/pages/Cuti/PengajuanCuti";
 import HistoriCuti from "./UserPage/components/pages/Cuti/HistoriCuti";
+import Rapat from "./UserPage/components/pages/Rapat/Rapat";
 import PelaporanPelatihan from "./UserPage/components/pages/Pelatihan/PelaporanPelatihan";
 import HistoriPelatihanPegawai from './UserPage/components/pages/Pelatihan/HistoriPelatihanPegawai';
 import DetailHistoriPelatihanPegawai from './UserPage/components/pages/Pelatihan/DetailHistoriPelatihanPegawai';
@@ -66,6 +68,7 @@ function App() {
             <Route path="/AdminPage/laporan_kinerja/:id_presensi" element={<LaporanKinerja />} />
             <Route path="/AdminPage/manajemen_cuti" element={<ManajemenCuti />} />
             <Route path="/AdminPage/histori_cuti_pegawai" element={<HistoriCutiPegawai />} />
+            <Route path="/AdminPage/manajemen_rapat" element={<ManajemenRapat />} />
             <Route path="/AdminPage/histori_pelatihan" element={<HistoryPelatihan />} />
             <Route path="/AdminPage/jadwal_pelatihan" element={<JadwalPelatihan />} />
             <Route path="/AdminPage/detail_history_pelatihan/:id_pelatihan" element={<DetailHistoryPelatihan />} />
@@ -87,6 +90,7 @@ function App() {
             <Route path="/UserPage/penggajian" element={<Penggajian />} />
             <Route path="/UserPage/pengajuan_cuti" element={<PengajuanCuti />} />
             <Route path="/UserPage/histori_cuti" element={<HistoriCuti />} />
+            <Route path="/UserPage/rapat" element={<Rapat />} />
             <Route path="/UserPage/pelaporan_pelatihan" element={<PelaporanPelatihan />} />
             <Route path="/UserPage/histori_pelatihan_pegawai" element={<HistoriPelatihanPegawai />} />
             <Route path="/UserPage/jadwal_pelatihan_pegawai" element={<JadwalPelatihanPegawai />} />
