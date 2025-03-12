@@ -15,12 +15,12 @@ function Rapat() {
          <p className="text-xl font-bold px-5">Jadwal Rapat</p>
          <div className="relative py-4 flex flex-row justify-between items-center w-full md:w-full px-4 md:px-0">
             <div className="relative flex-1 mr-2">
-               <button onClick={() => navigate('')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-5">
+               <button onClick={() => navigate('')} className="font-semibold text-white bg-green-900 rounded-sm h-10 px-5">
                   <TbScan fontSize={22} className="inline mr-1" /> Scan Presensi Rapat
                </button>
             </div>
             <div className="flex justify-between mx-2 md:mx-10">
-               <a href="#" className="text-green-900 hover:underline font-medium">Lihat semua rapat</a>
+               <button onClick={() => navigate('')} className="text-green-900 hover:underline font-semibold">Lihat semua rapat</button>
             </div>
          </div>
 
