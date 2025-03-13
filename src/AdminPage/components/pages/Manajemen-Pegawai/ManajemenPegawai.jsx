@@ -72,7 +72,7 @@ function ManajemenPegawai() {
                   />
                </div>
                <div className="flex items-center">
-                  <button onClick={() => navigate('')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-5 relative flex-1 mr-2">
+                  <button onClick={() => navigate('/AdminPage/tambah_data_role')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-5 relative flex-1 mr-2">
                      <HiMiniPlus fontSize={22} className="inline mr-1" /> Tambah Role
                   </button>
                </div>
