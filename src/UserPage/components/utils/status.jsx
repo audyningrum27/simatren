@@ -54,6 +54,18 @@ export function getStatus(status) {
 					{status.replaceAll('_', ' ').toLowerCase()}
 				</span>
 			);
+		case 'Hari ini':
+			return (
+				<span className="capitalize py-1 px-2 rounded-md text-xs text-red-600 bg-red-100 font-semibold">
+					{status.replaceAll('_', ' ').toLowerCase()}
+				</span>
+			);
+		case 'Mendatang':
+			return (
+				<span className="capitalize py-1 px-2 rounded-md text-xs text-sky-600 bg-sky-100 font-semibold">
+					{status.replaceAll('_', ' ').toLowerCase()}
+				</span>
+			)
 		default:
 			return (
 				<span className="capitalize py-1 px-2 rounded-md text-xs text-gray-600 bg-gray-100 font-semibold">

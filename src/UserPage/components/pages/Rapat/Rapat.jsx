@@ -1,7 +1,10 @@
 import React from 'react';
 import { TbScan } from "react-icons/tb";
+import { useNavigate } from 'react-router-dom';
 
 function Rapat() {
+   const navigate = useNavigate();
+
    const rapatHariIni = [
       { id: 1, nama: "Rapat Pengelola Masjid", lokasi: "Gedung 1", waktu: "09.00 - Selesai" },
       { id: 2, nama: "Rapat Guru MA", lokasi: "Gedung 1", waktu: "09.00 - Selesai" },
@@ -20,7 +23,7 @@ function Rapat() {
                </button>
             </div>
             <div className="flex justify-between mx-2 md:mx-10">
-               <button onClick={() => navigate('')} className="text-green-900 hover:underline font-semibold">Lihat semua rapat</button>
+               <button onClick={() => navigate('/UserPage/histori_rapat')} className="text-green-900 hover:underline font-semibold">Lihat semua rapat</button>
             </div>
          </div>
 
