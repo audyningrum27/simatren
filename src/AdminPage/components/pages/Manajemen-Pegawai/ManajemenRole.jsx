@@ -63,7 +63,7 @@ function ManajemenRole() {
 
 	return (
 		<div>
-			<p className="text-xl font-bold px-5">Manage Data Rapat</p>
+			<p className="text-xl font-bold px-5">Manage Data Role</p>
 
 			<div className="relative py-4 flex flex-row justify-between items-center w-full md:w-full px-4 md:px-0">
 				{/* Search Bar */}
