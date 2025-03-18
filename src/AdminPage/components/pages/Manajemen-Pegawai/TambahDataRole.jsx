@@ -101,7 +101,7 @@ const TambahDataRole = () => {
             <button
                type="button"
                className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-               onClick={() => navigate('/AdminPage/manajemen_pegawai')}
+               onClick={() => navigate('/AdminPage/manajemen_role')}
             >
                Batal
             </button>

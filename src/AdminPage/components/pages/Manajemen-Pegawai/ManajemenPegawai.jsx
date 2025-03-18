@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { HiOutlineSearch, HiChevronLeft, HiChevronRight } from 'react-icons/hi';
-import { HiMiniPlus } from "react-icons/hi2";
+import { HiMiniPlus, HiMiniUser } from "react-icons/hi2";
 import { getPegawaiStatus } from '../../utils/status';
 import { useNavigate } from 'react-router-dom';
 
@@ -72,8 +72,8 @@ function ManajemenPegawai() {
                   />
                </div>
                <div className="flex items-center">
-                  <button onClick={() => navigate('/AdminPage/tambah_data_role')} className="font-semibold text-xs text-white bg-green-900 rounded-sm h-10 px-5 relative flex-1 mr-2">
-                     <HiMiniPlus fontSize={22} className="inline mr-1" /> Tambah Role
+                  <button onClick={() => navigate('/AdminPage/manajemen_role')} className="font-semibold text-xs text-green-900 bg-[#AADC93] rounded-sm h-10 px-5 relative flex-1 mr-2">
+                     <HiMiniUser fontSize={22} className="inline mr-1" /> Data Role
                   </button>
                </div>
                <div className="flex items-center">

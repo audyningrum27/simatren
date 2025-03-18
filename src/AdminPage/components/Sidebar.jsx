@@ -32,6 +32,7 @@ export default function Sidebar({ isOpen }) {
         </div>
         <div className="px-5">
           <p className="text-sm font-bold">{userType?.nama_pegawai || 'S!MATREN'}</p>
+          {/* ubah sesuai role bukan admin saja */}
           <p className="text-[10px] font-thin">Admin</p>
         </div>
       </div>

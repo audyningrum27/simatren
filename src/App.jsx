@@ -7,6 +7,7 @@ import Dashboard from './AdminPage/components/pages/Dashboard/Dashboard';
 import ManajemenPegawai from './AdminPage/components/pages/Manajemen-Pegawai/ManajemenPegawai';
 import TambahDataPegawai from './AdminPage/components/pages/Manajemen-Pegawai/TambahDataPegawai';
 import DetailPegawai from './AdminPage/components/pages/Manajemen-Pegawai/DetailPegawai';
+import ManajemenRole from './AdminPage/components/pages/Manajemen-Pegawai/ManajemenRole';
 import TambahDataRole from './AdminPage/components/pages/Manajemen-Pegawai/TambahDataRole';
 import ManajemenGaji from './AdminPage/components/pages/Manajemen-Gaji/ManajemenGaji';
 import TambahDataGaji from './AdminPage/components/pages/Manajemen-Gaji/TambahDataGaji';
@@ -66,6 +67,7 @@ function App() {
             <Route path="/AdminPage/manajemen_pegawai" element={<ManajemenPegawai />} />
             <Route path="/AdminPage/tambah_data_pegawai" element={<TambahDataPegawai />} />
             <Route path="/AdminPage/detail_pegawai/:id_pegawai" element={<DetailPegawai />} />
+            <Route path="/AdminPage/manajemen_role" element={<ManajemenRole />} />
             <Route path="/AdminPage/tambah_data_role" element={<TambahDataRole />} />
             <Route path="/AdminPage/manajemen_gaji" element={<ManajemenGaji />} />
             <Route path="/AdminPage/tambah_data_gaji" element={<TambahDataGaji />} />

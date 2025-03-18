@@ -106,7 +106,7 @@ function RiwayatRapat() {
                            <td className="px-4 py-3">{data.tanggal}</td>
                            <td className="px-4 py-3">{getPegawaiStatus(data.status)}</td>
                            <td className="px-4 py-3">
-                              <button className="font-semibold hover:underline flex items-center">
+                              <button onClick={() => navigate(``)} className="font-semibold hover:underline flex items-center">
                                  Detail <HiChevronRight fontSize={18} className="ml-1" />
                               </button>
                            </td>
