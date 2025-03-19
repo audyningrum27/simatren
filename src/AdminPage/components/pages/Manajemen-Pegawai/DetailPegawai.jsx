@@ -23,7 +23,7 @@ export default function DetailPegawai() {
 
     const fetchPegawaiDetail = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/data_pegawai/pegawai/${id_pegawai}`);
+            const response = await fetch(`https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/${id_pegawai}`);
             const data = await response.json();
             if (data.tanggal_lahir) {
                 const tanggalLahir = moment.utc(data.tanggal_lahir).tz('Asia/Jakarta');
@@ -55,7 +55,7 @@ export default function DetailPegawai() {
                 }
                 console.log('Updating pegawai:', updatedPegawai);
 
-                const response = await fetch(`http://localhost:5000/api/data_pegawai/pegawai/${id_pegawai}`, {
+                const response = await fetch(`https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/${id_pegawai}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export default function DetailPegawai() {
 
     const confirmDelete = async () => {
         try {
-            await fetch(`http://localhost:5000/api/data_pegawai/pegawai/${id_pegawai}`, {
+            await fetch(`https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/${id_pegawai}`, {
                 method: 'DELETE',
             });
             setShowPopup(true);
@@ -124,7 +124,7 @@ export default function DetailPegawai() {
     if (!pegawai) return <p>Loading...</p>;
 
     const viewKartuKeluarga = () => {
-        const url = `http://localhost:5000/api/data_pegawai/pegawai/view-kk/${id_pegawai}`;
+        const url = `https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/view-kk/${id_pegawai}`;
         window.open(url, '_blank');
     };
 

@@ -15,11 +15,11 @@ const Role = () => {
         const id_pegawai = localStorage.getItem('id_pegawai');
 
         if (id_pegawai) {
-            axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${id_pegawai}`)
+            axios.get(`https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/profil/${id_pegawai}`)
                 .then(response => {
                     const role = response.data.id_role;
                     setIdRole(role);
-                    return axios.get(`http://localhost:5000/api/data_role/role/${role}`);
+                    return axios.get(`https://be-simatren.riset-d3rpla.com/api/data_role/role/${role}`);
                 })
                 .then(response => {
                     const questionsData = response.data;
@@ -62,7 +62,7 @@ const Role = () => {
             jawaban: checkedItems[question.id_deskripsi] || false,
         }));
 
-        axios.post('http://localhost:5000/api/data_role/transaksi_role', dataToSend)
+        axios.post('https://be-simatren.riset-d3rpla.com/api/data_role/transaksi_role', dataToSend)
             .then(response => {
                 console.log('Data successfully submitted');
                 setShowPopup(true);

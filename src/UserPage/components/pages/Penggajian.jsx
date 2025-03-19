@@ -29,7 +29,7 @@ function Penggajian() {
         console.error('nip is undefined');
         return;
       }
-      const response = await axios.get(`http://localhost:5000/api/data_gaji/gaji/${nip}`, {
+      const response = await axios.get(`https://be-simatren.riset-d3rpla.com/api/data_gaji/gaji/${nip}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

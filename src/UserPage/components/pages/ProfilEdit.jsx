@@ -26,7 +26,7 @@ const ProfilEdit = () => {
                 console.error('id_pegawai is undefined');
                 return;
             }
-            const response = await axios.get(`http://localhost:5000/api/data_pegawai/pegawai/profil/${id_pegawai}`, {
+            const response = await axios.get(`https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/profil/${id_pegawai}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -51,7 +51,7 @@ const ProfilEdit = () => {
         const formData = new FormData();
         formData.append('foto_profil', selectedFile);
         try {
-            const response = await axios.post(`http://localhost:5000/api/data_pegawai/pegawai/upload-foto/${id_pegawai}`, formData, {
+            const response = await axios.post(`https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/upload-foto/${id_pegawai}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -93,7 +93,7 @@ const ProfilEdit = () => {
         const formData = new FormData();
         formData.append('kartu_keluarga', selectedFileKK);
         try {
-            const response = await axios.post(`http://localhost:5000/api/data_pegawai/pegawai/upload-kk/${id_pegawai}`, formData, {
+            const response = await axios.post(`https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/upload-kk/${id_pegawai}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -133,7 +133,7 @@ const ProfilEdit = () => {
     const viewKartuKeluarga = () => {
         const id_pegawai = localStorage.getItem('id_pegawai');
         const token = localStorage.getItem('token');
-        const url = `http://localhost:5000/api/data_pegawai/pegawai/view-kk/${id_pegawai}`;
+        const url = `https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/view-kk/${id_pegawai}`;
         window.open(url, '_blank');
     };
 
@@ -151,7 +151,7 @@ const ProfilEdit = () => {
         };
 
         try {
-            const response = await axios.put(`http://localhost:5000/api/data_pegawai/pegawai/profil/${id_pegawai}`, updatedProfil, {
+            const response = await axios.put(`https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai/profil/${id_pegawai}`, updatedProfil, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

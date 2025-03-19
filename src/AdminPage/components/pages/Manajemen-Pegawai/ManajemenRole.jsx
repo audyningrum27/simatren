@@ -33,7 +33,7 @@ function ManajemenRole() {
 
 	const fetchDataRole = async () => {
 		try {
-			const response = await fetch('http://localhost:5000/api/data_role');
+			const response = await fetch('https://be-simatren.riset-d3rpla.com/api/data_role');
 			const data = await response.json();
 			setDataRole(data);
 		} catch (error) {
@@ -71,7 +71,7 @@ function ManajemenRole() {
 					<HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
 					<input
 						type="text"
-						placeholder="Cari judul atau pelaksana..."
+						placeholder="Cari nama role atau unit kerja..."
 						className="text-sm bg-gray-100 border border-gray-300 w-full h-10 pl-10 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-900"
 						value={searchTerm}
 						onChange={handleSearchChange}

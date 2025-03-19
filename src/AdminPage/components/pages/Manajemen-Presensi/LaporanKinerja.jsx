@@ -10,10 +10,10 @@ const LaporanKinerja = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const laporanResponse = await axios.get(`http://localhost:5000/api/data_presensi/presensi/laporan_kinerja/${id_presensi}`);
+                const laporanResponse = await axios.get(`https://be-simatren.riset-d3rpla.com/api/data_presensi/presensi/laporan_kinerja/${id_presensi}`);
                 setDataPresensi(laporanResponse.data);
 
-                const questionsResponse = await axios.get(`http://localhost:5000/api/data_role/questions/${id_presensi}`);
+                const questionsResponse = await axios.get(`https://be-simatren.riset-d3rpla.com/api/data_role/questions/${id_presensi}`);
                 setQuestions(questionsResponse.data);
 
             } catch (error) {

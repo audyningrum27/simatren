@@ -20,7 +20,7 @@ const DetailJadwalPelatihan = () => {
 
   const fetchDetailPelatihan = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`);
+      const response = await fetch(`https://be-simatren.riset-d3rpla.com/api/data_pelatihan/pelatihan/${id_pelatihan}`);
       const data = await response.json();
       const formattedData = {
         ...data,
@@ -45,7 +45,7 @@ const DetailJadwalPelatihan = () => {
         }
         console.log('Updating pelatihan:', updatedPelatihan);
 
-        const response = await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`, {
+        const response = await fetch(`https://be-simatren.riset-d3rpla.com/api/data_pelatihan/pelatihan/${id_pelatihan}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ const DetailJadwalPelatihan = () => {
 
   const confirmDelete = async () => {
     try {
-      await fetch(`http://localhost:5000/api/data_pelatihan/pelatihan/${id_pelatihan}`, {
+      await fetch(`https://be-simatren.riset-d3rpla.com/api/data_pelatihan/pelatihan/${id_pelatihan}`, {
         method: 'DELETE',
       });
       setShowPopup(true);
@@ -116,7 +116,7 @@ const DetailJadwalPelatihan = () => {
   };
 
   const viewBrosurPelatihan = (id_pelatihan) => {
-    const url = `http://localhost:5000/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
+    const url = `https://be-simatren.riset-d3rpla.com/api/data_pelatihan/pelatihan/view-brosur/${id_pelatihan}`;
     window.open(url, '_blank');
   };
 

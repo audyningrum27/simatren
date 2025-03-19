@@ -10,10 +10,10 @@ function TabelPresensi() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const presensiResponse = await axios.get(`http://localhost:5000/api/data_presensi/presensi/daily/${id_pegawai}`);
+                const presensiResponse = await axios.get(`https://be-simatren.riset-d3rpla.com/api/data_presensi/presensi/daily/${id_pegawai}`);
                 const presensiData = presensiResponse.data;
 
-                const cutiResponse = await axios.get(`http://localhost:5000/api/data_cuti/cuti/approved/${id_pegawai}`);
+                const cutiResponse = await axios.get(`https://be-simatren.riset-d3rpla.com/api/data_cuti/cuti/approved/${id_pegawai}`);
                 const cutiData = cutiResponse.data;
 
                 const monthlyData = processMonthlyData(presensiData, cutiData);

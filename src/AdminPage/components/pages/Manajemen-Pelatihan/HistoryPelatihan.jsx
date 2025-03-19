@@ -18,7 +18,7 @@ function HistoryPelatihan() {
 
   const fetchHistoriPelatihan = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_pelatihan/pelatihan');
+      const response = await fetch('https://be-simatren.riset-d3rpla.com/api/data_pelatihan/pelatihan');
       const data = await response.json();
       const filteredData = data.filter(item => item.status === 'Selesai' || item.status === 'Ditolak' || item.status === 'Belum Acc');
       setHistoriPelatihan(filteredData);

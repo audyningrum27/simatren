@@ -34,7 +34,7 @@ function HistoriRapat() {
 
    const fetchRiwayatRapat = async () => {
       try {
-         const response = await fetch('http://localhost:5000/api/riwayat_rapat');
+         const response = await fetch('https://be-simatren.riset-d3rpla.com/api/riwayat_rapat');
          const data = await response.json();
          setRiwayatRapat(data);
       } catch (error) {

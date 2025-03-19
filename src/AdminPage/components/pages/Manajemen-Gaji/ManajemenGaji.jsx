@@ -19,7 +19,7 @@ function ManajemenGaji() {
 
   const fetchDataGaji = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_gaji/gaji');
+      const response = await fetch('https://be-simatren.riset-d3rpla.com/api/data_gaji/gaji');
       const result = await response.json();
 
       if (result && Array.isArray(result)) {

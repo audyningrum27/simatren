@@ -11,7 +11,7 @@ const Header = ({ isOpen, setIsOpen }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const socket = io('http://localhost:5000');
+    const socket = io('https://be-simatren.riset-d3rpla.com');
 
     socket.on('notification', (notification) => {
       setNotifications((prevNotifications) => [notification, ...prevNotifications]);
@@ -25,8 +25,8 @@ const Header = ({ isOpen, setIsOpen }) => {
   const fetchNotifications = async () => {
     try {
       const response = await axios.all([
-        axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-admin/cuti`),
-        axios.get(`http://localhost:5000/api/data_notifikasi/notifikasi-admin/pelatihan`)
+        axios.get(`https://be-simatren.riset-d3rpla.com/api/data_notifikasi/notifikasi-admin/cuti`),
+        axios.get(`https://be-simatren.riset-d3rpla.com/api/data_notifikasi/notifikasi-admin/pelatihan`)
       ]);
 
       const cutiNotifications = response[0].data;
@@ -57,8 +57,8 @@ const Header = ({ isOpen, setIsOpen }) => {
   const handleNotificationClick = async (notification) => {
     try {
       const endpoint = notification.category === 'cuti'
-        ? `http://localhost:5000/api/data_notifikasi/notifikasi-admin/cuti/${notification.id_notifikasi}`
-        : `http://localhost:5000/api/data_notifikasi/notifikasi-admin/pelatihan/${notification.id_notifikasi}`;
+        ? `https://be-simatren.riset-d3rpla.com/api/data_notifikasi/notifikasi-admin/cuti/${notification.id_notifikasi}`
+        : `https://be-simatren.riset-d3rpla.com/api/data_notifikasi/notifikasi-admin/pelatihan/${notification.id_notifikasi}`;
 
       await axios.put(endpoint);
 

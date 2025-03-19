@@ -20,7 +20,7 @@ function Kinerja_gform() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/data_presensi/formkinerja/${id_pegawai}`);
+                const response = await axios.get(`https://be-simatren.riset-d3rpla.com/api/data_presensi/formkinerja/${id_pegawai}`);
                 const kinerjaData = response.data;
                 const monthlyData = processMonthlyData(kinerjaData);
                 setData(monthlyData);

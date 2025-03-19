@@ -15,7 +15,7 @@ function ManajemenKinerja() {
 
   const fetchDataPegawai = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/data_pegawai/pegawai');
+      const response = await fetch('https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai');
       const data = await response.json();
       setDataPegawai(data);
     } catch (error) {

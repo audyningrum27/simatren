@@ -25,7 +25,7 @@ const TambahGajiExcel = () => {
         formData.append('file', file);
 
         try {
-            const response = await axios.post('http://localhost:5000/api/data_gaji/import-gaji', formData, {
+            const response = await axios.post('https://be-simatren.riset-d3rpla.com/api/data_gaji/import-gaji', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -41,7 +41,7 @@ const TambahGajiExcel = () => {
 
     const handleDownloadTemplate = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/data_gaji/download-template', {
+            const response = await axios.get('https://be-simatren.riset-d3rpla.com/api/data_gaji/download-template', {
                 responseType: 'blob', 
             });
 

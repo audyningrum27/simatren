@@ -24,7 +24,7 @@ function HistoriPelatihanPegawai() {
         console.error('id_pegawai is undefined');
         return;
       }
-      const response = await axios.get(`http://localhost:5000/api/data_pelatihan/jadwalpelatihan/${id_pegawai}`, {
+      const response = await axios.get(`https://be-simatren.riset-d3rpla.com/api/data_pelatihan/jadwalpelatihan/${id_pegawai}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

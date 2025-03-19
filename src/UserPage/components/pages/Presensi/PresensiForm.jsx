@@ -25,7 +25,7 @@ const PresensiForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:5000/api/data_presensi/update-presensi/${id_presensi}`, formData);
+      const response = await axios.put(`https://be-simatren.riset-d3rpla.com/api/data_presensi/update-presensi/${id_presensi}`, formData);
       console.log(response.data.message);
       setShowPopup(true);
       setTimeout(() => {

@@ -48,7 +48,7 @@ const TambahDataPegawai = () => {
         password: hashedPassword,
       };
 
-      const response = await axios.post('http://localhost:5000/api/data_pegawai/pegawai', formDataWithHashedPassword);
+      const response = await axios.post('https://be-simatren.riset-d3rpla.com/api/data_pegawai/pegawai', formDataWithHashedPassword);
       setShowPopup(true);
     } catch (error) {
       console.error('Error saving data:', error);
