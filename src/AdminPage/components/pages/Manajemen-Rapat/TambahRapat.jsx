@@ -5,11 +5,13 @@ const TambahRapat = () => {
    const navigate = useNavigate();
    const [formData, setFormData] = useState({
       judulRapat: "",
+      nomorSurat: "",
       pelaksana: "",
+      ruangRapat: "",
       tanggalRapat: "",
       waktuRapat: "",
       pesertaRapat: "",
-      deskripsiRapat: "",
+      agendaRapat: "",
    });
 
    const handleChange = (e) => {
@@ -22,14 +24,24 @@ const TambahRapat = () => {
          <div className='md:w-[100%] w-[90%] mx-auto h-full flex flex-col py-5 justify-between'>
             <div className="relative rounded-sm box-border border border-gray-200 shadow-lg shadow-gray-500 p-10">
                <form>
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                      {/* Judul Rapat */}
                      <InputField
                         label="Judul Rapat"
                         name="judulRapat"
                         value={formData.judulRapat}
                         onChange={handleChange}
-                        placeholder="Perihal Agenda Rapat"
+                        placeholder="Masukkan judul rapat"
+                        required
+                     />
+
+                     {/* Nomor Rapat */}
+                     <InputField
+                        label="Nomor Surat"
+                        name="nomorSurat"
+                        value={formData.nomorSurat}
+                        onChange={handleChange}
+                        placeholder="Masukkan nomor surat"
                         required
                      />
 
@@ -40,6 +52,16 @@ const TambahRapat = () => {
                         value={formData.pelaksana}
                         onChange={handleChange}
                         placeholder="Nama atau unit pelaksana rapat"
+                        required
+                     />
+
+                     {/* Ruang Rapat */}
+                     <InputField
+                        label="Ruang / Gedung Rapat"
+                        name="ruangRapat"
+                        value={formData.ruangRapat}
+                        onChange={handleChange}
+                        placeholder="Masukkan ruang rapat"
                         required
                      />
 
@@ -73,13 +95,13 @@ const TambahRapat = () => {
                         required
                      />
 
-                     {/* Deskripsi Rapat */}
+                     {/* Agenda Rapat */}
                      <TextAreaField
-                        label="Deskripsi Rapat"
-                        name="deskripsiRapat"
-                        value={formData.deskripsiRapat}
+                        label="Agenda Rapat"
+                        name="agendaRapat"
+                        value={formData.agendaRapat}
                         onChange={handleChange}
-                        placeholder="Masukkan deskripsi kegiatan"
+                        placeholder="Masukkan Agenda Rapat"
                         required
                      />
                   </div>
@@ -135,7 +157,7 @@ const InputField = ({ label, name, type = "text", icon, value, onChange, placeho
 
 // Reusable TextArea Component
 const TextAreaField = ({ label, name, value, onChange, placeholder, required }) => (
-   <div className="col-span-2">
+   <div className="col-span-1 md:col-span-2 lg:col-span-3">
       <label className="text-gray-900 text-sm font-medium">
          {label} {required && <span className="text-red-700">*</span>}
       </label>
