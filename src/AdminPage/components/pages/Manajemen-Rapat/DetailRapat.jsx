@@ -25,7 +25,7 @@ const DetailRapat = () => {
          {/* Tombol Aksi */}
          <div className="flex flex-col md:flex-row gap-2 mb-4 py-4">
             <button
-               onClick={() => navigate('')}
+               onClick={() => navigate('/AdminPage/data_presensi_rapat')}
                className="flex items-center justify-center gap-2 bg-gray-300 hover:bg-green-900 hover:text-white font-semibold h-10 px-5 rounded-sm"
             >
                <HiOutlineUserGroup className="text-lg" /> Cek Kehadiran Peserta

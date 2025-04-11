@@ -20,6 +20,7 @@ import ManajemenRapat from './AdminPage/components/pages/Manajemen-Rapat/Manajem
 import TambahRapat from './AdminPage/components/pages/Manajemen-Rapat/TambahRapat';
 import RiwayatRapat from './AdminPage/components/pages/Manajemen-Rapat/RiwayatRapat';
 import DetailRapat from './AdminPage/components/pages/Manajemen-Rapat/DetailRapat';
+import DataPresensiRapat from './AdminPage/components/pages/Manajemen-Rapat/DataPresensiRapat';
 import HistoryPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/HistoryPelatihan';
 import JadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/JadwalPelatihan';
 import TambahJadwalPelatihan from './AdminPage/components/pages/Manajemen-Pelatihan/TambahJadwalPelatihan';
@@ -80,6 +81,7 @@ function App() {
             <Route path="/AdminPage/tambah_rapat" element={<TambahRapat />} />
             <Route path="/AdminPage/riwayat_rapat" element={<RiwayatRapat />} />
             <Route path="/AdminPage/detail_rapat" element={<DetailRapat />} />
+            <Route path="/AdminPage/data_presensi_rapat" element={<DataPresensiRapat />} />
             <Route path="/AdminPage/histori_pelatihan" element={<HistoryPelatihan />} />
             <Route path="/AdminPage/jadwal_pelatihan" element={<JadwalPelatihan />} />
             <Route path="/AdminPage/detail_history_pelatihan/:id_pelatihan" element={<DetailHistoryPelatihan />} />
