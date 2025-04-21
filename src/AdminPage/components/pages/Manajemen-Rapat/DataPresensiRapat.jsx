@@ -96,98 +96,93 @@ const DataPresensiRapat = () => {
             </div>
          </div>
 
-         {/* Pagination */}
-         <div className="flex items-center justify-center mt-4 space-x-4">
-            <button
-               onClick={goToPreviousPage}
-               disabled={currentPage === 1}
-               className="px-3 py-1 text-gray-600 hover:text-gray-900 disabled:opacity-50"
-            >
-               <HiChevronLeft fontSize={18} />
-            </button>
-            
-            {/* sliding window pagination */}
-            <div className="flex space-x-1">
-               {(() => {
-                  const visiblePages = 5;
-                  let startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
-                  let endPage = startPage + visiblePages - 1;
+         {/* Pagination + Buttons in one flex container */}
+         <div className="flex items-center justify-between px-5 p-5 md:w-[100%] w-[90%] mx-auto mt-3">
 
-                  if (endPage > totalPages) {
-                     endPage = totalPages;
-                     startPage = Math.max(1, endPage - visiblePages + 1);
-                  }
+            {/* Pagination */}
+            <div className="flex items-center space-x-4">
+               <button
+                  onClick={goToPreviousPage}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1 text-gray-600 hover:text-gray-900 disabled:opacity-50"
+               >
+                  <HiChevronLeft fontSize={18} />
+               </button>
 
-                  const pageNumbers = [];
-                  for (let i = startPage; i <= endPage; i++) {
-                     pageNumbers.push(i);
-                  }
+               <div className="flex space-x-1">
+                  {(() => {
+                     const visiblePages = 5;
+                     let startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+                     let endPage = startPage + visiblePages - 1;
 
-                  return (
-                     <>
-                        {startPage > 1 && (
-                           <>
-                              <button
-                                 onClick={() => setCurrentPage(1)}
-                                 className="px-4 py-2 rounded-md font-semibold text-sm bg-gray-200 text-gray-700 hover:bg-gray-300"
+                     if (endPage > totalPages) {
+                        endPage = totalPages;
+                        startPage = Math.max(1, endPage - visiblePages + 1);
+                     }
+
+                     const pageNumbers = [];
+                     for (let i = startPage; i <= endPage; i++) {
+                        pageNumbers.push(i);
+                     }
+
+                     return (
+                        <>
+                           {startPage > 1 && (
+                              <>
+                                 <button onClick={() => setCurrentPage(1)}
+                                    className="px-4 py-2 rounded-md font-semibold text-sm bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                    1
+                                 </button>
+                                 <span className="px-2">...</span>
+                              </>
+                           )}
+                           {pageNumbers.map((page) => (
+                              <button key={page}
+                                 className={`px-4 py-2 rounded-md font-semibold text-sm ${currentPage === page ? 'bg-green-900 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                                 onClick={() => setCurrentPage(page)}
                               >
-                                 1
+                                 {page}
                               </button>
-                              <span className="px-2">...</span>
-                           </>
-                        )}
-                        {pageNumbers.map((page) => (
-                           <button
-                              key={page}
-                              className={`px-4 py-2 rounded-md font-semibold text-sm ${currentPage === page
-                                 ? 'bg-green-900 text-white'
-                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                 }`}
-                              onClick={() => setCurrentPage(page)}
-                           >
-                              {page}
-                           </button>
-                        ))}
-                        {endPage < totalPages && (
-                           <>
-                              <span className="px-2">...</span>
-                              <button
-                                 onClick={() => setCurrentPage(totalPages)}
-                                 className="px-4 py-2 rounded-md font-semibold text-sm bg-gray-200 text-gray-700 hover:bg-gray-300"
-                              >
-                                 {totalPages}
-                              </button>
-                           </>
-                        )}
-                     </>
-                  );
-               })()}
+                           ))}
+                           {endPage < totalPages && (
+                              <>
+                                 <span className="px-2">...</span>
+                                 <button onClick={() => setCurrentPage(totalPages)}
+                                    className="px-4 py-2 rounded-md font-semibold text-sm bg-gray-200 text-gray-700 hover:bg-gray-300">
+                                    {totalPages}
+                                 </button>
+                              </>
+                           )}
+                        </>
+                     );
+                  })()}
+               </div>
+
+               <button
+                  onClick={goToNextPage}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1 text-gray-600 hover:text-gray-900 disabled:opacity-50"
+               >
+                  <HiChevronRight fontSize={18} />
+               </button>
             </div>
 
-            <button
-               onClick={goToNextPage}
-               disabled={currentPage === totalPages}
-               className="px-3 py-1 text-gray-600 hover:text-gray-900 disabled:opacity-50"
-            >
-               <HiChevronRight fontSize={18} />
-            </button>
-         </div>
-
-         {/* Buttons */}
-         <div className="px-5 p-5 flex flex-row gap-6 justify-end md:w-[100%] w-[90%] mx-auto mt-3">
-            <button
-               type="button"
-               className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-            >
-               Edit
-            </button>
-            <button
-               type="submit"
-               className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-               onClick={() => navigate('/AdminPage/riwayat_rapat')}
-            >
-               Simpan
-            </button>
+            {/* Buttons */}
+            <div className="flex flex-row gap-6">
+               <button
+                  type="button"
+                  className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+               >
+                  Batal
+               </button>
+               <button
+                  type="submit"
+                  className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  onClick={() => navigate('/AdminPage/riwayat_rapat')}
+               >
+                  Simpan
+               </button>
+            </div>
          </div>
       </div>
    );
