@@ -110,7 +110,7 @@ function ManajemenRole() {
 									<td className="px-4 py-3">{data.unit_kerja}</td>
 									<td className="px-4 py-3">{getPegawaiStatus(data.fitur_status)}</td>
 									<td className="px-4 py-3">
-										<button onClick={() => navigate(``)} className="font-semibold hover:underline flex items-center">
+										<button onClick={() => navigate(`/AdminPage/detail_data_role`)} className="font-semibold hover:underline flex items-center">
 											Detail <HiChevronRight fontSize={18} className="ml-1" />
 										</button>
 									</td>

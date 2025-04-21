@@ -9,6 +9,7 @@ import TambahDataPegawai from './AdminPage/components/pages/Manajemen-Pegawai/Ta
 import DetailPegawai from './AdminPage/components/pages/Manajemen-Pegawai/DetailPegawai';
 import ManajemenRole from './AdminPage/components/pages/Manajemen-Pegawai/ManajemenRole';
 import TambahDataRole from './AdminPage/components/pages/Manajemen-Pegawai/TambahDataRole';
+import DetailDataRole from './AdminPage/components/pages/Manajemen-Pegawai/DetailDataRole';
 import ManajemenGaji from './AdminPage/components/pages/Manajemen-Gaji/ManajemenGaji';
 import TambahDataGaji from './AdminPage/components/pages/Manajemen-Gaji/TambahDataGaji';
 import TambahGajiExcel from './AdminPage/components/pages/Manajemen-Gaji/TambahGajiExcel';
@@ -70,6 +71,7 @@ function App() {
             <Route path="/AdminPage/detail_pegawai/:id_pegawai" element={<DetailPegawai />} />
             <Route path="/AdminPage/manajemen_role" element={<ManajemenRole />} />
             <Route path="/AdminPage/tambah_data_role" element={<TambahDataRole />} />
+            <Route path="/AdminPage/detail_data_role" element={<DetailDataRole />} />
             <Route path="/AdminPage/manajemen_gaji" element={<ManajemenGaji />} />
             <Route path="/AdminPage/tambah_data_gaji" element={<TambahDataGaji />} />
             <Route path="/AdminPage/tambah_data_gaji_excel" element={<TambahGajiExcel />} />
