@@ -178,7 +178,7 @@ const DataPresensiRapat = () => {
                <button
                   type="submit"
                   className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-                  onClick={() => navigate('/AdminPage/riwayat_rapat')}
+                  onClick={() => navigate('/AdminPage/detail_rapat')}
                >
                   Simpan
                </button>
