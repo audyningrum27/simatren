@@ -8,6 +8,8 @@ const DataPresensiRapat = () => {
    const [dataPresensiRapat, setDataPresensiRapat] = useState([]);
    const [currentPage, setCurrentPage] = useState(1);
    const itemsPerPage = 10;
+   const [editIndex, setEditIndex] = useState(null);
+   const [editedKeterangan, setEditedKeterangan] = useState('');
 
    // Data Dummy
    const dummyData = [
@@ -39,6 +41,13 @@ const DataPresensiRapat = () => {
       }
    };
 
+   const handleSimpanEdit = (index) => {
+      const updated = [...dataPresensiRapat];
+      updated[(currentPage - 1) * itemsPerPage + index].keterangan = editedKeterangan;
+      setDataPresensiRapat(updated);
+      setEditIndex(null);
+   };
+
    const totalPages = Math.ceil(dataPresensiRapat.length / itemsPerPage);
    const indexOfLastItem = currentPage * itemsPerPage;
    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -59,15 +68,15 @@ const DataPresensiRapat = () => {
          {/* Table */}
          <div className="py-4">
             <div className="min-h-[484px] md:w-full w-[34rem] max-[500px]:w-[24rem] overflow-auto border rounded-lg shadow-sm">
-               <table className="w-full text-sm text-left text-gray-700 min-w-[900px]">
+               <table className="w-full text-sm text-left text-gray-700 min-w-[900px] table-fixed">
                   <thead className="sticky top-0 bg-white uppercase">
                      <tr className='border-b-[1.5px]'>
-                        <th className="px-4 py-3">No</th>
-                        <th className="px-4 py-3">Nama Peserta</th>
-                        <th className="px-4 py-3">Jabatan</th>
-                        <th className="px-4 py-3">Jam Scan QR</th>
-                        <th className="px-4 py-3">Status</th>
-                        <th className="px-4 py-3">Keterangan</th>
+                        <th className="px-4 py-3 w-[50px]">No</th>
+                        <th className="px-4 py-3 w-auto">Nama Peserta</th>
+                        <th className="px-4 py-3 w-auto">Jabatan</th>
+                        <th className="px-4 py-3 w-[150px]">Jam Scan QR</th>
+                        <th className="px-4 py-3 w-[150px]">Status</th>
+                        <th className="px-4 py-3 w-[250px]">Keterangan</th>
                      </tr>
                   </thead>
                   <tbody>
@@ -83,11 +92,38 @@ const DataPresensiRapat = () => {
                               <td className='px-4 py-3'>{data.jabatan}</td>
                               <td className='px-4 py-3'>{data.jam_scanqr}</td>
                               <td className='px-4 py-3'>{getPegawaiStatus(data.status_presensi)}</td>
-                              <td className='px-4 py-3'>
-                                 <button onClick={() => navigate(``)} className="font-semibold hover:underline flex items-center">
-                                    Edit <HiOutlinePencilAlt fontSize={18} className="inline ml-1" />
-                                 </button>
+                              <td className='px-4 py-3 align-top'>
+                                 {editIndex === index ? (
+                                    <div className="flex items-center gap-2">
+                                       <input
+                                          type="text"
+                                          className="border rounded-md px-2 py-1 text-sm w-full max-w-[180px]"
+                                          value={editedKeterangan}
+                                          onChange={(e) => setEditedKeterangan(e.target.value)}
+                                       />
+                                       <button
+                                          onClick={() => handleSimpanEdit(index)}
+                                          className="bg-gray-300 text-black px-3 py-1 rounded-md text-sm hover:bg-green-900 hover:text-white"
+                                       >
+                                          Simpan
+                                       </button>
+                                    </div>
+                                 ) : (
+                                    <div className="flex items-start gap-2 max-w-[200px] whitespace-pre-wrap break-all">
+                                       <span>{data.keterangan || 'Edit'}</span>
+                                       <button
+                                          onClick={() => {
+                                             setEditIndex(index);
+                                             setEditedKeterangan(data.keterangan || '');
+                                          }}
+                                          className="text-gray-500 hover:text-gray-700"
+                                       >
+                                          <HiOutlinePencilAlt fontSize={18} />
+                                       </button>
+                                    </div>
+                                 )}
                               </td>
+
                            </tr>
                         ))
                      )}
@@ -97,10 +133,10 @@ const DataPresensiRapat = () => {
          </div>
 
          {/* Pagination + Buttons in one flex container */}
-         <div className="flex items-center justify-between px-5 p-5 md:w-[100%] w-[90%] mx-auto mt-3">
+         <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full gap-4 px-4 mt-3 py-2">
 
             {/* Pagination */}
-            <div className="flex items-center space-x-4">
+            <div className="flex justify-center flex-wrap gap-2 w-full md:w-auto">
                <button
                   onClick={goToPreviousPage}
                   disabled={currentPage === 1}
@@ -168,19 +204,13 @@ const DataPresensiRapat = () => {
             </div>
 
             {/* Buttons */}
-            <div className="flex flex-row gap-6">
-               <button
-                  type="button"
-                  className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-               >
-                  Batal
-               </button>
+            <div className="flex justify-center md:justify-end w-full md:w-auto">
                <button
                   type="submit"
-                  className="w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  className="w-full md:w-28 text-black bg-gray-300 hover:bg-green-900 hover:text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                   onClick={() => navigate('/AdminPage/detail_rapat')}
                >
-                  Simpan
+                  Selesai
                </button>
             </div>
          </div>

@@ -135,7 +135,7 @@ const DetailRapat = () => {
                   </button>
                </div>
 
-               <div className="bg-white border rounded-lg shadow-md p-4">
+               <div className="bg-white border rounded-lg shadow-md p-4 mb-8">
                   <dl className="grid grid-cols-1 md:grid-cols-[150px_1fr] gap-x-4 gap-y-2">
                      <dt className="font-semibold">Judul Rapat</dt>
                      <dd>{formData.judulRapat}</dd>
@@ -173,7 +173,7 @@ const DetailRapat = () => {
             // Edit Mode
             <div>
                <p className="text-2xl flex justify-center font-bold mb-4">Edit Detail Rapat</p>
-               <div className="rounded-sm border border-gray-200 shadow-lg p-5">
+               <div className="rounded-sm border border-gray-200 shadow-lg p-5 mb-8">
                   <form>
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <InputField label="Judul Rapat" name="judulRapat" value={formData.judulRapat} onChange={handleChange} required />
