@@ -63,6 +63,12 @@ function ManajemenCuti() {
     setSelectedStatus('');
   };
 
+  const renderStatusIcon = (status) => {
+    if (status === 'Diterima') return <span className="text-green-600 font-bold text-xl">✔</span>;
+    if (status === 'Ditolak') return <span className="text-red-600 font-bold text-xl">✖</span>;
+    return <span className="text-gray-400 font-bold text-xl">-</span>;
+  };
+
   const handleYes = async () => {
     try {
       // Memperbarui status cuti
@@ -170,6 +176,10 @@ function ManajemenCuti() {
                   <td className='font-bold py-4'>Nama Pegawai</td>
                   <td className='font-bold py-4'>Tanggal Mulai</td>
                   <td className='font-bold py-4'>Tanggal Selesai</td>
+                  <td className='font-bold py-4'>Kaur</td>
+                  <td className='font-bold py-4'>Kanit</td>
+                  <td className='font-bold py-4'>Kadiv</td>
+                  <td className='font-bold py-4'>HRD</td>
                   <td className='font-bold py-4'>Bukti Form Izin</td>
                   <td className='font-bold py-4'>Action</td>
                 </tr>
@@ -192,6 +202,19 @@ function ManajemenCuti() {
                       <td>{data.nama_pegawai}</td>
                       <td>{data.tanggalMulai}</td>
                       <td>{data.tanggalSelesai}</td>
+                      <td className="text-center">
+                        {renderStatusIcon(data.status_kaur)}
+                      </td>
+                      <td className="text-center">
+                        {renderStatusIcon(data.status_kanit)}
+                      </td>
+                      <td className="text-center">
+                        {renderStatusIcon(data.status_kadiv)}
+                      </td>
+                      <td className="text-center">
+                        {renderStatusIcon(data.status_hrd)}
+                      </td>
+
                       <td className='font-semibold'>
                         <button
                           className='flex justify-start items-center'
