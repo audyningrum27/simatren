@@ -39,6 +39,7 @@ import PengajuanCuti from "./UserPage/components/pages/Cuti/PengajuanCuti";
 import HistoriCuti from "./UserPage/components/pages/Cuti/HistoriCuti";
 import Rapat from "./UserPage/components/pages/Rapat/Rapat";
 import HistoriRapat from "./UserPage/components/pages/Rapat/HistoriRapat";
+import DetailRapatUser from "./UserPage/components/pages/Rapat/DetailRapatUser";
 import PelaporanPelatihan from "./UserPage/components/pages/Pelatihan/PelaporanPelatihan";
 import HistoriPelatihanPegawai from './UserPage/components/pages/Pelatihan/HistoriPelatihanPegawai';
 import DetailHistoriPelatihanPegawai from './UserPage/components/pages/Pelatihan/DetailHistoriPelatihanPegawai';
@@ -107,6 +108,7 @@ function App() {
             <Route path="/UserPage/histori_cuti" element={<HistoriCuti />} />
             <Route path="/UserPage/rapat" element={<Rapat />} />
             <Route path="/UserPage/histori_rapat" element={<HistoriRapat />} />
+            <Route path="/UserPage/detail_rapat_pegawai" element={<DetailRapatUser />} />
             <Route path="/UserPage/pelaporan_pelatihan" element={<PelaporanPelatihan />} />
             <Route path="/UserPage/histori_pelatihan_pegawai" element={<HistoriPelatihanPegawai />} />
             <Route path="/UserPage/jadwal_pelatihan_pegawai" element={<JadwalPelatihanPegawai />} />
