@@ -127,19 +127,62 @@ function HistoriRapat() {
                <HiChevronLeft fontSize={18} />
             </button>
 
+            {/* sliding window pagination */}
             <div className="flex space-x-1">
-               {Array.from({ length: totalPages }, (_, index) => (
-                  <button
-                     key={index}
-                     className={`px-4 py-2 rounded-md font-semibold text-sm ${currentPage === index + 1
-                           ? 'bg-green-900 text-white'
-                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                        }`}
-                     onClick={() => setCurrentPage(index + 1)}
-                  >
-                     {index + 1}
-                  </button>
-               ))}
+               {(() => {
+                  const visiblePages = 5;
+                  let startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+                  let endPage = startPage + visiblePages - 1;
+
+                  if (endPage > totalPages) {
+                     endPage = totalPages;
+                     startPage = Math.max(1, endPage - visiblePages + 1);
+                  }
+
+                  const pageNumbers = [];
+                  for (let i = startPage; i <= endPage; i++) {
+                     pageNumbers.push(i);
+                  }
+
+                  return (
+                     <>
+                        {startPage > 1 && (
+                           <>
+                              <button
+                                 onClick={() => setCurrentPage(1)}
+                                 className="px-4 py-2 rounded-md font-semibold text-sm bg-gray-200 text-gray-700 hover:bg-gray-300"
+                              >
+                                 1
+                              </button>
+                              <span className="px-2">...</span>
+                           </>
+                        )}
+                        {pageNumbers.map((page) => (
+                           <button
+                              key={page}
+                              className={`px-4 py-2 rounded-md font-semibold text-sm ${currentPage === page
+                                 ? 'bg-green-900 text-white'
+                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                 }`}
+                              onClick={() => setCurrentPage(page)}
+                           >
+                              {page}
+                           </button>
+                        ))}
+                        {endPage < totalPages && (
+                           <>
+                              <span className="px-2">...</span>
+                              <button
+                                 onClick={() => setCurrentPage(totalPages)}
+                                 className="px-4 py-2 rounded-md font-semibold text-sm bg-gray-200 text-gray-700 hover:bg-gray-300"
+                              >
+                                 {totalPages}
+                              </button>
+                           </>
+                        )}
+                     </>
+                  );
+               })()}
             </div>
 
             <button

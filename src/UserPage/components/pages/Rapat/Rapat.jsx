@@ -1,5 +1,5 @@
 import React from 'react';
-import { TbScan } from "react-icons/tb";
+import { BiQrScan } from "react-icons/bi";
 import { useNavigate } from 'react-router-dom';
 
 function Rapat() {
@@ -27,7 +27,7 @@ function Rapat() {
             <div className="relative">
                <button onClick={() => navigate('')}
                   className="font-semibold text-white bg-green-900 rounded-sm h-10 px-5">
-                  <TbScan fontSize={22} className="inline mr-1" /> Scan Presensi Rapat
+                  <BiQrScan fontSize={22} className="inline mr-1" /> Scan Presensi Rapat
                </button>
             </div>
             <div className="flex justify-between mx-2 md:mx-10">
