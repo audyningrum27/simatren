@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 const TambahDataRole = () => {
    const navigate = useNavigate();
    const [showPopup, setShowPopup] = useState(false);
-   const [formData, setFormData] = useState({
+   const [role, setRole] = useState({
       nama_role: "",
       unit_kerja: "",
-      fiturManajemen: [],
+      tanggung_jawab: [],
       status: "None" // default None
    });
 
@@ -24,8 +24,8 @@ const TambahDataRole = () => {
 
    const handleChange = (e) => {
       const { name, value } = e.target;
-      setFormData({
-         ...formData,
+      setRole({
+         ...role,
          [name]: value
       });
    };
@@ -33,17 +33,17 @@ const TambahDataRole = () => {
    const handleCheckboxChange = (e) => {
       const { value, checked } = e.target;
 
-      setFormData((prevData) => {
+      setRole((prevRole) => {
          const updatedFiturManajemen = checked
-            ? [...prevData.fiturManajemen, value]
-            : prevData.fiturManajemen.filter(item => item !== value);
+            ? [...prevRole.tanggung_jawab, value]
+            : prevRole.tanggung_jawab.filter(item => item !== value);
 
          // Update status otomatis
          const newStatus = updatedFiturManajemen.length > 0 ? "Aktif" : "None";
 
          return {
-            ...prevData,
-            fiturManajemen: updatedFiturManajemen,
+            ...prevRole,
+            tanggung_jawab: updatedFiturManajemen,
             status: newStatus
          };
       });
@@ -51,13 +51,13 @@ const TambahDataRole = () => {
 
    const handleSave = async () => {
       try {
-         console.log("Data yang akan dikirim:", formData);
+         console.log("Data yang akan dikirim:", role);
          // Pastikan endpoint API sudah benar
          const response = await axios.post('https://be-simatren.riset-d3rpla.com/api/data_role/manajemen/pegawai/role/create', {
-            namaRole: formData.nama_role,
-            unitKerja: formData.unit_kerja,
-            status: formData.status,
-            tanggungJawab: formData.fiturManajemen
+            namaRole: role.nama_role,
+            unitKerja: role.unit_kerja,
+            status: role.status,
+            tanggungJawab: role.tanggung_jawab
          });
 
          if (response.status === 200) {
@@ -90,7 +90,7 @@ const TambahDataRole = () => {
                      <InputField
                         label="Nama Role / Posisi"
                         name="nama_role"
-                        value={formData.nama_role}
+                        value={role.nama_role}
                         onChange={handleChange}
                         placeholder="Masukkan nama posisi"
                         required
@@ -103,7 +103,7 @@ const TambahDataRole = () => {
                         </label>
                         <select
                            name="unit_kerja"
-                           value={formData.unit_kerja}
+                           value={role.unit_kerja}
                            onChange={handleChange}
                            className="text-sm focus:outline-gray-400 active:outline-gray-400 border border-gray-300 w-full h-10 pl-1 rounded-md text-gray-400"
                            required
@@ -131,7 +131,7 @@ const TambahDataRole = () => {
                                  <input
                                     type="checkbox"
                                     value={fiturFormatted}
-                                    checked={formData.fiturManajemen.includes(fiturFormatted)}
+                                    checked={role.tanggung_jawab.includes(fiturFormatted)}
                                     onChange={handleCheckboxChange}
                                     className="w-4 h-4"
                                  />

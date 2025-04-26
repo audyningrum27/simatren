@@ -52,16 +52,13 @@ const DetailDataRole = () => {
 
    const handleCheckboxChange = (e) => {
       const { value, checked } = e.target;
+      
       setRole((prevRole) => {
-         let updatedTanggungJawab;
+         const updatedTanggungJawab = checked
+            ? [...prevRole.tanggung_jawab, value]
+            : prevRole.tanggung_jawab.filter(item => item !== value);
 
-         if (checked) {
-            updatedTanggungJawab = [...prevRole.tanggung_jawab, value];
-         } else {
-            updatedTanggungJawab = prevRole.tanggung_jawab.filter(item => item !== value);
-         }
-
-         // Set status berdasarkan jumlah fitur aktif
+         // Update status otomatis
          const newStatus = updatedTanggungJawab.length > 0 ? "Aktif" : "None";
 
          return {
