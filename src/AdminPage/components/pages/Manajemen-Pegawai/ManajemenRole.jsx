@@ -11,31 +11,15 @@ function ManajemenRole() {
 	const itemsPerPage = 10;
 	const [searchTerm, setSearchTerm] = useState('');
 
-	// Data Dummy
-	const dummyData = [
-		{ nama_role: 'Guru MA', unit_kerja: 'TPA', fitur_status: 'Aktif' },
-		{ nama_role: 'Guru MTs', unit_kerja: 'TPA', fitur_status: 'Aktif' },
-		{ nama_role: 'Kaur TA MA', unit_kerja: 'TPA', fitur_status: 'Aktif' },
-		{ nama_role: 'Kaur TA MTs', unit_kerja: 'TPA', fitur_status: 'Aktif' },
-		{ nama_role: 'Kepala MA', unit_kerja: 'TPA', fitur_status: 'Aktif' },
-		{ nama_role: 'Kepala MTs', unit_kerja: 'TPA', fitur_status: 'Aktif' },
-		{ nama_role: 'Anggota Security', unit_kerja: 'Non TPA', fitur_status: 'None' },
-		{ nama_role: 'Konselor', unit_kerja: 'Non TPA', fitur_status: 'None' },
-		{ nama_role: 'Staf Asrama', unit_kerja: 'Non TPA', fitur_status: 'None' },
-		{ nama_role: 'Staf TU MA', unit_kerja: 'Non TPA', fitur_status: 'None' },
-		{ nama_role: 'Staf TU MTs', unit_kerja: 'Non TPA', fitur_status: 'None' },
-	];
-
 	useEffect(() => {
-		setDataRole(dummyData); // Gunakan data dummy sebelum fetch data dari database
 		fetchDataRole();
 	}, []);
 
 	const fetchDataRole = async () => {
 		try {
-			const response = await fetch('https://be-simatren.riset-d3rpla.com/api/data_role');
+			const response = await fetch('https://be-simatren.riset-d3rpla.com/api/data_role/manajemen/pegawai/role');
 			const data = await response.json();
-			setDataRole(data);
+			setDataRole(data.data);
 		} catch (error) {
 			console.error('Error fetching data:', error);
 		}
@@ -47,7 +31,7 @@ function ManajemenRole() {
 
 	const filteredDataRole = datarole.filter((data) =>
 		data.nama_role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-		data.unit_kerja.toLowerCase().includes(searchTerm.toLowerCase())
+		data.status.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
 	const totalPages = Math.ceil(filteredDataRole.length / itemsPerPage);
@@ -71,7 +55,7 @@ function ManajemenRole() {
 					<HiOutlineSearch fontSize={20} className="text-gray-400 absolute top-1/2 left-3 -translate-y-1/2" />
 					<input
 						type="text"
-						placeholder="Cari nama role atau unit kerja..."
+						placeholder="Cari nama role atau fitur status..."
 						className="text-sm bg-gray-100 border border-gray-300 w-full h-10 pl-10 pr-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-900"
 						value={searchTerm}
 						onChange={handleSearchChange}
@@ -100,7 +84,7 @@ function ManajemenRole() {
 					<tbody className="bg-white">
 						{currentPageData.length === 0 ? (
 							<tr>
-								<td colSpan="10" className="text-center py-4 text-gray-500">Tidak ada riwayat rapat.</td>
+								<td colSpan="10" className="text-center py-4 text-gray-500">Tidak ada data role.</td>
 							</tr>
 						) : (
 							currentPageData.map((data, index) => (
@@ -108,9 +92,9 @@ function ManajemenRole() {
 									<td className="px-4 py-3">{(currentPage - 1) * itemsPerPage + index + 1}</td>
 									<td className="px-4 py-3">{data.nama_role}</td>
 									<td className="px-4 py-3">{data.unit_kerja}</td>
-									<td className="px-4 py-3">{getPegawaiStatus(data.fitur_status)}</td>
+									<td className="px-4 py-3">{getPegawaiStatus(data.status)}</td>
 									<td className="px-4 py-3">
-										<button onClick={() => navigate(`/AdminPage/detail_data_role`)} className="font-semibold hover:underline flex items-center">
+										<button onClick={() => navigate(`/AdminPage/detail_data_role/${data.id_role}`)} className="font-semibold hover:underline flex items-center">
 											Detail <HiChevronRight fontSize={18} className="ml-1" />
 										</button>
 									</td>

@@ -72,7 +72,7 @@ function App() {
             <Route path="/AdminPage/detail_pegawai/:id_pegawai" element={<DetailPegawai />} />
             <Route path="/AdminPage/manajemen_role" element={<ManajemenRole />} />
             <Route path="/AdminPage/tambah_data_role" element={<TambahDataRole />} />
-            <Route path="/AdminPage/detail_data_role" element={<DetailDataRole />} />
+            <Route path="/AdminPage/detail_data_role/:id_role" element={<DetailDataRole />} />
             <Route path="/AdminPage/manajemen_gaji" element={<ManajemenGaji />} />
             <Route path="/AdminPage/tambah_data_gaji" element={<TambahDataGaji />} />
             <Route path="/AdminPage/tambah_data_gaji_excel" element={<TambahGajiExcel />} />
